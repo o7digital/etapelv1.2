@@ -1,7 +1,3 @@
----
-import ProductCatalog from '../components/ProductCatalog.astro';
----
-
 <!doctype html>
 <html lang="es">
 <head>
@@ -91,7 +87,7 @@ import ProductCatalog from '../components/ProductCatalog.astro';
     <nav class="nav">
       <a class="brand" href="#"><img src="/etapel-logo.svg" alt="Etapel"></a>
       <div class="menu">
-        <a href="/">Home</a><a href="/#catalogo-productos">Línea de Producto</a><a href="/quienes-somos">¿Quiénes Somos?</a><a href="/capacitacion">Capacitación</a><a href="/#postventa">PostVenta</a><a href="/#contacto">Contacto</a>
+        <a href="/">Home</a><a href="/linea-de-producto">Línea de Producto</a><a href="/quienes-somos">¿Quiénes Somos?</a><a href="/capacitacion">Capacitación</a><a href="/postventa">PostVenta</a><a href="/#contacto">Contacto</a>
       </div>
       <div class="nav-actions"><a class="lang" href="#" aria-label="Cambiar idioma a inglés">EN</a><a class="btn orange" href="/#contacto">Solicitar información</a></div>
     </nav>
@@ -104,7 +100,7 @@ import ProductCatalog from '../components/ProductCatalog.astro';
           <span class="eyebrow"><span class="dot"></span> Tecnología automotriz certificada</span>
           <h1>Soluciones premium para talleres de alto rendimiento.</h1>
           <p>Equipamiento, pintura, cabinas, soldadura, aire comprimido y capacitación especializada para talleres automotrices que buscan procesos homologados y resultados profesionales.</p>
-          <div class="hero-actions"><a class="btn orange" href="#catalogo-productos">Ver catálogo de productos</a><a class="btn outline" href="#familias">Ver familias</a></div>
+          <div class="hero-actions"><a class="btn orange" href="/linea-de-producto">Ver catálogo de productos</a><a class="btn outline" href="/#contacto">Hablar con un asesor</a></div>
           <div class="metrics">
             <div class="metric"><strong>48</strong><span>Líneas líderes mundiales</span></div>
             <div class="metric"><strong>360°</strong><span>Equipos, soporte y postventa</span></div>
@@ -137,151 +133,6 @@ import ProductCatalog from '../components/ProductCatalog.astro';
     <div class="brands">
       <div class="brands-inner"><span>Marcas y tecnologías</span><div class="brands-list"><span>SATA</span><span>GYS</span><span>3M</span><span>PPG</span><span>Farecla</span><span>Rupes</span><span>Polyvance</span></div></div>
     </div>
-
-    <section class="families" id="familias">
-      <div class="container">
-        <div class="section-head"><div><div class="label">Línea de Producto</div><h2>Cuatro familias principales para operar con precisión.</h2></div><p>Una navegación simple para encontrar la categoría adecuada sin convertir el sitio en un catálogo pesado.</p></div>
-        <div class="cards">
-          <article class="family-card"><div class="icon">01</div><h3>Pintura</h3><p>Pistolas, consumibles y sistemas para procesos de pintura y acabado.</p><ul><li>Pistolas de pintura</li><li>Mascarillas y vaso RPS</li><li>Sistema de lijado</li><li>Sistema de pulido</li></ul></article>
-          <article class="family-card"><div class="icon">02</div><h3>Cabinas y Preparación</h3><p>Cabinas, cuartos de mezclado y espacios de preparación para repintado.</p><ul><li>Cabinas USI</li><li>Cabinas Millibar</li><li>Cuartos de mezclado</li><li>Zonas de preparación</li></ul></article>
-          <article class="family-card"><div class="icon">03</div><h3>Soldadura y Enderezado</h3><p>Soldadoras, bancos y soluciones para reparación estructural y de carrocería.</p><ul><li>Soldadoras</li><li>Banco de enderezado</li><li>Car-O-Liner</li><li>Josam</li></ul></article>
-          <article class="family-card"><div class="icon">04</div><h3>Mecánica y Aire</h3><p>Mecánica, aire comprimido, infrarrojo y equipos complementarios.</p><ul><li>Mecánica</li><li>Aire comprimido</li><li>Lámparas infrarrojo</li><li>Equipos de repintado</li></ul></article>
-        </div>
-      </div>
-    </section>
-
-    <ProductCatalog />
-
-    <section id="quienes">
-      <div class="container">
-        <div class="about-intro">
-          <div class="about-lead">
-            <div class="label">¿Quiénes Somos?</div>
-            <h2>Etapel SA de CV.</h2>
-            <p>Somos una empresa mexicana con una meta clara: mejorar la rentabilidad de nuestros clientes. Durante más de tres décadas, hemos importado, comercializado y brindado servicios que hacen que nuestros productos no solo funcionen, sino que potencien la productividad de nuestros usuarios.</p>
-            <p style="margin-top:18px">Representamos en exclusiva a 48 líneas de productos líderes en el mercado global, ofreciendo soluciones de alta calidad respaldadas por experiencia y compromiso.</p>
-          </div>
-          <div class="about-grid">
-            <article class="about-card">
-              <h3>Visión</h3>
-              <p>Servir cada vez a más clientes como líder, ofreciendo la mejor opción de compra y la mejor relación costo-beneficio mediante tecnología de punta, innovación y experiencia.</p>
-            </article>
-            <article class="about-card">
-              <h3>Misión</h3>
-              <p>Satisfacer las necesidades de productos y servicios de la industria, fomentando nuestra filosofía y valores para asegurar relaciones valiosas y a largo plazo.</p>
-            </article>
-            <article class="about-card wide">
-              <h3>Política</h3>
-              <p>ETAPEL S.A. DE C.V. está dedicada a la venta de pintura, consumibles, herramientas, equipos mayores, servicios de mantenimiento e instalación. La organización está comprometida con estándares ambientales, de seguridad y calidad, cumplimiento legal, prevención de impactos ambientales y mejora continua.</p>
-            </article>
-            <article class="about-card wide">
-              <h3>Ofrecemos</h3>
-              <p>Un equipo formado por personal directo y distribuidores, profesional, actualizado y calificado para dar excelente servicio en industrias automotriz, hojalatería, pintura aeronáutica, marítima, transporte, madera e industria general.</p>
-              <div class="offer-list">
-                <span>Carrocería</span><span>Pintura</span><span>Pintura en polvo</span><span>Mecánica</span><span>Estacionamiento</span><span>Madera</span><span>Estética</span><span>Construcción e industria</span>
-              </div>
-            </article>
-          </div>
-        </div>
-      </div>
-      <div class="container split">
-        <div class="dark-panel"><span class="eyebrow"><span class="dot"></span> Calidad certificada</span><h2>Sistema de gestión integral certificado.</h2><p>Etapel no se presenta como un simple proveedor: acompaña al taller en selección, implementación, capacitación y postventa para proteger la inversión y elevar el nivel operativo.</p><div class="proofs"><div class="proof"><div class="tick">✓</div><div><b>Procesos homologados</b><span>Soluciones alineadas con estándares internacionales.</span></div></div><div class="proof"><div class="tick">✓</div><div><b>Capacitación técnica</b><span>Uso adecuado de equipos, productos y procesos.</span></div></div><div class="proof"><div class="tick">✓</div><div><b>Postventa especializada</b><span>Acompañamiento antes, durante y después de la compra.</span></div></div></div></div>
-        <div class="white-stack"><div class="service"><div class="num">01</div><div><h3>Centro de Capacitación</h3><p>Capacitación práctica en pintura y carrocería para maximizar rendimiento, seguridad y calidad de aplicación.</p></div></div><div class="service"><div class="num">02</div><div><h3>Homologaciones / GYS</h3><p>Equipos y procesos respaldados por marcas líderes del sector automotriz para resultados profesionales.</p></div></div><div class="service"><div class="num">03</div><div><h3>Soporte y PostVenta</h3><p>Asesoría técnica para elegir, instalar y mantener las soluciones adecuadas según cada operación.</p></div></div></div>
-      </div>
-    </section>
-
-    <section class="training" id="capacitacion">
-      <div class="container">
-        <div class="training-hero">
-          <div class="training-copy">
-            <div class="label">Sistema de enseñanza</div>
-            <h2>Servicios de Capacitación en Etapel.</h2>
-            <p>Fortalecemos el uso adecuado de equipos, la eficiencia operativa y la seguridad del personal con capacitación enfocada en resultados.</p>
-            <div class="training-actions">
-              <a class="btn orange" href="https://wa.link/oowyzu" target="_blank" rel="noreferrer">Haz clic aquí para contactarnos</a>
-              <a class="btn outline-dark" href="#contacto">Ir a contacto</a>
-            </div>
-          </div>
-          <div class="training-media"><img src="/images/capacitacion-1.webp" alt="Capacitación Etapel" loading="lazy"></div>
-        </div>
-
-        <div class="training-grid">
-          <article class="training-card"><img src="/images/capacitacion-1.webp" alt="Formación especializada" loading="lazy"><div><h3>1. Formación Especializada</h3><p>Nuestro equipo de expertos capacita a tu personal en el uso adecuado de los equipos, garantizando que aprovechen al máximo su potencial, aumenten la productividad y mantengan la seguridad en el lugar de trabajo.</p></div></article>
-          <article class="training-card"><img src="/images/capacitacion-2.webp" alt="Limpieza eficiente" loading="lazy"><div><h3>2. Limpieza Eficiente</h3><p>Enseñamos las mejores prácticas de limpieza y mantenimiento de equipos. Una limpieza adecuada prolonga la vida útil y garantiza un rendimiento óptimo.</p></div></article>
-          <article class="training-card"><img src="/images/capacitacion-3.webp" alt="Diseño de espacios eficientes" loading="lazy"><div><h3>3. Diseño de Espacios Eficientes</h3><p>Si es necesario, creamos layouts personalizados para optimizar el flujo de trabajo y maximizar la eficiencia operativa.</p></div></article>
-          <article class="training-card"><img src="/images/capacitacion-4.webp" alt="Procesos homologados" loading="lazy"><div><h3>4. Procesos Homologados</h3><p>Nos aseguramos de que tus procesos cumplan con altos estándares de calidad y seguridad, ayudando a mejorar la confiabilidad de tus operaciones.</p></div></article>
-          <article class="training-card"><img src="/images/capacitacion-5.webp" alt="Seguridad del personal" loading="lazy"><div><h3>5. Seguridad del Personal</h3><p>Evaluamos y mejoramos las condiciones de trabajo para garantizar un entorno seguro para tu personal.</p></div></article>
-          <article class="training-card"><img src="/images/capacitacion-6.webp" alt="Identificación de oportunidades" loading="lazy"><div><h3>6. Identificación de Oportunidades</h3><p>Realizamos análisis para identificar áreas de oportunidad en tus operaciones y apoyar decisiones informadas para crecer con eficiencia.</p></div></article>
-        </div>
-
-        <div class="training-cta">
-          <h3>Nuestro objetivo es ser tu socio estratégico en el camino hacia el éxito empresarial.</h3>
-          <p>Contáctanos hoy mismo para descubrir cómo Etapel puede agregar un valor inigualable a tu empresa. Juntos, podemos lograr grandes cosas.</p>
-          <div class="training-actions">
-            <a class="btn orange" href="https://wa.link/oowyzu" target="_blank" rel="noreferrer">Haz clic aquí para contactarnos</a>
-            <a class="btn outline" href="#contacto">Formulario de contacto</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="after-sales" id="postventa">
-      <div class="container">
-        <div class="after-sales-hero">
-          <div class="after-sales-copy">
-            <div class="label">Servicio</div>
-            <h2>PostVenta</h2>
-            <p>Soporte técnico y acompañamiento para mantener tus equipos y procesos en operación.</p>
-            <div class="after-sales-actions">
-              <a class="btn orange" href="https://wa.me/525570111515?text=Hola%2C%20quiero%20informaci%C3%B3n%20de%20PostVenta" target="_blank" rel="noreferrer">Contacta con un experto</a>
-              <a class="btn outline-dark" href="#formulario-postventa">Ir al formulario</a>
-            </div>
-          </div>
-          <div class="after-sales-media"><img src="/images/postventa.webp" alt="Servicio PostVenta Etapel" loading="lazy"></div>
-        </div>
-
-        <div class="section-head" style="margin-top:44px">
-          <div><div class="label">PostVenta</div><h2>Servicios</h2></div>
-          <p>Atención especializada para instalación, mantenimiento, reparación, seguimiento técnico y demostraciones.</p>
-        </div>
-        <div class="after-sales-services">
-          <article class="after-sales-item"><span>01</span><h3>Levantamientos</h3></article>
-          <article class="after-sales-item"><span>02</span><h3>Mantenimientos</h3></article>
-          <article class="after-sales-item"><span>03</span><h3>Reparaciones</h3></article>
-          <article class="after-sales-item"><span>04</span><h3>Instalaciones</h3></article>
-          <article class="after-sales-item"><span>05</span><h3>Desinstalaciones</h3></article>
-          <article class="after-sales-item"><span>06</span><h3>Capacitaciones</h3></article>
-          <article class="after-sales-item"><span>07</span><h3>Demostraciones</h3></article>
-        </div>
-
-        <div class="after-sales-form" id="formulario-postventa">
-          <div>
-            <div class="label">Contacta con un experto</div>
-            <h3>Estamos aquí para ayudarte</h3>
-            <p>Compártenos tu requerimiento y nuestro equipo dará seguimiento al servicio que necesitas.</p>
-            <a class="btn outline-dark" style="margin-top:18px" href="https://wa.me/525570111515?text=Hola%2C%20quiero%20informaci%C3%B3n%20de%20PostVenta" target="_blank" rel="noreferrer">WhatsApp</a>
-          </div>
-          <form class="form-grid">
-            <input type="text" name="nombre" placeholder="Nombre *">
-            <input type="text" name="empresa" placeholder="Empresa *">
-            <input type="tel" name="telefono" placeholder="Teléfono">
-            <input type="email" name="email" placeholder="Email *">
-            <select name="tema">
-              <option value="">Seleccione el tema del cual requiere información *</option>
-              <option>Levantamientos</option>
-              <option>Mantenimientos</option>
-              <option>Reparaciones</option>
-              <option>Instalaciones</option>
-              <option>Desinstalaciones</option>
-              <option>Capacitaciones</option>
-              <option>Demostraciones</option>
-            </select>
-            <textarea name="mensaje" placeholder="Mensaje opcional *"></textarea>
-            <button type="submit" class="btn orange">Enviar</button>
-          </form>
-        </div>
-      </div>
-    </section>
 
     <section class="product">
       <div class="container product-box">
@@ -370,7 +221,7 @@ import ProductCatalog from '../components/ProductCatalog.astro';
           <h3>Servicios</h3>
           <ul>
             <li><a href="/capacitacion">Capacitación</a></li>
-            <li><a href="/#postventa">PostVenta</a></li>
+            <li><a href="/postventa">PostVenta</a></li>
           </ul>
         </div>
         <div>
