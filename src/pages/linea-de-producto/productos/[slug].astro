@@ -1,0 +1,200 @@
+---
+import SiteLayout from '../../../layouts/SiteLayout.astro';
+import { catalogProducts, productDetailPath, type CatalogProduct } from '../../../data/products';
+import { productFamilies } from '../../../data/productLines';
+import type { ProductDownload } from '../../../data/productTypes';
+
+export function getStaticPaths() {
+  return catalogProducts.map((product) => ({ params: { slug: product.slug }, props: { product } }));
+}
+
+const { product } = Astro.props as { product: CatalogProduct };
+const family = productFamilies.find((item) => item.slug === product.familySlug);
+const slides = product.highlightSlides || product.highlights;
+const relatedProducts = catalogProducts
+  .filter((item) => item.familySlug === product.familySlug && item.slug !== product.slug)
+  .slice(0, 4);
+const productDownloads = product.downloads || ['Ficha técnica', 'Manual de operación'];
+const getDownloadLabel = (download: string | ProductDownload) => typeof download === 'string' ? download : download.label;
+const getDownloadHref = (download: string | ProductDownload) => typeof download === 'string' ? '/#contacto' : download.url;
+const isLinkedDownload = (download: string | ProductDownload) => typeof download !== 'string';
+---
+
+<SiteLayout title={`${product.name} | Catálogo Etapel`} description={product.summary}>
+  <main data-product-detail>
+    <section class="page-hero">
+      <div class="page-hero-inner">
+        <div>
+          <span class="eyebrow"><span class="dot"></span> {product.brand} / {family?.shortTitle}</span>
+          <h1>{product.name}</h1>
+          <p>{product.summary}</p>
+          <div class="hero-actions">
+            <a class="btn orange" href="/#contacto">Pregunte ahora</a>
+            {family && <a class="btn outline" href={`${family.href}#catalogo-productos`}>Volver al catálogo</a>}
+          </div>
+        </div>
+        <div class="hero-panel"><img src={product.image} alt={product.name} /></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="detail-grid">
+          <div class="gallery-box">
+            <div class="gallery-main">
+              <img src={product.gallery[0] || product.image} alt={product.name} data-gallery-main />
+            </div>
+            <div class="thumbs">
+              {product.gallery.map((image, index) => (
+                <button type="button" class={index === 0 ? 'active' : ''} data-gallery-thumb data-image={image} aria-label={`Imagen ${index + 1}`}>
+                  <img src={image} alt={product.name} loading="lazy" />
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div class="detail-copy">
+            <div class="badges">{product.badges.map((badge) => <span class="badge">{badge}</span>)}</div>
+            <h1>{product.summary}</h1>
+            <p style="color:#647083;line-height:1.8;font-size:17px">{product.description}</p>
+
+            {(product.optionGroups || []).map((group) => (
+              <div style="margin-top:26px">
+                <h3 style="color:var(--navy);margin:0 0 8px">{group.label}</h3>
+                <div class="option-grid">
+                  {group.options.map((option) => (
+                    <button type="button" class={option.selected ? 'selected' : ''} disabled={option.disabled} data-option-button>{option.label}</button>
+                  ))}
+                </div>
+                {group.help && <a href="/#contacto" style="display:inline-block;margin-top:10px;color:var(--orange-dark);font-weight:800">{group.help}</a>}
+              </div>
+            ))}
+
+            <div style="margin-top:34px">
+              <h2 style="color:var(--navy);font-size:32px;letter-spacing:-.04em">Aspectos destacados</h2>
+              <p style="min-height:86px;color:#4b5563;line-height:1.75;font-size:18px" data-highlight-text>{slides[0]}</p>
+              <div style="display:flex;gap:12px;align-items:center">
+                <button class="btn outline-dark" type="button" data-highlight-prev>‹</button>
+                <strong><span data-highlight-index>1</span>/{slides.length}</strong>
+                <button class="btn outline-dark" type="button" data-highlight-next>›</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tabs" role="tablist">
+          {['Descripción', 'Datos técnicos', 'Descargas', 'Piezas de recambio'].map((tab, index) => (
+            <button type="button" data-detail-tab data-panel={`panel-${index}`} class={`tab ${index === 0 ? 'active' : ''}`}>{tab}</button>
+          ))}
+        </div>
+
+        <div data-detail-panel id="panel-0">
+          <div class="panel-grid">
+            {product.detailBlocks.map((block) => (
+              <article class="detail-panel" style="padding:24px">
+                <h3 style="color:var(--navy);margin-top:0">{block.title}</h3>
+                <p style="color:#647083;line-height:1.7">{block.body}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+
+        <div class="hidden" data-detail-panel id="panel-1">
+          <dl style="margin-top:24px">
+            {product.specs.map((spec) => (
+              <div class="info-row">
+                <dt style="font-weight:900;color:var(--navy)">{spec.label}</dt>
+                <dd style="margin:0;text-align:right;color:#4b5563">{spec.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+
+        <div class="hidden" data-detail-panel id="panel-2">
+          <div class="catalog-grid" style="margin-top:24px">
+            {productDownloads.map((download) => (
+              <a class="detail-panel" style="padding:22px;font-weight:900;color:var(--navy)" href={getDownloadHref(download)} target={isLinkedDownload(download) ? '_blank' : undefined} rel={isLinkedDownload(download) ? 'noopener noreferrer' : undefined}>
+                {getDownloadLabel(download)}
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <div class="hidden" data-detail-panel id="panel-3">
+          <div class="catalog-grid" style="margin-top:24px">
+            {(product.spareParts || ['Kit de mantenimiento', 'Juntas', 'Accesorios']).map((part) => (
+              <a class="detail-panel" style="padding:22px;font-weight:900;color:var(--navy)" href="/#contacto">{part}</a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {relatedProducts.length > 0 && (
+      <section class="related">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <div class="label">También puede interesarte</div>
+              <h2>Productos relacionados</h2>
+            </div>
+          </div>
+          <div class="catalog-grid">
+            {relatedProducts.map((item) => (
+              <article class="product-card">
+                <a href={productDetailPath(item)}>
+                  <div class="product-image"><img src={item.image} alt={item.name} loading="lazy" /></div>
+                  <div class="product-body"><small>{item.interest || item.category}</small><h3>{item.name}</h3><span class="arrow">→</span></div>
+                </a>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+  </main>
+</SiteLayout>
+
+<script define:vars={{ slides }}>
+  document.querySelectorAll('[data-product-detail]').forEach((detail) => {
+    const mainImage = detail.querySelector('[data-gallery-main]');
+    const thumbs = Array.from(detail.querySelectorAll('[data-gallery-thumb]'));
+    let imageIndex = 0;
+    const setImage = (index) => {
+      if (!thumbs.length) return;
+      imageIndex = (index + thumbs.length) % thumbs.length;
+      const active = thumbs[imageIndex];
+      mainImage.src = active.dataset.image;
+      thumbs.forEach((thumb, thumbIndex) => thumb.classList.toggle('active', thumbIndex === imageIndex));
+    };
+    thumbs.forEach((thumb, index) => thumb.addEventListener('click', () => setImage(index)));
+
+    detail.querySelectorAll('[data-option-button]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const group = button.closest('.option-grid');
+        group.querySelectorAll('[data-option-button]').forEach((item) => item.classList.remove('selected'));
+        button.classList.add('selected');
+      });
+    });
+
+    const highlightText = detail.querySelector('[data-highlight-text]');
+    const highlightIndex = detail.querySelector('[data-highlight-index]');
+    let slideIndex = 0;
+    const setSlide = (index) => {
+      slideIndex = (index + slides.length) % slides.length;
+      highlightText.textContent = slides[slideIndex];
+      highlightIndex.textContent = String(slideIndex + 1);
+    };
+    detail.querySelector('[data-highlight-prev]')?.addEventListener('click', () => setSlide(slideIndex - 1));
+    detail.querySelector('[data-highlight-next]')?.addEventListener('click', () => setSlide(slideIndex + 1));
+
+    const tabs = Array.from(detail.querySelectorAll('[data-detail-tab]'));
+    const panels = Array.from(detail.querySelectorAll('[data-detail-panel]'));
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        tabs.forEach((item) => item.classList.toggle('active', item === tab));
+        panels.forEach((panel) => panel.classList.toggle('hidden', panel.id !== tab.dataset.panel));
+      });
+    });
+  });
+</script>

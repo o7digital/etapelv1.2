@@ -1,0 +1,53 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import ProductCatalog from '../../components/ProductCatalog.astro';
+import { productFamilies, type ProductFamily } from '../../data/productLines';
+
+export function getStaticPaths() {
+  return productFamilies.map((family) => ({ params: { slug: family.slug }, props: { family } }));
+}
+
+const { family } = Astro.props as { family: ProductFamily };
+---
+
+<SiteLayout title={`${family.title} para taller automotriz CDMX | Etapel`} description={family.pageDescription}>
+  <main>
+    <section class="page-hero">
+      <div class="page-hero-inner">
+        <div>
+          <span class="eyebrow"><span class="dot"></span> {family.title}</span>
+          <h1>{family.title}</h1>
+          <p>{family.pageDescription}</p>
+          <div class="hero-actions">
+            <a class="btn orange" href="#catalogo-productos">Ver productos</a>
+            <a class="btn outline" href="/linea-de-producto">Todas las líneas</a>
+          </div>
+        </div>
+        <div class="hero-panel"><img src={family.image} alt={family.title} /></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="label">Subproductos</div>
+            <h2>Subfamilias y soluciones.</h2>
+          </div>
+          <p>Esta categoría agrupa las sublíneas principales para hacer más útil el recorrido comercial.</p>
+        </div>
+        <div class="catalog-grid">
+          {family.items.map((item, index) => (
+            <article class="detail-panel" style="padding:24px">
+              <div class="label">{String(index + 1).padStart(2, '0')}</div>
+              <h3 style="margin:8px 0 10px;color:var(--navy);font-size:24px;letter-spacing:-.04em">{item}</h3>
+              <p style="color:#647083;line-height:1.65">Línea integrada dentro de {family.shortTitle.toLowerCase()} con asesoría técnica Etapel.</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <ProductCatalog familySlug={family.slug} />
+  </main>
+</SiteLayout>

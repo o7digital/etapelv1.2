@@ -1,0 +1,154 @@
+---
+import { catalogProducts, productDetailPath } from '../data/products';
+import { productFamilies } from '../data/productLines';
+
+interface Props {
+  familySlug?: string;
+}
+
+const { familySlug } = Astro.props as Props;
+const initialProducts = familySlug
+  ? catalogProducts.filter((product) => product.familySlug === familySlug)
+  : catalogProducts;
+const activeFamily = familySlug ? productFamilies.find((family) => family.slug === familySlug) : undefined;
+const interests = Array.from(new Set(initialProducts.map((product) => product.interest || product.category))).sort();
+const patterns = Array.from(new Set(initialProducts.map((product) => product.sprayPattern || 'Standard'))).sort();
+const nozzleTechnologies = Array.from(new Set(initialProducts.map((product) => product.nozzleTechnology || product.technology))).sort();
+const defaultInterest = interests.includes('Pistolas con vaso de gravedad')
+  ? 'Pistolas con vaso de gravedad'
+  : interests[0];
+---
+
+<section id="catalogo-productos" class="catalog-section">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="label">Catálogo de productos</div>
+        <h2>{activeFamily ? activeFamily.shortTitle : 'Productos Etapel'}</h2>
+      </div>
+      <p>Filtra por tipo de producto, forma del abanico y tecnología. Cada tarjeta abre una ficha con galería, datos técnicos y recursos.</p>
+    </div>
+
+    <div class="catalog-shell" data-product-catalog data-default-interest={defaultInterest}>
+      <h3 class="section-title" style="font-size:32px">¿Qué te interesa?</h3>
+      <div class="filter-grid">
+        {interests.map((interest) => (
+          <button
+            type="button"
+            value={interest}
+            data-interest-filter
+            class={`filter-btn ${interest === defaultInterest ? 'active' : ''}`}
+          >
+            {interest}
+          </button>
+        ))}
+      </div>
+
+      <div class="catalog-toolbar">
+        <div class="catalog-count"><span data-catalog-count>{initialProducts.length}</span> Resultados</div>
+        <label>
+          <span class="label">Buscar</span>
+          <input type="search" data-catalog-search class="field" placeholder="Buscar por producto, uso o marca" />
+        </label>
+      </div>
+
+      <div class="select-row">
+        <select data-pattern-filter class="field">
+          <option value="">Forma del abanico</option>
+          {patterns.map((pattern) => <option value={pattern}>{pattern}</option>)}
+        </select>
+        <select data-nozzle-filter class="field">
+          <option value="">Tecnología de boquillas</option>
+          {nozzleTechnologies.map((technology) => <option value={technology}>{technology}</option>)}
+        </select>
+      </div>
+
+      <div class="chips" data-active-filters></div>
+
+      <div class="catalog-grid" data-catalog-grid>
+        {initialProducts.map((product) => (
+          <article
+            data-catalog-card
+            data-interest={product.interest || product.category}
+            data-pattern={product.sprayPattern || 'Standard'}
+            data-nozzle={product.nozzleTechnology || product.technology}
+            data-search={`${product.name} ${product.brand} ${product.category} ${product.technology} ${product.application} ${product.summary}`.toLowerCase()}
+            class="product-card"
+          >
+            <a href={productDetailPath(product)}>
+              <div class="product-image">
+                <img src={product.image} alt={product.name} loading="lazy" />
+              </div>
+              <div class="product-body">
+                <small>{product.interest || product.category}</small>
+                <h3>{product.name}</h3>
+                <p>{product.summary}</p>
+                <span class="arrow">→</span>
+              </div>
+            </a>
+          </article>
+        ))}
+      </div>
+
+      <p class="empty" data-catalog-empty>No hay productos con estos filtros.</p>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll('[data-product-catalog]').forEach((catalog) => {
+    const interestButtons = Array.from(catalog.querySelectorAll('[data-interest-filter]'));
+    const patternSelect = catalog.querySelector('[data-pattern-filter]');
+    const nozzleSelect = catalog.querySelector('[data-nozzle-filter]');
+    const searchInput = catalog.querySelector('[data-catalog-search]');
+    const countNode = catalog.querySelector('[data-catalog-count]');
+    const activeFilters = catalog.querySelector('[data-active-filters]');
+    const emptyNode = catalog.querySelector('[data-catalog-empty]');
+    const cards = Array.from(catalog.querySelectorAll('[data-catalog-card]'));
+    let selectedInterest = catalog.dataset.defaultInterest || '';
+
+    const applyFilters = () => {
+      const term = searchInput.value.trim().toLowerCase();
+      let count = 0;
+
+      cards.forEach((card) => {
+        const matches =
+          (!selectedInterest || card.dataset.interest === selectedInterest) &&
+          (!patternSelect.value || card.dataset.pattern === patternSelect.value) &&
+          (!nozzleSelect.value || card.dataset.nozzle === nozzleSelect.value) &&
+          (!term || card.dataset.search.includes(term));
+
+        card.classList.toggle('hidden', !matches);
+        if (matches) count += 1;
+      });
+
+      countNode.textContent = String(count);
+      emptyNode.style.display = count > 0 ? 'none' : 'block';
+      interestButtons.forEach((button) => button.classList.toggle('active', button.value === selectedInterest));
+      activeFilters.innerHTML = '';
+      [selectedInterest, patternSelect.value, nozzleSelect.value].filter(Boolean).forEach((value) => {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.textContent = `${value} x`;
+        chip.addEventListener('click', () => {
+          if (selectedInterest === value) selectedInterest = '';
+          if (patternSelect.value === value) patternSelect.value = '';
+          if (nozzleSelect.value === value) nozzleSelect.value = '';
+          applyFilters();
+        });
+        activeFilters.appendChild(chip);
+      });
+    };
+
+    interestButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        selectedInterest = selectedInterest === button.value ? '' : button.value;
+        applyFilters();
+      });
+    });
+    patternSelect.addEventListener('change', applyFilters);
+    nozzleSelect.addEventListener('change', applyFilters);
+    searchInput.addEventListener('input', applyFilters);
+    applyFilters();
+  });
+</script>
