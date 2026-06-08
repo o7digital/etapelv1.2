@@ -1,13 +1,14 @@
 # Etapel v1.2
 
-Primera base estática para la nueva versión del sitio Etapel.
+Primera base Astro para la nueva versión del sitio Etapel.
 
 ## Vista local
 
-Abre `index.html` directamente en el navegador o sirve la carpeta con un servidor estático.
+Instala dependencias y ejecuta el servidor de desarrollo.
 
 ```sh
-python3 -m http.server 4321
+npm install
+npm run dev
 ```
 
 Luego visita `http://localhost:4321`.
