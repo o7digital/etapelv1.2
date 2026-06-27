@@ -4,6 +4,7 @@ import SiteLayout from '../../layouts/SiteLayout.astro';
 export function getStaticPaths() {
   return [
     { params: { page: undefined } },
+    { params: { page: 'product-lines' } },
     { params: { page: 'about-us' } },
     { params: { page: 'training' } },
     { params: { page: 'after-sales' } },
@@ -12,7 +13,7 @@ export function getStaticPaths() {
 }
 
 const page = Astro.params.page ?? '';
-const validPages = ['', 'about-us', 'training', 'after-sales', 'contact'];
+const validPages = ['', 'product-lines', 'about-us', 'training', 'after-sales', 'contact'];
 if (!validPages.includes(page)) return Astro.redirect('/en');
 
 const pages = {
@@ -23,6 +24,14 @@ const pages = {
     heading: 'Technology, service and expertise for your business',
     intro: 'We help automotive professionals improve productivity with specialized equipment, reliable supplies and expert support.',
     image: '/images/hero-etapel.webp',
+  },
+  'product-lines': {
+    title: 'Product Lines | Etapel',
+    description: 'Explore Etapel product lines for automotive paint, preparation, welding, body repair, mechanics and compressed air.',
+    eyebrow: 'Product catalog',
+    heading: 'Solutions for every stage of automotive repair',
+    intro: 'Explore our main equipment and supply families. Individual product specifications remain in the original Spanish catalog for now.',
+    image: '/etapel-logo.svg',
   },
   'about-us': {
     title: 'About Us | Etapel',
@@ -73,7 +82,7 @@ const isHome = page === '';
               <span class="eyebrow"><span class="dot"></span> Certified automotive technology</span>
               <h1>Premium solutions for high-performance body shops.</h1>
               <p>Equipment, paint, spray booths, welding, compressed air and specialized training for automotive professionals seeking standardized processes and professional results.</p>
-              <div class="hero-actions"><a class="btn orange" href="/linea-de-producto">View product catalog</a><a class="btn outline" href="/en/contact">Talk to an advisor</a></div>
+              <div class="hero-actions"><a class="btn orange" href="/en/product-lines">View product catalog</a><a class="btn outline" href="/en/contact">Talk to an advisor</a></div>
               <div class="metrics"><div class="metric"><strong>48</strong><span>World-leading product lines</span></div><div class="metric"><strong>360°</strong><span>Equipment, support and after-sales</span></div><div class="metric"><strong>CDMX</strong><span>Specialized technical service</span></div></div>
             </div>
             <div class="visual">
@@ -103,7 +112,7 @@ const isHome = page === '';
           <p>{content.intro}</p>
           <div class="en-actions">
             <a class="btn orange" href={isContact ? 'mailto:ventas@etapel.com.mx' : '/en/contact'}>{isContact ? 'ventas@etapel.com.mx' : 'Talk to an expert'}</a>
-            <a class="btn outline-dark" href={isHome ? '/linea-de-producto' : 'https://wa.link/oowyzu'}>{isHome ? 'View product lines' : 'WhatsApp'}</a>
+            <a class="btn outline-dark" href={isHome ? '/en/product-lines' : 'https://wa.link/oowyzu'}>{isHome ? 'View product lines' : 'WhatsApp'}</a>
           </div>
         </div>
         <div class:list={['en-media', { 'logo-media': isContact }]}>
@@ -114,7 +123,8 @@ const isHome = page === '';
     </section>
     )}
 
-    {isHome && <section class="en-section"><div class="container"><div class="section-head"><div><div class="label">Featured product</div><h2>Have you discovered the SATAjet X 5500?</h2></div></div><div class="en-grid"><a href="/linea-de-producto"><h3>Product lines</h3><p>Paint, preparation, welding, body repair, mechanics and compressed air.</p></a><a href="/en/training"><h3>Training</h3><p>Practical knowledge to improve quality, safety and productivity.</p></a><a href="/en/after-sales"><h3>After-sales</h3><p>Technical support throughout the service life of your equipment.</p></a></div></div></section>}
+    {isHome && <section class="en-section"><div class="container"><div class="section-head"><div><div class="label">Featured product</div><h2>Have you discovered the SATAjet X 5500?</h2></div></div><div class="en-grid"><a href="/en/product-lines"><h3>Product lines</h3><p>Paint, preparation, welding, body repair, mechanics and compressed air.</p></a><a href="/en/training"><h3>Training</h3><p>Practical knowledge to improve quality, safety and productivity.</p></a><a href="/en/after-sales"><h3>After-sales</h3><p>Technical support throughout the service life of your equipment.</p></a></div></div></section>}
+    {page === 'product-lines' && <section class="en-section"><div class="container"><div class="en-grid product-lines"><a href="/linea-de-producto/pintura"><h3>Paint</h3><p>Spray guns, paint systems, filtration, respiratory protection and consumables.</p></a><a href="/linea-de-producto/cabinas-y-preparacion"><h3>Spray Booths & Preparation</h3><p>Preparation, mixing and refinishing areas for professional workshops.</p></a><a href="/linea-de-producto/soldadura-y-enderezado"><h3>Welding & Body Repair</h3><p>Equipment for structural repair, welding and straightening.</p></a><a href="/linea-de-producto/mecanica-y-aire"><h3>Mechanics & Air</h3><p>Compressed-air systems and complementary workshop equipment.</p></a></div></div></section>}
     {page === 'about-us' && <section class="en-section"><div class="container"><div class="en-grid"><article><h3>Our mission</h3><p>To meet the industry’s product and service needs while building valuable, long-term relationships.</p></article><article><h3>Our team</h3><p>Qualified professionals and distributors committed to excellent service throughout Mexico.</p></article><article><h3>Our commitment</h3><p>Consumables, tools, major equipment, maintenance, installation and specialized advice.</p></article></div></div></section>}
     {page === 'training' && <section class="en-section"><div class="container"><div class="en-grid"><article><h3>Specialized training</h3><p>Proper equipment use to maximize performance, productivity and safety.</p></article><article><h3>Efficient processes</h3><p>Cleaning, maintenance and workspace layouts designed for reliable operations.</p></article><article><h3>Continuous improvement</h3><p>Process standardization, workplace safety and identification of improvement opportunities.</p></article></div></div></section>}
     {page === 'after-sales' && <section class="en-section"><div class="container"><div class="en-grid"><article><h3>Technical assessments</h3><p>On-site analysis and clear recommendations for your operation.</p></article><article><h3>Maintenance and repairs</h3><p>Specialized service to protect performance and equipment life.</p></article><article><h3>Installation and training</h3><p>Installation, removal, demonstrations and operator training.</p></article></div></div></section>}

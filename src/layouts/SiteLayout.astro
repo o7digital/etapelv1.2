@@ -30,7 +30,7 @@ const english = lang === 'en';
         <a class="brand" href={english ? '/en' : '/'}><img src="/etapel-logo.svg" alt="Etapel" /></a>
         <div class="menu">
           <a href={english ? '/en' : '/'}>Home</a>
-          <a href="/linea-de-producto">{english ? 'Product Lines' : 'Línea de Producto'}</a>
+          <a href={english ? '/en/product-lines' : '/linea-de-producto'}>{english ? 'Product Lines' : 'Línea de Producto'}</a>
           <a href={english ? '/en/about-us' : '/#quienes'}>{english ? 'About Us' : '¿Quiénes Somos?'}</a>
           <a href={english ? '/en/training' : '/#capacitacion'}>{english ? 'Training' : 'Capacitación'}</a>
           <a href={english ? '/en/after-sales' : '/#postventa'}>{english ? 'After-Sales' : 'Posventa'}</a>
@@ -41,7 +41,7 @@ const english = lang === 'en';
           <summary aria-label="Abrir menú"><span class="hamburger"></span></summary>
           <div class="mobile-panel">
             <a href={english ? '/en' : '/'}>Home</a>
-            <a href="/linea-de-producto">{english ? 'Product Lines' : 'Línea de Producto'}</a>
+            <a href={english ? '/en/product-lines' : '/linea-de-producto'}>{english ? 'Product Lines' : 'Línea de Producto'}</a>
             <a href={english ? '/en/about-us' : '/#quienes'}>{english ? 'About Us' : '¿Quiénes Somos?'}</a>
             <a href={english ? '/en/training' : '/#capacitacion'}>{english ? 'Training' : 'Capacitación'}</a>
             <a href={english ? '/en/after-sales' : '/#postventa'}>{english ? 'After-Sales' : 'Posventa'}</a>
@@ -53,8 +53,21 @@ const english = lang === 'en';
       </nav>
     </header>
     <slot />
-    <footer class="footer">
-      <div class="footer-inner"><img src="/etapel-logo.svg" alt="Etapel" /><span>{english ? 'Copyright © 2026 Etapel. All rights reserved.' : 'Copyright © 2026 Etapel. Todos los derechos reservados.'}</span></div>
-    </footer>
+    {english ? (
+      <footer class="footer footer-full">
+        <div class="footer-grid">
+          <div><img src="/etapel-logo.svg" alt="Etapel" /><p>At Etapel, we are more than suppliers: we are partners in the growth of your business.</p><p>Discover how we can help you reach new levels of success.</p></div>
+          <div><h3>Product lines</h3><ul><li><a href="/linea-de-producto/pintura">Paint</a></li><li><a href="/linea-de-producto/cabinas-y-preparacion">Spray Booths & Preparation</a></li><li><a href="/linea-de-producto/soldadura-y-enderezado">Welding & Body Repair</a></li><li><a href="/linea-de-producto/mecanica-y-aire">Mechanics & Air</a></li></ul></div>
+          <div><h3>Services</h3><ul><li><a href="/en/training">Training</a></li><li><a href="/en/after-sales">After-Sales</a></li></ul></div>
+          <div><h3>Contact</h3><ul><li><a href="mailto:ventas@etapel.com.mx">ventas@etapel.com.mx</a></li><li><a href="tel:+525556895055">55 5689 5055</a></li><li><a href="https://wa.link/oowyzu">WhatsApp</a></li></ul></div>
+        </div>
+        <div class="footer-bottom"><span>Copyright © 2026 Etapel. All rights reserved.</span><div><a href="/en/contact">Need help? Contact us</a><a href="/en/contact">Privacy Policy</a><a href="/">Versión en español</a></div></div>
+      </footer>
+    ) : (
+      <footer class="footer"><div class="footer-inner"><img src="/etapel-logo.svg" alt="Etapel" /><span>Copyright © 2026 Etapel. Todos los derechos reservados.</span></div></footer>
+    )}
+    <style is:global>
+      .footer-full{padding:58px 28px 28px}.footer-full>.footer-grid,.footer-full>.footer-bottom{max-width:var(--max);margin-left:auto;margin-right:auto}.footer-full .footer-grid{display:grid;grid-template-columns:1.15fr .95fr .75fr .9fr;gap:36px}.footer-full img{width:150px}.footer-full p{color:#aeb8cf;line-height:1.7}.footer-full h3{font-size:12px;text-transform:uppercase;letter-spacing:.18em;color:#fff;margin:0 0 18px}.footer-full ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}.footer-full a{color:#c8d2e5}.footer-full .footer-bottom{margin-top:36px;padding-top:22px;border-top:1px solid rgba(255,255,255,.12);display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}.footer-full .footer-bottom div{display:flex;gap:18px;flex-wrap:wrap}@media(max-width:800px){.footer-full .footer-grid{grid-template-columns:1fr}}
+    </style>
   </body>
 </html>
