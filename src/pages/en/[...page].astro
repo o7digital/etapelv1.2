@@ -1,0 +1,96 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+
+export function getStaticPaths() {
+  return [
+    { params: { page: undefined } },
+    { params: { page: 'about-us' } },
+    { params: { page: 'training' } },
+    { params: { page: 'after-sales' } },
+    { params: { page: 'contact' } },
+  ];
+}
+
+const page = Astro.params.page ?? '';
+const validPages = ['', 'about-us', 'training', 'after-sales', 'contact'];
+if (!validPages.includes(page)) return Astro.redirect('/en');
+
+const pages = {
+  '': {
+    title: 'Etapel | Automotive solutions in Mexico',
+    description: 'Automotive refinishing equipment, tools, training and technical support from Etapel.',
+    eyebrow: 'Automotive solutions',
+    heading: 'Technology, service and expertise for your business',
+    intro: 'We help automotive professionals improve productivity with specialized equipment, reliable supplies and expert support.',
+    image: '/images/hero-etapel.webp',
+  },
+  'about-us': {
+    title: 'About Us | Etapel',
+    description: 'Learn about Etapel, a Mexican company providing automotive solutions and specialized services.',
+    eyebrow: 'About Etapel',
+    heading: 'More than a supplier, a strategic partner',
+    intro: 'For more than three decades, we have imported, marketed and supported solutions that improve our customers’ productivity and profitability.',
+    image: '/images/quienes-somos.webp',
+  },
+  training: {
+    title: 'Training | Etapel',
+    description: 'Specialized Etapel training for equipment, processes, safety and operational efficiency.',
+    eyebrow: 'Learning system',
+    heading: 'Specialized training focused on results',
+    intro: 'We strengthen equipment use, operational efficiency and workplace safety through practical, expert-led training.',
+    image: '/images/capacitacion-1.webp',
+  },
+  'after-sales': {
+    title: 'After-Sales Service | Etapel',
+    description: 'Etapel technical support, maintenance, repairs, installation and demonstrations.',
+    eyebrow: 'Technical service',
+    heading: 'Support that keeps your operation moving',
+    intro: 'Our specialized team provides installation, maintenance, repairs and technical follow-up for your equipment and processes.',
+    image: '/images/postventa.webp',
+  },
+  contact: {
+    title: 'Contact Etapel | Sales and support',
+    description: 'Contact Etapel for sales information, technical support and automotive solutions.',
+    eyebrow: 'Talk to an expert',
+    heading: 'We are here to help',
+    intro: 'Contact our team for commercial assistance, follow-up and guidance on the right solution for your business.',
+    image: '/etapel-logo.svg',
+  },
+} as const;
+
+const content = pages[page as keyof typeof pages];
+const isContact = page === 'contact';
+const isHome = page === '';
+---
+
+<SiteLayout title={content.title} description={content.description} lang="en">
+  <main>
+    <section class="en-hero">
+      <div class="en-shell">
+        <div class="en-copy">
+          <div class="label">{content.eyebrow}</div>
+          <h1>{content.heading}</h1>
+          <p>{content.intro}</p>
+          <div class="en-actions">
+            <a class="btn orange" href={isContact ? 'mailto:ventas@etapel.com.mx' : '/en/contact'}>{isContact ? 'ventas@etapel.com.mx' : 'Talk to an expert'}</a>
+            <a class="btn outline-dark" href={isHome ? '/linea-de-producto' : 'https://wa.link/oowyzu'}>{isHome ? 'View product lines' : 'WhatsApp'}</a>
+          </div>
+        </div>
+        <div class:list={['en-media', { 'logo-media': isContact }]}>
+          <img src={content.image} alt={content.heading} loading="eager" />
+          {isContact && <p>Exclusive nationwide supplier</p>}
+        </div>
+      </div>
+    </section>
+
+    {isHome && <section class="en-section"><div class="container"><div class="section-head"><div><div class="label">What we offer</div><h2>Complete solutions for automotive professionals</h2></div></div><div class="en-grid"><a href="/linea-de-producto"><h3>Product lines</h3><p>Paint, preparation, welding, body repair, mechanics and compressed air.</p></a><a href="/en/training"><h3>Training</h3><p>Practical knowledge to improve quality, safety and productivity.</p></a><a href="/en/after-sales"><h3>After-sales</h3><p>Technical support throughout the service life of your equipment.</p></a></div></div></section>}
+    {page === 'about-us' && <section class="en-section"><div class="container"><div class="en-grid"><article><h3>Our mission</h3><p>To meet the industry’s product and service needs while building valuable, long-term relationships.</p></article><article><h3>Our team</h3><p>Qualified professionals and distributors committed to excellent service throughout Mexico.</p></article><article><h3>Our commitment</h3><p>Consumables, tools, major equipment, maintenance, installation and specialized advice.</p></article></div></div></section>}
+    {page === 'training' && <section class="en-section"><div class="container"><div class="en-grid"><article><h3>Specialized training</h3><p>Proper equipment use to maximize performance, productivity and safety.</p></article><article><h3>Efficient processes</h3><p>Cleaning, maintenance and workspace layouts designed for reliable operations.</p></article><article><h3>Continuous improvement</h3><p>Process standardization, workplace safety and identification of improvement opportunities.</p></article></div></div></section>}
+    {page === 'after-sales' && <section class="en-section"><div class="container"><div class="en-grid"><article><h3>Technical assessments</h3><p>On-site analysis and clear recommendations for your operation.</p></article><article><h3>Maintenance and repairs</h3><p>Specialized service to protect performance and equipment life.</p></article><article><h3>Installation and training</h3><p>Installation, removal, demonstrations and operator training.</p></article></div></div></section>}
+    {isContact && <section class="en-section"><div class="container"><form class="en-form" action="https://formspree.io/f/xeewlkng" method="POST"><input name="name" placeholder="Name *" required /><input name="company" placeholder="Company" /><input type="tel" name="phone" placeholder="Phone" /><input type="email" name="email" placeholder="Email *" required /><textarea name="message" placeholder="How can we help?"></textarea><input type="hidden" name="_subject" value="New English website contact" /><button class="btn orange" type="submit">Send message</button></form></div></section>}
+  </main>
+</SiteLayout>
+
+<style>
+  main{background:linear-gradient(180deg,#f6f8fc,#fff)}.en-hero{padding:92px 28px}.en-shell{max-width:1180px;margin:auto;display:grid;grid-template-columns:.94fr 1.06fr;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden}.en-copy{padding:56px;border-left:8px solid var(--orange)}.en-copy h1{color:var(--navy);font-size:clamp(42px,5vw,64px);line-height:.96;margin:0 0 20px}.en-copy p{color:#647083;font-size:17px;line-height:1.75}.en-actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:28px}.en-media{min-height:470px;background:#f6f8fc}.en-media img{width:100%;height:100%;object-fit:cover}.logo-media{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:50px}.logo-media img{width:min(320px,75%);height:auto;object-fit:contain}.logo-media p{color:#14609d;text-transform:uppercase;font-size:30px;text-align:center}.en-section{padding:20px 28px 86px}.en-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.en-grid article,.en-grid a{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow-soft);padding:30px}.en-grid h3{color:var(--navy);font-size:28px;margin:0 0 14px}.en-grid p{color:#647083;line-height:1.7}.en-form{max-width:760px;margin:auto;display:grid;gap:12px;background:#fff;padding:34px;border:1px solid var(--line);box-shadow:var(--shadow-soft)}.en-form input,.en-form textarea{width:100%;border:1px solid var(--line);background:#f7f8fb;padding:15px;font:inherit}.en-form textarea{min-height:150px}@media(max-width:800px){.en-shell,.en-grid{grid-template-columns:1fr}.en-copy{padding:32px}.en-media{min-height:320px}}
+</style>

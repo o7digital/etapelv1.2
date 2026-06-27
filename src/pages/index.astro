@@ -55,16 +55,17 @@
     .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:42px;max-width:680px}
     .metric{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);padding:20px 18px;backdrop-filter: blur(12px)}
     .metric strong{display:block;font-size:30px;letter-spacing:-.04em;color:#fff}.metric span{display:block;margin-top:5px;font-size:12px;line-height:1.35;color:#b7c3d8;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
-    .visual{position:relative;min-height:650px}
-    .machine-card{position:absolute;right:0;top:170px;width:min(520px,100%);min-height:430px;background:linear-gradient(145deg,#fff,#f4f7fb);box-shadow:var(--shadow);border:1px solid rgba(255,255,255,.75);padding:28px;overflow:hidden}
+    .visual{position:relative;min-height:720px}
+    .machine-card{position:absolute;right:0;top:170px;width:min(560px,100%);min-height:500px;background:linear-gradient(145deg,#fff,#f4f7fb);box-shadow:var(--shadow);border:1px solid rgba(255,255,255,.75);padding:28px;overflow:hidden}
     .machine-card:before{content:"";position:absolute;inset:auto -90px -120px auto;width:310px;height:310px;background:var(--orange);opacity:.13;transform:rotate(25deg)}
     .card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;border-bottom:1px solid var(--line);padding-bottom:20px;color:var(--navy)}
     .chip{display:inline-flex;align-items:center;gap:8px;background:rgba(245,130,32,.12);color:var(--orange-dark);padding:8px 10px;font-size:11px;font-weight:950;text-transform:uppercase;letter-spacing:.12em}
     .machine-title{margin:14px 0 0;font-size:30px;line-height:1.03;letter-spacing:-.045em;color:var(--navy)}
     .spec-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:26px}
     .spec{background:#fff;border:1px solid var(--line);padding:18px;min-height:118px}.spec small{display:block;font-weight:900;font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:#7a8494}.spec b{display:block;margin-top:10px;font-size:22px;color:var(--navy);letter-spacing:-.035em}.spec p{margin:6px 0 0;color:#667085;font-size:13px;line-height:1.45}
+    .spec.featured{grid-column:1/-1;min-height:104px}
     .orange-rule{height:6px;width:110px;background:var(--orange);margin-top:26px}
-    .gys-card{position:absolute;right:0;top:0;width:min(520px,100%);background:#fff;color:var(--navy);box-shadow:var(--shadow);border-left:8px solid var(--orange);padding:24px;z-index:4}
+    .gys-card{position:absolute;right:0;top:0;width:min(560px,100%);background:#fff;color:var(--navy);box-shadow:var(--shadow);border-left:8px solid var(--orange);padding:24px;z-index:4}
     .gys-card .kicker{font-weight:950;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--orange-dark)}
     .gys-card h3{font-size:36px;line-height:.9;margin:12px 0 10px;letter-spacing:-.07em;color:var(--navy)}
     .gys-card p{font-size:14px;line-height:1.55;color:#4b5563;margin:0}.gys-card .mini{display:flex;gap:8px;margin-top:16px}.mini span{height:8px;width:38px;background:var(--orange)}.mini span:nth-child(2){background:var(--green)}.mini span:nth-child(3){background:var(--navy)}
@@ -79,6 +80,7 @@
     .contact{background:linear-gradient(180deg,#fff 0%,#f6f8fc 100%);padding-bottom:0}.contact-hero{display:grid;grid-template-columns:.94fr 1.06fr;gap:0;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden}.contact-copy{padding:52px}.contact-copy h2{font-size:56px;line-height:.96;letter-spacing:-.07em;margin:0 0 18px;color:var(--navy)}.contact-copy p{color:#647083;line-height:1.75;font-size:17px}.contact-actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:28px}.contact-media{min-height:470px;background:#f6f8fc}.contact-media img{width:100%;height:100%;object-fit:cover;object-position:center 35%}.contact-main{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:34px}.office-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.office-card,.contact-data,.contact-form,.map-card{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow-soft)}.office-card{padding:22px;font-weight:950;color:var(--navy);text-transform:uppercase;letter-spacing:.12em;font-size:12px}.contact-data{padding:30px;margin-top:18px}.contact-data h3,.contact-form h3{margin:0 0 18px;color:var(--navy);font-size:30px;letter-spacing:-.045em}.contact-links{display:grid;grid-template-columns:1fr 1fr;gap:14px}.contact-link{background:#f7f8fb;border:1px solid var(--line);padding:18px}.contact-link small{display:block;color:var(--orange-dark);font-weight:950;letter-spacing:.16em;text-transform:uppercase}.contact-link a{display:block;margin-top:10px;color:var(--navy);font-weight:900}.map-card{overflow:hidden;min-height:360px}.map-card img{width:100%;height:100%;object-fit:cover;object-position:top}.contact-form{margin-top:34px;padding:36px;display:grid;grid-template-columns:.85fr 1.15fr;gap:28px}.contact-form p{color:#647083;line-height:1.7;margin:0}.footer{padding:58px 28px 28px;background:linear-gradient(145deg,#050720 0%,var(--navy) 58%,#0b1145 100%);color:#d8e0ef}.footer-shell{max-width:var(--max);margin:0 auto}.footer-grid{display:grid;grid-template-columns:1.15fr .95fr .75fr .9fr;gap:36px}.footer img{width:150px;filter:brightness(0) invert(1)}.footer p{color:#aeb8cf;line-height:1.7}.footer h3{font-size:12px;text-transform:uppercase;letter-spacing:.18em;color:#fff;margin:0 0 18px}.footer ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}.footer a{color:#c8d2e5}.footer a:hover{color:#fff}.footer-bottom{margin-top:36px;padding-top:22px;border-top:1px solid rgba(255,255,255,.12);display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap;color:#aeb8cf;font-size:13px}.footer-bottom-links{display:flex;gap:18px;flex-wrap:wrap}.footer-keywords{margin-top:18px;padding-top:18px;border-top:1px solid rgba(255,255,255,.1);font-size:11px;line-height:1.8;color:#8f9ab2;text-align:center}
     @media(max-width:980px){.menu{display:none}.hero-inner,.about-intro,.split,.product-box,.training-hero,.after-sales-hero,.after-sales-form,.contact-hero,.contact-main,.contact-form,.cta-box{grid-template-columns:1fr}.visual{min-height:530px}.cards,.catalog-grid,.training-grid,.after-sales-services,.footer-grid{grid-template-columns:repeat(2,1fr)}.filter-grid{grid-template-columns:repeat(2,1fr)}.brands-inner{align-items:flex-start;flex-direction:column}.service,.training-card{grid-template-columns:1fr}.product-copy,.training-copy,.after-sales-copy,.contact-copy{padding:36px}}
     @media(max-width:640px){.nav{height:auto;padding:18px;align-items:flex-start}.nav-actions .btn{display:none}.brand img{width:140px}.hero-inner{padding:58px 20px}.metrics{grid-template-columns:1fr}.cards,.about-grid,.offer-list,.catalog-grid,.filter-grid,.training-grid,.after-sales-services,.office-grid,.contact-links,.footer-grid{grid-template-columns:1fr}.machine-card{position:relative;top:auto}.gys-card{position:relative;bottom:auto;width:100%;margin-top:18px}.visual{min-height:auto}.section-head{display:block}.section-head p{margin-top:18px}.about-lead h2,.product-copy h2,.training-copy h2,.after-sales-copy h2,.contact-copy h2,.dark-panel h2{font-size:40px}.footer-bottom{align-items:flex-start;flex-direction:column}}
+    .mobile-menu{display:none}.mobile-menu summary{width:46px;height:46px;border:1px solid var(--line);display:grid;place-items:center;cursor:pointer;list-style:none;background:#fff}.mobile-menu summary::-webkit-details-marker{display:none}.hamburger,.hamburger:before,.hamburger:after{display:block;width:22px;height:2px;background:var(--navy);content:"";transition:.2s ease}.hamburger:before{transform:translateY(-7px)}.hamburger:after{transform:translateY(5px)}.mobile-menu[open] .hamburger{background:transparent}.mobile-menu[open] .hamburger:before{transform:translateY(2px) rotate(45deg)}.mobile-menu[open] .hamburger:after{transform:translateY(0) rotate(-45deg)}.mobile-panel{position:absolute;right:28px;top:calc(100% + 12px);width:min(88vw,360px);background:#fff;border:1px solid var(--line);box-shadow:0 22px 60px rgba(7,11,47,.18);padding:12px;display:grid;gap:4px}.mobile-panel a{padding:14px 16px;font-weight:850;color:#17203b}.mobile-panel a:hover{background:#f6f8fc;color:var(--orange-dark)}.mobile-panel .mobile-cta{margin-top:6px;background:var(--orange);color:#fff;text-align:center}@media(max-width:980px){.nav{position:relative}.nav-actions{display:none}.mobile-menu{display:block}}@media(max-width:640px){.nav{height:70px!important;padding:0 18px!important;align-items:center!important}.brand{min-width:0!important}.mobile-panel{right:18px}section{padding-left:20px!important;padding-right:20px!important}.field,.form-grid input,.form-grid select,.form-grid textarea{min-width:0;width:100%}.catalog-shell,.training-copy,.post-copy,.contact-copy,.about-copy,.product-copy{padding:24px!important}}
   </style>
 </head>
 <body>
@@ -87,9 +89,23 @@
     <nav class="nav">
       <a class="brand" href="#"><img src="/etapel-logo.svg" alt="Etapel"></a>
       <div class="menu">
-        <a href="/">Home</a><a href="/linea-de-producto">Línea de Producto</a><a href="/quienes-somos">¿Quiénes Somos?</a><a href="/capacitacion">Capacitación</a><a href="/postventa">Posventa</a><a href="/#contacto">Contacto</a>
+        <a href="/">Home</a><a href="/linea-de-producto">Línea de Producto</a><a href="/quienes-somos">¿Quiénes Somos?</a><a href="/capacitacion">Capacitación</a><a href="/postventa">Posventa</a><a href="/contacto">Contacto</a>
       </div>
-      <div class="nav-actions"><a class="lang" href="#" aria-label="Cambiar idioma a inglés">EN</a><a class="btn orange" href="/#contacto">Solicitar información</a></div>
+      <div class="nav-actions"><a class="lang" href="/en" aria-label="Cambiar idioma a inglés">EN</a><a class="btn orange" href="/contacto">Solicitar información</a></div>
+      <details class="mobile-menu">
+        <summary aria-label="Abrir menú"><span class="hamburger"></span></summary>
+        <div class="mobile-panel">
+          <a href="/">Home</a>
+          <a href="/linea-de-producto">Línea de Producto</a>
+          <a href="/quienes-somos">¿Quiénes Somos?</a>
+          <a href="/capacitacion">Capacitación</a>
+          <a href="/postventa">Posventa</a>
+          <a href="/contacto">Contacto</a>
+          <a href="#" aria-label="Cambiar idioma a inglés">EN</a>
+          <a class="mobile-cta" href="/contacto">Solicitar información</a>
+        </div>
+      </details>
+
     </nav>
   </header>
 
@@ -100,7 +116,7 @@
           <span class="eyebrow"><span class="dot"></span> Tecnología automotriz certificada</span>
           <h1>Soluciones premium para talleres de alto rendimiento.</h1>
           <p>Equipamiento, pintura, cabinas, soldadura, aire comprimido y capacitación especializada para talleres automotrices que buscan procesos homologados y resultados profesionales.</p>
-          <div class="hero-actions"><a class="btn orange" href="/linea-de-producto">Ver catálogo de productos</a><a class="btn outline" href="/#contacto">Hablar con un asesor</a></div>
+          <div class="hero-actions"><a class="btn orange" href="/linea-de-producto">Ver catálogo de productos</a><a class="btn outline" href="/contacto">Hablar con un asesor</a></div>
           <div class="metrics">
             <div class="metric"><strong>48</strong><span>Líneas líderes mundiales</span></div>
             <div class="metric"><strong>360°</strong><span>Equipos, soporte y postventa</span></div>
@@ -113,10 +129,11 @@
               <div><span class="chip">Proceso integral</span><h2 class="machine-title">Pintura, carrocería y equipamiento profesional.</h2></div>
             </div>
             <div class="spec-grid">
-              <div class="spec"><small>Familia 01</small><b>Pintura</b><p>Pistolas, consumibles y sistemas de acabado.</p></div>
+              <div class="spec"><small>Familia 01</small><b>Pistolas y Pintura</b><p>Pistolas, consumibles y sistemas de acabado.</p></div>
               <div class="spec"><small>Familia 02</small><b>Cabinas</b><p>Preparación, mezclado y zonas de repintado.</p></div>
               <div class="spec"><small>Familia 03</small><b>Soldadura</b><p>Equipos para reparación estructural.</p></div>
               <div class="spec"><small>Familia 04</small><b>Mecánica</b><p>Aire comprimido y equipos complementarios.</p></div>
+              <div class="spec featured"><small>Familia 05</small><b>Consumibles</b><p>Lijas, masking, plásticos, borlas, pulimentos y papel.</p></div>
             </div>
             <div class="orange-rule"></div>
           </div>
@@ -136,68 +153,11 @@
 
     <section class="product">
       <div class="container product-box">
-        <div class="product-copy"><div class="label">Producto destacado</div><h2>¿Ya conoces SATAjet X 5500?</h2><p>Diseñada para los más exigentes. Su sistema de boquilla X permite trabajar distintos sistemas de pintura con una sensación de aplicación más suave, menor ruido y mejor aprovechamiento del material.</p><div class="bullets"><div class="bullet">Boquilla X</div><div class="bullet">Menor ruido</div><div class="bullet">Aplicación suave</div><div class="bullet">Optimización de material</div></div><a class="btn orange" href="#contacto">Quiero conocerla</a></div>
+        <div class="product-copy"><div class="label">Producto destacado</div><h2>¿Ya conoces SATAjet X 5500?</h2><p>Diseñada para los más exigentes. Su sistema de boquilla X permite trabajar distintos sistemas de pintura con una sensación de aplicación más suave, menor ruido y mejor aprovechamiento del material.</p><div class="bullets"><div class="bullet">Boquilla X</div><div class="bullet">Menor ruido</div><div class="bullet">Aplicación suave</div><div class="bullet">Optimización de material</div></div><a class="btn orange" href="mailto:ventas@etapel.com.mx">Quiero conocerla</a></div>
         <div class="product-visual"><span class="spark s1"></span><span class="spark s2"></span><span class="spark s3"></span><span class="spark s4"></span><div class="spray"></div></div>
       </div>
     </section>
 
-    <section class="contact" id="contacto">
-      <div class="container">
-        <div class="contact-hero">
-          <div class="contact-copy">
-            <div class="label">Contacta con un experto</div>
-            <h2>Estamos aquí para ayudarte</h2>
-            <p>Escríbenos para recibir atención comercial, seguimiento y orientación sobre las soluciones de Etapel.</p>
-            <div class="contact-actions">
-              <a href="mailto:ventas@etapel.com.mx" class="btn orange">ventas@etapel.com.mx</a>
-              <a href="https://wa.link/oowyzu" class="btn outline-dark" target="_blank" rel="noreferrer">WhatsApp</a>
-            </div>
-          </div>
-          <div class="contact-media"><img src="/images/contacto-etapel.webp" alt="Equipo Etapel" loading="lazy"></div>
-        </div>
-
-        <div class="contact-main">
-          <div>
-            <div class="office-grid">
-              <article class="office-card">Monterrey</article>
-              <article class="office-card">CDMX</article>
-              <article class="office-card">Veracruz</article>
-            </div>
-            <div class="contact-data">
-              <h3>Datos de contacto</h3>
-              <div class="contact-links">
-                <div class="contact-link"><small>Email</small><a href="mailto:ventas@etapel.com.mx">ventas@etapel.com.mx</a></div>
-                <div class="contact-link"><small>Teléfono</small><a href="tel:+525556895055">55 5689 5055</a></div>
-              </div>
-              <div style="margin-top:20px"><a href="https://wa.link/oowyzu" class="btn orange" target="_blank" rel="noreferrer">contactanos</a></div>
-            </div>
-          </div>
-          <div class="map-card"><img src="/images/mapa-etapel.webp" alt="Mapa de referencia Etapel" loading="lazy"></div>
-        </div>
-
-        <div class="contact-form">
-          <div>
-            <div class="label">Formulario</div>
-            <h3>Contactanos, estamos para servirte</h3>
-            <p>Comparte tus datos y el tema sobre el cual requieres información.</p>
-          </div>
-          <form class="form-grid">
-            <input type="text" name="nombre" placeholder="Nombre *">
-            <input type="text" name="empresa" placeholder="Empresa">
-            <input type="tel" name="telefono" placeholder="Teléfono">
-            <input type="email" name="correo" placeholder="Correo *">
-            <select name="tema">
-              <option value="">Seleccione el tema del cual requiere información *</option>
-              <option>Suscripción a ofertas especiales</option>
-              <option>Atención personalizada</option>
-              <option>Quejas o sugerencias</option>
-            </select>
-            <textarea name="mensaje" placeholder="Mensaje opcional"></textarea>
-            <button type="submit" class="btn orange">Enviar</button>
-          </form>
-        </div>
-      </div>
-    </section>
   </main>
 
   <footer class="footer">
@@ -236,9 +196,9 @@
       <div class="footer-bottom">
         <p>Copyright © 2026 Etapel. Todos los derechos reservados.</p>
         <div class="footer-bottom-links">
-          <a href="#contacto">¿Necesitas ayuda? ¡Contáctanos!</a>
-          <a href="#contacto">Aviso de Privacidad</a>
-          <a href="#">English version</a>
+          <a href="mailto:ventas@etapel.com.mx">¿Necesitas ayuda? ¡Contáctanos!</a>
+          <a href="#">Aviso de Privacidad</a>
+          <a href="/en">English version</a>
         </div>
       </div>
       <div class="footer-keywords">

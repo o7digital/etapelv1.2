@@ -16,7 +16,7 @@ const relatedProducts = catalogProducts
   .slice(0, 4);
 const productDownloads = product.downloads || ['Ficha técnica', 'Manual de operación'];
 const getDownloadLabel = (download: string | ProductDownload) => typeof download === 'string' ? download : download.label;
-const getDownloadHref = (download: string | ProductDownload) => typeof download === 'string' ? '/#contacto' : download.url;
+const getDownloadHref = (download: string | ProductDownload) => typeof download === 'string' ? '/contacto' : download.url;
 const isLinkedDownload = (download: string | ProductDownload) => typeof download !== 'string';
 ---
 
@@ -29,7 +29,7 @@ const isLinkedDownload = (download: string | ProductDownload) => typeof download
           <h1>{product.name}</h1>
           <p>{product.summary}</p>
           <div class="hero-actions">
-            <a class="btn orange" href="/#contacto">Pregunte ahora</a>
+            <a class="btn orange" href="/contacto">Pregunte ahora</a>
             {family && <a class="btn outline" href={`${family.href}#catalogo-productos`}>Volver al catálogo</a>}
           </div>
         </div>
@@ -66,7 +66,7 @@ const isLinkedDownload = (download: string | ProductDownload) => typeof download
                     <button type="button" class={option.selected ? 'selected' : ''} disabled={option.disabled} data-option-button>{option.label}</button>
                   ))}
                 </div>
-                {group.help && <a href="/#contacto" style="display:inline-block;margin-top:10px;color:var(--orange-dark);font-weight:800">{group.help}</a>}
+                {group.help && <a href="/contacto" style="display:inline-block;margin-top:10px;color:var(--orange-dark);font-weight:800">{group.help}</a>}
               </div>
             ))}
 
@@ -123,7 +123,7 @@ const isLinkedDownload = (download: string | ProductDownload) => typeof download
         <div class="hidden" data-detail-panel id="panel-3">
           <div class="catalog-grid" style="margin-top:24px">
             {(product.spareParts || ['Kit de mantenimiento', 'Juntas', 'Accesorios']).map((part) => (
-              <a class="detail-panel" style="padding:22px;font-weight:900;color:var(--navy)" href="/#contacto">{part}</a>
+              <a class="detail-panel" style="padding:22px;font-weight:900;color:var(--navy)" href="/contacto">{part}</a>
             ))}
           </div>
         </div>

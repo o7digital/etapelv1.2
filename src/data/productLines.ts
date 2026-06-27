@@ -13,8 +13,8 @@ export interface ProductFamily {
 export const productFamilies: ProductFamily[] = [
   {
     slug: 'pintura',
-    title: 'Pintura',
-    shortTitle: 'Pintura',
+    title: 'Pistolas y Pintura',
+    shortTitle: 'Pistolas y Pintura',
     href: '/linea-de-producto/pintura',
     menuDescription: 'Pistolas, consumibles y sistemas para procesos de pintura y acabado.',
     pageDescription:
@@ -80,6 +80,25 @@ export const productFamilies: ProductFamily[] = [
       'Lámparas infrarrojo',
       'Otros equipos de repintado',
       'Pintura y productos PPG'
+    ]
+  },
+  {
+    slug: 'consumibles',
+    title: 'Consumibles',
+    shortTitle: 'Consumibles',
+    href: '/linea-de-producto/consumibles',
+    menuDescription: 'Lijas, masking, plásticos, pulimentos y consumibles de operación diaria.',
+    pageDescription:
+      'Consumibles para mantener el flujo del taller con materiales de preparación, protección, acabado y pulido disponibles para compra recurrente.',
+    image: '/images/products/sata/catalog/rps-the-original.webp',
+    accent: 'from-orange-500/16 to-amber-500/8',
+    items: [
+      'Lijas',
+      'Masking',
+      'Plásticos',
+      'Borlas',
+      'Pulimentos',
+      'Papel'
     ]
   }
 ];

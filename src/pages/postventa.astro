@@ -11,6 +11,7 @@
     main{background:linear-gradient(180deg,#f6f8fc 0%,#fff 100%)}section{padding:92px 28px}.container{max-width:var(--max);margin:0 auto}.label{font-size:12px;font-weight:950;letter-spacing:.14em;text-transform:uppercase;color:var(--orange-dark);margin-bottom:12px}.post-hero{display:grid;grid-template-columns:1fr 1fr;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden}.post-copy{padding:56px}.post-copy h1{font-size:clamp(42px,5vw,64px);line-height:.96;letter-spacing:-.07em;margin:0 0 18px;color:var(--navy)}.post-copy p{color:#647083;line-height:1.75;font-size:17px}.post-actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:28px}.post-media{min-height:430px;background:#f6f8fc}.post-media img{width:100%;height:100%;object-fit:cover;object-position:center 38%}.section-head{display:flex;align-items:end;justify-content:space-between;gap:28px;margin:44px 0 28px}.section-head h2{font-size:clamp(34px,4vw,56px);line-height:.98;letter-spacing:-.065em;margin:0;color:var(--navy)}.section-head p{max-width:430px;color:#647083;line-height:1.7}.services{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.service{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow-soft);padding:24px}.service span{display:inline-grid;place-items:center;width:44px;height:44px;border:1px solid var(--line);color:var(--orange-dark);font-weight:950;margin-bottom:18px}.service h3{margin:0;color:var(--navy);font-size:22px;letter-spacing:-.035em}.form-box{margin-top:34px;display:grid;grid-template-columns:.85fr 1.15fr;gap:30px;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);padding:34px}.form-box h2{font-size:38px;line-height:1;letter-spacing:-.055em;margin:0 0 14px;color:var(--navy)}.form-box p{color:#647083;line-height:1.7}.form-grid{display:grid;gap:12px}.form-grid input,.form-grid select,.form-grid textarea{width:100%;border:1px solid var(--line);background:#f7f8fb;padding:14px 15px;font:inherit;color:var(--ink)}.form-grid textarea{min-height:140px;resize:vertical}
     .footer{padding:58px 28px 28px;background:linear-gradient(145deg,#050720 0%,var(--navy) 58%,#0b1145 100%);color:#d8e0ef}.footer-shell{max-width:var(--max);margin:0 auto}.footer-grid{display:grid;grid-template-columns:1.15fr .95fr .75fr .9fr;gap:36px}.footer img{width:150px;filter:brightness(0) invert(1)}.footer p{color:#aeb8cf;line-height:1.7}.footer h3{font-size:12px;text-transform:uppercase;letter-spacing:.18em;color:#fff;margin:0 0 18px}.footer ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}.footer a{color:#c8d2e5}.footer a:hover{color:#fff}.footer-bottom{margin-top:36px;padding-top:22px;border-top:1px solid rgba(255,255,255,.12);display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap;color:#aeb8cf;font-size:13px}.footer-bottom-links{display:flex;gap:18px;flex-wrap:wrap}.footer-keywords{margin-top:18px;padding-top:18px;border-top:1px solid rgba(255,255,255,.1);font-size:11px;line-height:1.8;color:#8f9ab2;text-align:center}
     @media(max-width:980px){.menu{display:none}.post-hero,.form-box{grid-template-columns:1fr}.services,.footer-grid{grid-template-columns:repeat(2,1fr)}.post-copy{padding:36px}}@media(max-width:640px){.nav{height:auto;padding:18px;align-items:flex-start}.nav-actions .btn{display:none}.brand img{width:140px}.services,.footer-grid{grid-template-columns:1fr}.section-head{display:block}.post-copy h1{font-size:40px}.footer-bottom{align-items:flex-start;flex-direction:column}}
+    .mobile-menu{display:none}.mobile-menu summary{width:46px;height:46px;border:1px solid var(--line);display:grid;place-items:center;cursor:pointer;list-style:none;background:#fff}.mobile-menu summary::-webkit-details-marker{display:none}.hamburger,.hamburger:before,.hamburger:after{display:block;width:22px;height:2px;background:var(--navy);content:"";transition:.2s ease}.hamburger:before{transform:translateY(-7px)}.hamburger:after{transform:translateY(5px)}.mobile-menu[open] .hamburger{background:transparent}.mobile-menu[open] .hamburger:before{transform:translateY(2px) rotate(45deg)}.mobile-menu[open] .hamburger:after{transform:translateY(0) rotate(-45deg)}.mobile-panel{position:absolute;right:28px;top:calc(100% + 12px);width:min(88vw,360px);background:#fff;border:1px solid var(--line);box-shadow:0 22px 60px rgba(7,11,47,.18);padding:12px;display:grid;gap:4px}.mobile-panel a{padding:14px 16px;font-weight:850;color:#17203b}.mobile-panel a:hover{background:#f6f8fc;color:var(--orange-dark)}.mobile-panel .mobile-cta{margin-top:6px;background:var(--orange);color:#fff;text-align:center}@media(max-width:980px){.nav{position:relative}.nav-actions{display:none}.mobile-menu{display:block}}@media(max-width:640px){.nav{height:70px!important;padding:0 18px!important;align-items:center!important}.brand{min-width:0!important}.mobile-panel{right:18px}section{padding-left:20px!important;padding-right:20px!important}.field,.form-grid input,.form-grid select,.form-grid textarea{min-width:0;width:100%}.catalog-shell,.training-copy,.post-copy,.contact-copy,.about-copy,.product-copy{padding:24px!important}}
   </style>
 </head>
 <body>
@@ -19,9 +20,23 @@
     <nav class="nav">
       <a class="brand" href="/"><img src="/etapel-logo.svg" alt="Etapel"></a>
       <div class="menu">
-        <a href="/">Home</a><a href="/linea-de-producto">Línea de Producto</a><a href="/quienes-somos">¿Quiénes Somos?</a><a href="/capacitacion">Capacitación</a><a href="/postventa">Posventa</a><a href="/#contacto">Contacto</a>
+        <a href="/">Home</a><a href="/linea-de-producto">Línea de Producto</a><a href="/quienes-somos">¿Quiénes Somos?</a><a href="/capacitacion">Capacitación</a><a href="/postventa">Posventa</a><a href="/contacto">Contacto</a>
       </div>
-      <div class="nav-actions"><a class="lang" href="#" aria-label="Cambiar idioma a inglés">EN</a><a class="btn orange" href="/#contacto">Solicitar información</a></div>
+      <div class="nav-actions"><a class="lang" href="/en/after-sales" aria-label="Cambiar idioma a inglés">EN</a><a class="btn orange" href="/contacto">Solicitar información</a></div>
+      <details class="mobile-menu">
+        <summary aria-label="Abrir menú"><span class="hamburger"></span></summary>
+        <div class="mobile-panel">
+          <a href="/">Home</a>
+          <a href="/linea-de-producto">Línea de Producto</a>
+          <a href="/quienes-somos">¿Quiénes Somos?</a>
+          <a href="/capacitacion">Capacitación</a>
+          <a href="/postventa">Posventa</a>
+          <a href="/contacto">Contacto</a>
+          <a href="#" aria-label="Cambiar idioma a inglés">EN</a>
+          <a class="mobile-cta" href="/contacto">Solicitar información</a>
+        </div>
+      </details>
+
     </nav>
   </header>
 
@@ -34,7 +49,7 @@
             <h1>Posventa</h1>
             <p>Soporte técnico y acompañamiento para mantener tus equipos y procesos en operación.</p>
             <div class="post-actions">
-              <a class="btn orange" href="https://wa.me/525570111515?text=Hola%2C%20quiero%20informaci%C3%B3n%20de%20Posventa" target="_blank" rel="noreferrer">Contacta con un experto</a>
+              <a class="btn orange" href="/contacto">Contactar con un experto</a>
               <a class="btn outline-dark" href="#formulario-postventa">Ir al formulario</a>
             </div>
           </div>
@@ -62,12 +77,12 @@
             <p>Compártenos tu requerimiento y nuestro equipo dará seguimiento al servicio que necesitas.</p>
             <a class="btn outline-dark" style="margin-top:18px" href="https://wa.me/525570111515?text=Hola%2C%20quiero%20informaci%C3%B3n%20de%20Posventa" target="_blank" rel="noreferrer">WhatsApp</a>
           </div>
-          <form class="form-grid">
-            <input type="text" name="nombre" placeholder="Nombre *">
-            <input type="text" name="empresa" placeholder="Empresa *">
+          <form class="form-grid" action="https://formspree.io/f/xeewlkng" method="POST">
+            <input type="text" name="nombre" placeholder="Nombre *" required>
+            <input type="text" name="empresa" placeholder="Empresa *" required>
             <input type="tel" name="telefono" placeholder="Teléfono">
-            <input type="email" name="email" placeholder="Email *">
-            <select name="tema">
+            <input type="email" name="email" placeholder="Email *" required>
+            <select name="tema" required>
               <option value="">Seleccione el tema del cual requiere información *</option>
               <option>Levantamientos</option>
               <option>Mantenimientos</option>
@@ -78,6 +93,7 @@
               <option>Demostraciones</option>
             </select>
             <textarea name="mensaje" placeholder="Mensaje opcional *"></textarea>
+            <input type="hidden" name="_subject" value="Nueva solicitud de posventa desde Etapel">
             <button type="submit" class="btn orange">Enviar</button>
           </form>
         </div>
@@ -121,9 +137,9 @@
       <div class="footer-bottom">
         <p>Copyright © 2026 Etapel. Todos los derechos reservados.</p>
         <div class="footer-bottom-links">
-          <a href="/#contacto">¿Necesitas ayuda? ¡Contáctanos!</a>
-          <a href="/#contacto">Aviso de Privacidad</a>
-          <a href="#">English version</a>
+          <a href="/contacto">¿Necesitas ayuda? ¡Contáctanos!</a>
+          <a href="/contacto">Aviso de Privacidad</a>
+          <a href="/en/after-sales">English version</a>
         </div>
       </div>
       <div class="footer-keywords">
