@@ -119,7 +119,7 @@ const defaultInterest = interests.includes('Pistolas con vaso de gravedad')
             data-search={`${product.name} ${product.brand} ${product.category} ${product.technology} ${product.application} ${product.summary}`.toLowerCase()}
             class="product-card"
           >
-            <a href={productDetailPath(product)}>
+            <a href={en ? `/en/product-lines/products/${product.slug}` : productDetailPath(product)}>
               <div class="product-image">
                 <img src={product.image} alt={product.name} loading="lazy" />
               </div>

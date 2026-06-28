@@ -1,0 +1,11 @@
+---
+import ProductDetail from '../../../linea-de-producto/productos/[slug].astro';
+import { catalogProducts, type CatalogProduct } from '../../../../data/products';
+
+export function getStaticPaths() {
+  return catalogProducts.map((product) => ({ params: { slug: product.slug }, props: { product } }));
+}
+
+const { product } = Astro.props as { product: CatalogProduct };
+---
+<ProductDetail product={product} lang="en" />

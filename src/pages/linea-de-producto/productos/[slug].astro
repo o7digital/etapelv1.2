@@ -8,9 +8,56 @@ export function getStaticPaths() {
   return catalogProducts.map((product) => ({ params: { slug: product.slug }, props: { product } }));
 }
 
-const { product } = Astro.props as { product: CatalogProduct };
-const family = productFamilies.find((item) => item.slug === product.familySlug);
+const { product, lang = 'es' } = Astro.props as { product: CatalogProduct; lang?: 'es' | 'en' };
+const en = lang === 'en';
+const translations: Array<[RegExp, string]> = [
+  [/\bProducto SATA incluido en el catálogo de Etapel\.?/gi, 'SATA product included in the Etapel catalog.'],
+  [/\bDisponible para cotización y asesoría técnica\.?/gi, 'Available for quotation and technical advice.'],
+  [/\bSelección recomendada según proceso, material y operación del taller\.?/gi, 'Recommended selection based on process, material and workshop operation.'],
+  [/\bPistola(s)? de pintura\b/gi, 'Paint spray gun$1'],
+  [/\brepintado automotriz\b/gi, 'automotive refinishing'],
+  [/\bAplicación\b/gi, 'Application'], [/\bTecnología\b/gi, 'Technology'], [/\bOrientación\b/gi, 'Purpose'], [/\bSoporte\b/gi, 'Support'],
+  [/\bUso recomendado\b/gi, 'Recommended use'], [/\bCómo lo trabaja Etapel\b/gi, 'How Etapel supports it'],
+  [/\bFicha técnica\b/gi, 'Technical data sheet'], [/\bManual de operación\b/gi, 'Operating manual'],
+  [/\bKit de mantenimiento\b/gi, 'Maintenance kit'], [/\bJuntas\b/gi, 'Seals'], [/\bAccesorios\b/gi, 'Accessories'],
+  [/\bForma del abanico\b/gi, 'Spray pattern'], [/\bTamaño de la boquilla\b/gi, 'Nozzle size'], [/\bTecnología de boquillas\b/gi, 'Nozzle technology'],
+  [/\bVersión de unidad digital\b/gi, 'Digital unit version'], [/\b¿Qué\b/gi, 'Which'], [/\bes la adecuada para mí\?/gi, 'is right for me?'],
+  [/\bFondos, bases y barnices\b/gi, 'Primers, basecoats and clearcoats'], [/\bAcabado fino y repetible\b/gi, 'Fine, repeatable finish'],
+  [/\bAsesoría Etapel para selección\b/gi, 'Etapel selection advice'], [/\bDescripción\b/gi, 'Description'],
+];
+const tr = (value?: string) => {
+  if (!value || !en) return value || '';
+  return translations.reduce((text, [pattern, replacement]) => text.replace(pattern, replacement), value);
+};
+const familyNameEn: Record<string, string> = {
+  pintura: 'paint and refinishing',
+  'cabinas-y-preparacion': 'spray booth and preparation',
+  'soldadura-y-enderezado': 'welding and body repair',
+  'mecanica-y-aire': 'mechanics and compressed air',
+  consumibles: 'workshop consumables',
+};
+const productArea = familyNameEn[product.familySlug] || 'automotive workshop';
+const displaySummary = en ? `${product.name}: professional ${productArea} solution.` : product.summary;
+const displayDescription = en
+  ? `${product.name} is part of Etapel’s professional product range. Our team provides product selection guidance, technical advice and quotation support according to your workshop process and application requirements.`
+  : product.description;
 const slides = product.highlightSlides || product.highlights;
+const displaySlides = en
+  ? [
+      `Professional solution selected for ${productArea} applications.`,
+      'Technical guidance and quotation support are available from Etapel.',
+      'Configuration and accessories can be selected according to the workshop process.',
+    ]
+  : slides;
+const displaySpecs = en
+  ? [
+      { label: 'Brand', value: product.brand },
+      { label: 'Product area', value: productArea },
+      { label: 'Technology', value: product.technology || 'Professional workshop technology' },
+      { label: 'Application', value: 'Automotive workshop use' },
+    ]
+  : product.specs;
+const family = productFamilies.find((item) => item.slug === product.familySlug);
 const relatedProducts = catalogProducts
   .filter((item) => item.familySlug === product.familySlug && item.slug !== product.slug)
   .slice(0, 4);
@@ -20,17 +67,17 @@ const getDownloadHref = (download: string | ProductDownload) => typeof download 
 const isLinkedDownload = (download: string | ProductDownload) => typeof download !== 'string';
 ---
 
-<SiteLayout title={`${product.name} | Catálogo Etapel`} description={product.summary}>
+<SiteLayout title={`${product.name} | ${en ? 'Etapel Catalog' : 'Catálogo Etapel'}`} description={displaySummary} lang={lang}>
   <main data-product-detail>
     <section class="page-hero">
       <div class="page-hero-inner">
         <div>
           <span class="eyebrow"><span class="dot"></span> {product.brand} / {family?.shortTitle}</span>
           <h1>{product.name}</h1>
-          <p>{product.summary}</p>
+          <p>{displaySummary}</p>
           <div class="hero-actions">
-            <a class="btn orange" href="/contacto">Pregunte ahora</a>
-            {family && <a class="btn outline" href={`${family.href}#catalogo-productos`}>Volver al catálogo</a>}
+            <a class="btn orange" href={en ? '/en/contact#contact-form' : '/contacto#formulario-contacto'}>{en ? 'Ask now' : 'Pregunte ahora'}</a>
+            {family && <a class="btn outline" href={en ? '/en/product-lines#product-catalog' : `${family.href}#catalogo-productos`}>{en ? 'Back to catalog' : 'Volver al catálogo'}</a>}
           </div>
         </div>
         <div class="hero-panel"><img src={product.image} alt={product.name} /></div>
@@ -55,27 +102,27 @@ const isLinkedDownload = (download: string | ProductDownload) => typeof download
 
           <div class="detail-copy">
             <div class="badges">{product.badges.map((badge) => <span class="badge">{badge}</span>)}</div>
-            <h1>{product.summary}</h1>
-            <p style="color:#647083;line-height:1.8;font-size:17px">{product.description}</p>
+            <h1>{displaySummary}</h1>
+            <p style="color:#647083;line-height:1.8;font-size:17px">{displayDescription}</p>
 
             {(product.optionGroups || []).map((group) => (
               <div style="margin-top:26px">
-                <h3 style="color:var(--navy);margin:0 0 8px">{group.label}</h3>
+                <h3 style="color:var(--navy);margin:0 0 8px">{tr(group.label)}</h3>
                 <div class="option-grid">
                   {group.options.map((option) => (
                     <button type="button" class={option.selected ? 'selected' : ''} disabled={option.disabled} data-option-button>{option.label}</button>
                   ))}
                 </div>
-                {group.help && <a href="/contacto" style="display:inline-block;margin-top:10px;color:var(--orange-dark);font-weight:800">{group.help}</a>}
+                {group.help && <a href={en ? '/en/contact#contact-form' : '/contacto#formulario-contacto'} style="display:inline-block;margin-top:10px;color:var(--orange-dark);font-weight:800">{tr(group.help)}</a>}
               </div>
             ))}
 
             <div style="margin-top:34px">
-              <h2 style="color:var(--navy);font-size:32px;letter-spacing:-.04em">Aspectos destacados</h2>
-              <p style="min-height:86px;color:#4b5563;line-height:1.75;font-size:18px" data-highlight-text>{slides[0]}</p>
+              <h2 style="color:var(--navy);font-size:32px;letter-spacing:-.04em">{en ? 'Highlights' : 'Aspectos destacados'}</h2>
+              <p style="min-height:86px;color:#4b5563;line-height:1.75;font-size:18px" data-highlight-text>{displaySlides[0]}</p>
               <div style="display:flex;gap:12px;align-items:center">
                 <button class="btn outline-dark" type="button" data-highlight-prev>‹</button>
-                <strong><span data-highlight-index>1</span>/{slides.length}</strong>
+                <strong><span data-highlight-index>1</span>/{displaySlides.length}</strong>
                 <button class="btn outline-dark" type="button" data-highlight-next>›</button>
               </div>
             </div>
@@ -83,17 +130,20 @@ const isLinkedDownload = (download: string | ProductDownload) => typeof download
         </div>
 
         <div class="tabs" role="tablist">
-          {['Descripción', 'Datos técnicos', 'Descargas', 'Piezas de recambio'].map((tab, index) => (
+          {(en ? ['Description', 'Technical data', 'Downloads', 'Spare parts'] : ['Descripción', 'Datos técnicos', 'Descargas', 'Piezas de recambio']).map((tab, index) => (
             <button type="button" data-detail-tab data-panel={`panel-${index}`} class={`tab ${index === 0 ? 'active' : ''}`}>{tab}</button>
           ))}
         </div>
 
         <div data-detail-panel id="panel-0">
           <div class="panel-grid">
-            {product.detailBlocks.map((block) => (
+            {(en ? [
+              { title: 'Recommended use', body: `Professional ${productArea} processes requiring reliable equipment and consistent results.` },
+              { title: 'Etapel support', body: 'Contact Etapel for configuration, compatible accessories, technical guidance and quotation support.' },
+            ] : product.detailBlocks).map((block) => (
               <article class="detail-panel" style="padding:24px">
-                <h3 style="color:var(--navy);margin-top:0">{block.title}</h3>
-                <p style="color:#647083;line-height:1.7">{block.body}</p>
+                <h3 style="color:var(--navy);margin-top:0">{tr(block.title)}</h3>
+                <p style="color:#647083;line-height:1.7">{tr(block.body)}</p>
               </article>
             ))}
           </div>
@@ -101,10 +151,10 @@ const isLinkedDownload = (download: string | ProductDownload) => typeof download
 
         <div class="hidden" data-detail-panel id="panel-1">
           <dl style="margin-top:24px">
-            {product.specs.map((spec) => (
+            {displaySpecs.map((spec) => (
               <div class="info-row">
-                <dt style="font-weight:900;color:var(--navy)">{spec.label}</dt>
-                <dd style="margin:0;text-align:right;color:#4b5563">{spec.value}</dd>
+                <dt style="font-weight:900;color:var(--navy)">{tr(spec.label)}</dt>
+                <dd style="margin:0;text-align:right;color:#4b5563">{tr(spec.value)}</dd>
               </div>
             ))}
           </dl>
@@ -114,7 +164,7 @@ const isLinkedDownload = (download: string | ProductDownload) => typeof download
           <div class="catalog-grid" style="margin-top:24px">
             {productDownloads.map((download) => (
               <a class="detail-panel" style="padding:22px;font-weight:900;color:var(--navy)" href={getDownloadHref(download)} target={isLinkedDownload(download) ? '_blank' : undefined} rel={isLinkedDownload(download) ? 'noopener noreferrer' : undefined}>
-                {getDownloadLabel(download)}
+                {tr(getDownloadLabel(download))}
               </a>
             ))}
           </div>
@@ -123,7 +173,7 @@ const isLinkedDownload = (download: string | ProductDownload) => typeof download
         <div class="hidden" data-detail-panel id="panel-3">
           <div class="catalog-grid" style="margin-top:24px">
             {(product.spareParts || ['Kit de mantenimiento', 'Juntas', 'Accesorios']).map((part) => (
-              <a class="detail-panel" style="padding:22px;font-weight:900;color:var(--navy)" href="/contacto">{part}</a>
+              <a class="detail-panel" style="padding:22px;font-weight:900;color:var(--navy)" href={en ? '/en/contact#contact-form' : '/contacto#formulario-contacto'}>{tr(part)}</a>
             ))}
           </div>
         </div>
@@ -135,16 +185,16 @@ const isLinkedDownload = (download: string | ProductDownload) => typeof download
         <div class="container">
           <div class="section-head">
             <div>
-              <div class="label">También puede interesarte</div>
-              <h2>Productos relacionados</h2>
+              <div class="label">{en ? 'You may also be interested in' : 'También puede interesarte'}</div>
+              <h2>{en ? 'Related products' : 'Productos relacionados'}</h2>
             </div>
           </div>
           <div class="catalog-grid">
             {relatedProducts.map((item) => (
               <article class="product-card">
-                <a href={productDetailPath(item)}>
+                <a href={en ? `/en/product-lines/products/${item.slug}` : productDetailPath(item)}>
                   <div class="product-image"><img src={item.image} alt={item.name} loading="lazy" /></div>
-                  <div class="product-body"><small>{item.interest || item.category}</small><h3>{item.name}</h3><span class="arrow">→</span></div>
+                  <div class="product-body"><small>{en ? (familyNameEn[item.familySlug] || 'Automotive workshop') : (item.interest || item.category)}</small><h3>{item.name}</h3><span class="arrow">→</span></div>
                 </a>
               </article>
             ))}
@@ -155,7 +205,7 @@ const isLinkedDownload = (download: string | ProductDownload) => typeof download
   </main>
 </SiteLayout>
 
-<script define:vars={{ slides }}>
+<script define:vars={{ slides: displaySlides }}>
   document.querySelectorAll('[data-product-detail]').forEach((detail) => {
     const mainImage = detail.querySelector('[data-gallery-main]');
     const thumbs = Array.from(detail.querySelectorAll('[data-gallery-thumb]'));
