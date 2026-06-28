@@ -7,6 +7,36 @@ interface Props {
 
 const { title, description, lang = 'es' } = Astro.props as Props;
 const english = lang === 'en';
+const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const englishToSpanish: Record<string, string> = {
+  '/en': '/',
+  '/en/product-lines': '/linea-de-producto',
+  '/en/about-us': '/quienes-somos',
+  '/en/training': '/capacitacion',
+  '/en/after-sales': '/postventa',
+  '/en/contact': '/contacto',
+  '/en/privacy-policy': '/aviso-de-privacidad',
+};
+const spanishToEnglish: Record<string, string> = {
+  '/': '/en',
+  '/linea-de-producto': '/en/product-lines',
+  '/quienes-somos': '/en/about-us',
+  '/capacitacion': '/en/training',
+  '/postventa': '/en/after-sales',
+  '/contacto': '/en/contact',
+  '/aviso-de-privacidad': '/en/privacy-policy',
+};
+const productPrefixEs = '/linea-de-producto/productos/';
+const productPrefixEn = '/en/product-lines/products/';
+const languageHref = english
+  ? currentPath.startsWith(productPrefixEn)
+    ? `${productPrefixEs}${currentPath.slice(productPrefixEn.length)}`
+    : englishToSpanish[currentPath] || '/'
+  : currentPath.startsWith(productPrefixEs)
+    ? `${productPrefixEn}${currentPath.slice(productPrefixEs.length)}`
+    : currentPath.startsWith('/linea-de-producto/')
+      ? '/en/product-lines'
+      : spanishToEnglish[currentPath] || '/en';
 ---
 
 <!doctype html>
@@ -36,7 +66,7 @@ const english = lang === 'en';
           <a href={english ? '/en/after-sales' : '/#postventa'}>{english ? 'After-Sales' : 'Posventa'}</a>
           <a href={english ? '/en/contact' : '/contacto'}>{english ? 'Contact' : 'Contacto'}</a>
         </div>
-        <div class="nav-actions"><a class="lang" href={english ? '/' : '/en'} aria-label={english ? 'Cambiar idioma a español' : 'Cambiar idioma a inglés'}>{english ? 'ES' : 'EN'}</a><a class="btn orange" href={english ? '/en/contact#contact-form' : '/contacto#formulario-contacto'}>{english ? 'Request information' : 'Solicitar información'}</a></div>
+        <div class="nav-actions"><a class="lang" href={languageHref} aria-label={english ? 'Cambiar idioma a español' : 'Cambiar idioma a inglés'}>{english ? 'ES' : 'EN'}</a><a class="btn orange" href={english ? '/en/contact#contact-form' : '/contacto#formulario-contacto'}>{english ? 'Request information' : 'Solicitar información'}</a></div>
         <details class="mobile-menu">
           <summary aria-label="Abrir menú"><span class="hamburger"></span></summary>
           <div class="mobile-panel">
@@ -46,7 +76,7 @@ const english = lang === 'en';
             <a href={english ? '/en/training' : '/#capacitacion'}>{english ? 'Training' : 'Capacitación'}</a>
             <a href={english ? '/en/after-sales' : '/#postventa'}>{english ? 'After-Sales' : 'Posventa'}</a>
             <a href={english ? '/en/contact' : '/contacto'}>{english ? 'Contact' : 'Contacto'}</a>
-            <a href={english ? '/' : '/en'}>{english ? 'ES' : 'EN'}</a>
+            <a href={languageHref}>{english ? 'ES' : 'EN'}</a>
             <a class="mobile-cta" href={english ? '/en/contact#contact-form' : '/contacto#formulario-contacto'}>{english ? 'Request information' : 'Solicitar información'}</a>
           </div>
         </details>
@@ -61,7 +91,7 @@ const english = lang === 'en';
           <div><h3>Services</h3><ul><li><a href="/en/training">Training</a></li><li><a href="/en/after-sales">After-Sales</a></li></ul></div>
           <div><h3>Contact</h3><ul><li><a href="mailto:ventas@etapel.com.mx">ventas@etapel.com.mx</a></li><li><a href="tel:+525556895055">55 5689 5055</a></li><li><a href="https://wa.link/oowyzu">WhatsApp</a></li></ul></div>
         </div>
-        <div class="footer-bottom"><span>Copyright © 2026 Etapel. All rights reserved.</span><div><a href="/en/contact">Need help? Contact us</a><a href="/en/privacy-policy">Privacy Policy</a><a href="/">Versión en español</a></div></div>
+        <div class="footer-bottom"><span>Copyright © 2026 Etapel. All rights reserved.</span><div><a href="/en/contact">Need help? Contact us</a><a href="/en/privacy-policy">Privacy Policy</a><a href={languageHref}>Versión en español</a></div></div>
       </footer>
     ) : (
       <footer class="footer"><div class="footer-inner"><img src="/etapel-logo.svg" alt="Etapel" /><span>Copyright © 2026 Etapel. Todos los derechos reservados.</span></div></footer>
