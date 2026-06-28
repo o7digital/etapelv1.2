@@ -9,11 +9,12 @@ export function getStaticPaths() {
     { params: { page: 'training' } },
     { params: { page: 'after-sales' } },
     { params: { page: 'contact' } },
+    { params: { page: 'privacy-policy' } },
   ];
 }
 
 const page = Astro.params.page ?? '';
-const validPages = ['', 'product-lines', 'about-us', 'training', 'after-sales', 'contact'];
+const validPages = ['', 'product-lines', 'about-us', 'training', 'after-sales', 'contact', 'privacy-policy'];
 if (!validPages.includes(page)) return Astro.redirect('/en');
 
 const pages = {
@@ -63,6 +64,14 @@ const pages = {
     eyebrow: 'Talk to an expert',
     heading: 'We are here to help',
     intro: 'Contact our team for commercial assistance, follow-up and guidance on the right solution for your business.',
+    image: '/etapel-logo.svg',
+  },
+  'privacy-policy': {
+    title: 'Privacy Policy | Etapel',
+    description: 'Etapel privacy policy regarding the collection, use and protection of personal data.',
+    eyebrow: 'Legal information',
+    heading: 'Privacy Policy',
+    intro: 'How Etapel collects, uses and protects your personal information.',
     image: '/etapel-logo.svg',
   },
 } as const;
@@ -141,6 +150,13 @@ const isHome = page === '';
         <form class="en-form" action="https://formspree.io/f/xeewlkng" method="POST"><input name="name" placeholder="Name *" required /><input name="company" placeholder="Company" /><input type="tel" name="phone" placeholder="Phone" /><input type="email" name="email" placeholder="Email *" required /><select name="topic" required><option value="">Select the topic you need information about *</option><option>Special offers</option><option>Personal assistance</option><option>Complaints or suggestions</option></select><textarea name="message" placeholder="Optional message"></textarea><input type="hidden" name="_subject" value="New English website contact" /><button class="btn orange" type="submit">Send message</button></form>
       </div>
     </div></section>}
+    {page === 'privacy-policy' && <section class="privacy-content"><article>
+      <p>Etapel, located at California 167, Col. Parque San Andrés, Mexico City, C.P. 04040, Mexico, is responsible for collecting, using and protecting your personal data.</p>
+      <p>Your personal information will be used to provide the services and products you have requested, inform you of changes to them and evaluate the quality of the service we provide.</p>
+      <p>For these purposes, we may collect your name, landline number, mobile number and email address. If invoicing is required, we may also request your legal business name, Mexican Federal Taxpayer Registry number (RFC), tax address, contact telephone number and the email address to which the information will be sent. None of this information is considered sensitive under Mexico’s Federal Law on the Protection of Personal Data Held by Private Parties.</p>
+      <p>You have the right to access, correct and cancel your personal data, object to its processing or withdraw your consent. To exercise these rights, contact us at <a href="tel:+525556895055">55 5689 5055</a>, visit California 167, Col. Parque San Andrés, Mexico City, C.P. 04040, Mexico, or email <a href="mailto:ventas@etapel.com.mx">ventas@etapel.com.mx</a>.</p>
+      <p>Your personal data may be processed only within Mexico by authorized Etapel personnel. Your information may not be shared with any other institution for any reason.</p>
+    </article></section>}
   </main>
 </SiteLayout>
 
@@ -149,4 +165,5 @@ const isHome = page === '';
 </style>
 <style>
   .contact-details{padding:0 28px 86px}.contact-main{display:grid;grid-template-columns:1fr 1fr;gap:28px}.office-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.office-grid article,.contact-data,.map-card,.contact-form{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow-soft)}.office-grid article{padding:22px;font-weight:950;color:var(--navy);text-transform:uppercase;letter-spacing:.12em;font-size:12px}.contact-data{padding:30px;margin-top:18px}.contact-data h2,.contact-form h2{margin:0 0 18px;color:var(--navy);font-size:30px}.contact-links{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}.contact-links>div{background:#f7f8fb;border:1px solid var(--line);padding:18px}.contact-links small{display:block;color:var(--orange-dark);font-weight:950;text-transform:uppercase}.contact-links a{display:block;margin-top:10px;color:var(--navy);font-weight:900}.map-card{overflow:hidden;min-height:360px}.map-card img{width:100%;height:100%;object-fit:cover;object-position:top}.contact-form{margin-top:34px;padding:36px;display:grid;grid-template-columns:.85fr 1.15fr;gap:28px}.contact-form p{color:#647083;line-height:1.7}.contact-form .en-form{padding:0;border:0;box-shadow:none}.en-form select{width:100%;border:1px solid var(--line);background:#f7f8fb;padding:15px;font:inherit}@media(max-width:800px){.contact-main,.contact-form,.office-grid,.contact-links{grid-template-columns:1fr}}
+  .privacy-content{padding:0 28px 86px}.privacy-content article{max-width:900px;margin:auto;padding:46px;background:#fff;border-left:8px solid var(--orange);box-shadow:var(--shadow-soft)}.privacy-content p{color:#566174;font-size:17px;line-height:1.8}.privacy-content a{color:var(--orange-dark);font-weight:850}
 </style>
