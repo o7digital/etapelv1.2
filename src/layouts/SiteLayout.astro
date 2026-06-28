@@ -36,7 +36,7 @@ const english = lang === 'en';
           <a href={english ? '/en/after-sales' : '/#postventa'}>{english ? 'After-Sales' : 'Posventa'}</a>
           <a href={english ? '/en/contact' : '/contacto'}>{english ? 'Contact' : 'Contacto'}</a>
         </div>
-        <div class="nav-actions"><a class="lang" href={english ? '/' : '/en'} aria-label={english ? 'Cambiar idioma a español' : 'Cambiar idioma a inglés'}>{english ? 'ES' : 'EN'}</a><a class="btn orange" href={english ? '/en/contact' : '/contacto'}>{english ? 'Request information' : 'Solicitar información'}</a></div>
+        <div class="nav-actions"><a class="lang" href={english ? '/' : '/en'} aria-label={english ? 'Cambiar idioma a español' : 'Cambiar idioma a inglés'}>{english ? 'ES' : 'EN'}</a><a class="btn orange" href={english ? '/en/contact#contact-form' : '/contacto#formulario-contacto'}>{english ? 'Request information' : 'Solicitar información'}</a></div>
         <details class="mobile-menu">
           <summary aria-label="Abrir menú"><span class="hamburger"></span></summary>
           <div class="mobile-panel">
@@ -47,7 +47,7 @@ const english = lang === 'en';
             <a href={english ? '/en/after-sales' : '/#postventa'}>{english ? 'After-Sales' : 'Posventa'}</a>
             <a href={english ? '/en/contact' : '/contacto'}>{english ? 'Contact' : 'Contacto'}</a>
             <a href={english ? '/' : '/en'}>{english ? 'ES' : 'EN'}</a>
-            <a class="mobile-cta" href={english ? '/en/contact' : '/contacto'}>{english ? 'Request information' : 'Solicitar información'}</a>
+            <a class="mobile-cta" href={english ? '/en/contact#contact-form' : '/contacto#formulario-contacto'}>{english ? 'Request information' : 'Solicitar información'}</a>
           </div>
         </details>
       </nav>
