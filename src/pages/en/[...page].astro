@@ -1,5 +1,7 @@
 ---
 import SiteLayout from '../../layouts/SiteLayout.astro';
+import ProductCatalog from '../../components/ProductCatalog.astro';
+import { productFamilies } from '../../data/productLines';
 
 export function getStaticPaths() {
   return [
@@ -79,6 +81,14 @@ const pages = {
 const content = pages[page as keyof typeof pages];
 const isContact = page === 'contact';
 const isHome = page === '';
+const isProductLines = page === 'product-lines';
+const familyEnglish: Record<string, { short: string; title: string; description: string }> = {
+  pintura: { short: 'Spray Guns & Paint', title: 'Paint and refinishing', description: 'Spray guns, paint systems, filtration, protection and finishing supplies.' },
+  'cabinas-y-preparacion': { short: 'Booths & Preparation', title: 'Spray booths and preparation', description: 'Preparation, mixing and refinishing areas for professional workshops.' },
+  'soldadura-y-enderezado': { short: 'Welding & Body Repair', title: 'Welding and structural repair', description: 'Equipment for welding, straightening and structural body repair.' },
+  'mecanica-y-aire': { short: 'Mechanics & Air', title: 'Mechanics and compressed air', description: 'Compressed-air systems and complementary workshop equipment.' },
+  consumibles: { short: 'Consumables', title: 'Workshop consumables', description: 'Abrasives, masking products, plastics, pads, compounds and paper.' },
+};
 ---
 
 <SiteLayout title={content.title} description={content.description} lang="en">
@@ -112,6 +122,13 @@ const isHome = page === '';
         </section>
         <div class="brands"><div class="brands-inner"><span>Brands and technologies</span><div class="brands-list"><span>SATA</span><span>GYS</span><span>3M</span><span>PPG</span><span>Farecla</span><span>Rupes</span><span>Polyvance</span></div></div></div>
       </>
+    ) : isProductLines ? (
+      <section class="page-hero">
+        <div class="page-hero-inner">
+          <div><span class="eyebrow"><span class="dot"></span> Product Lines</span><h1>Solutions organized by family for professional body shops.</h1><p>Browse the catalog by category, subfamily and product page through a clear, professional structure.</p><div class="hero-actions"><a class="btn orange" href="#product-catalog">View products</a><a class="btn outline" href="#families">View families</a></div></div>
+          <div class="hero-panel"><div class="hero-panel-grid">{productFamilies.map((family) => <a class="hero-chip" href={family.href}>{familyEnglish[family.slug]?.short ?? family.shortTitle}</a>)}</div></div>
+        </div>
+      </section>
     ) : (
     <section class="en-hero">
       <div class="en-shell">
@@ -133,7 +150,7 @@ const isHome = page === '';
     )}
 
     {isHome && <section class="en-section"><div class="container"><div class="section-head"><div><div class="label">Featured product</div><h2>Have you discovered the SATAjet X 5500?</h2></div></div><div class="en-grid"><a href="/en/product-lines"><h3>Product lines</h3><p>Paint, preparation, welding, body repair, mechanics and compressed air.</p></a><a href="/en/training"><h3>Training</h3><p>Practical knowledge to improve quality, safety and productivity.</p></a><a href="/en/after-sales"><h3>After-sales</h3><p>Technical support throughout the service life of your equipment.</p></a></div></div></section>}
-    {page === 'product-lines' && <section class="en-section"><div class="container"><div class="en-grid product-lines"><a href="/linea-de-producto/pintura"><h3>Paint</h3><p>Spray guns, paint systems, filtration, respiratory protection and consumables.</p></a><a href="/linea-de-producto/cabinas-y-preparacion"><h3>Spray Booths & Preparation</h3><p>Preparation, mixing and refinishing areas for professional workshops.</p></a><a href="/linea-de-producto/soldadura-y-enderezado"><h3>Welding & Body Repair</h3><p>Equipment for structural repair, welding and straightening.</p></a><a href="/linea-de-producto/mecanica-y-aire"><h3>Mechanics & Air</h3><p>Compressed-air systems and complementary workshop equipment.</p></a></div></div></section>}
+    {isProductLines && <><section id="families" class="en-section"><div class="container"><div class="section-head"><div><div class="label">Main families</div><h2>Clear access to every product category.</h2></div><p>Choose a family to explore the corresponding equipment and supplies.</p></div><div class="grid-families">{productFamilies.map((family) => { const translated = familyEnglish[family.slug]; return <article class="family-tile"><div class="family-copy"><div class="label">{translated?.short ?? family.shortTitle}</div><h3>{translated?.title ?? family.title}</h3><p>{translated?.description ?? family.menuDescription}</p><div style="margin-top:24px"><a class="btn outline-dark" href={family.href}>View category</a></div></div><div class="family-media"><img src={family.image} alt={translated?.title ?? family.title} loading="lazy" /></div></article> })}</div></div></section><div id="product-catalog"><ProductCatalog lang="en" /></div></>}
     {page === 'about-us' && <section class="en-section"><div class="container"><div class="en-grid"><article><h3>Our mission</h3><p>To meet the industry’s product and service needs while building valuable, long-term relationships.</p></article><article><h3>Our team</h3><p>Qualified professionals and distributors committed to excellent service throughout Mexico.</p></article><article><h3>Our commitment</h3><p>Consumables, tools, major equipment, maintenance, installation and specialized advice.</p></article></div></div></section>}
     {page === 'training' && <section class="en-section"><div class="container"><div class="en-grid"><article><h3>Specialized training</h3><p>Proper equipment use to maximize performance, productivity and safety.</p></article><article><h3>Efficient processes</h3><p>Cleaning, maintenance and workspace layouts designed for reliable operations.</p></article><article><h3>Continuous improvement</h3><p>Process standardization, workplace safety and identification of improvement opportunities.</p></article></div></div></section>}
     {page === 'after-sales' && <section class="en-section"><div class="container"><div class="en-grid"><article><h3>Technical assessments</h3><p>On-site analysis and clear recommendations for your operation.</p></article><article><h3>Maintenance and repairs</h3><p>Specialized service to protect performance and equipment life.</p></article><article><h3>Installation and training</h3><p>Installation, removal, demonstrations and operator training.</p></article></div></div></section>}

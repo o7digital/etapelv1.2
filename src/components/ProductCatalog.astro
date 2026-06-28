@@ -4,9 +4,11 @@ import { productFamilies } from '../data/productLines';
 
 interface Props {
   familySlug?: string;
+  lang?: 'es' | 'en';
 }
 
-const { familySlug } = Astro.props as Props;
+const { familySlug, lang = 'es' } = Astro.props as Props;
+const en = lang === 'en';
 const initialProducts = familySlug
   ? catalogProducts.filter((product) => product.familySlug === familySlug)
   : catalogProducts;
@@ -65,14 +67,14 @@ const defaultInterest = interests.includes('Pistolas con vaso de gravedad')
   <div class="container">
     <div class="section-head">
       <div>
-        <div class="label">Catálogo de productos</div>
-        <h2>{activeFamily ? activeFamily.shortTitle : 'Productos Etapel'}</h2>
+        <div class="label">{en ? 'Product catalog' : 'Catálogo de productos'}</div>
+        <h2>{activeFamily ? activeFamily.shortTitle : en ? 'Etapel products' : 'Productos Etapel'}</h2>
       </div>
-      <p>Filtra por tipo de producto, forma del abanico y tecnología. Cada tarjeta abre una ficha con galería, datos técnicos y recursos.</p>
+      <p>{en ? 'Filter by product type, spray pattern and technology. Each card opens a detailed product page.' : 'Filtra por tipo de producto, forma del abanico y tecnología. Cada tarjeta abre una ficha con galería, datos técnicos y recursos.'}</p>
     </div>
 
     <div class="catalog-shell" data-product-catalog data-default-interest={defaultInterest}>
-      <h3 class="section-title" style="font-size:32px">¿Qué te interesa?</h3>
+      <h3 class="section-title" style="font-size:32px">{en ? 'What are you looking for?' : '¿Qué te interesa?'}</h3>
       <div class="filter-grid">
         {interests.map((interest) => (
           <button
@@ -87,20 +89,20 @@ const defaultInterest = interests.includes('Pistolas con vaso de gravedad')
       </div>
 
       <div class="catalog-toolbar">
-        <div class="catalog-count"><span data-catalog-count>{initialProducts.length}</span> Resultados</div>
+        <div class="catalog-count"><span data-catalog-count>{initialProducts.length}</span> {en ? 'Results' : 'Resultados'}</div>
         <label>
-          <span class="label">Buscar</span>
-          <input type="search" data-catalog-search class="field" placeholder="Buscar por producto, uso o marca" />
+          <span class="label">{en ? 'Search' : 'Buscar'}</span>
+          <input type="search" data-catalog-search class="field" placeholder={en ? 'Search by product, use or brand' : 'Buscar por producto, uso o marca'} />
         </label>
       </div>
 
       <div class="select-row">
         <select data-pattern-filter class="field">
-          <option value="">Forma del abanico</option>
+          <option value="">{en ? 'Spray pattern' : 'Forma del abanico'}</option>
           {patterns.map((pattern) => <option value={pattern}>{pattern}</option>)}
         </select>
         <select data-nozzle-filter class="field">
-          <option value="">Tecnología de boquillas</option>
+          <option value="">{en ? 'Nozzle technology' : 'Tecnología de boquillas'}</option>
           {nozzleTechnologies.map((technology) => <option value={technology}>{technology}</option>)}
         </select>
       </div>
