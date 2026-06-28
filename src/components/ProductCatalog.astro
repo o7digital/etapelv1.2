@@ -19,6 +19,29 @@ const nozzleTechnologies = Array.from(new Set(initialProducts.map((product) => p
 const defaultInterest = interests.includes('Pistolas con vaso de gravedad')
   ? 'Pistolas con vaso de gravedad'
   : interests[0];
+const interestTranslations: Record<string, string> = {
+  'Pistolas con vaso de gravedad': 'Gravity-feed spray guns',
+  'Pistolas con calderin': 'Pressure-feed spray guns',
+  'Pistolas aerograficas': 'Airbrush spray guns',
+  'Pistolas de vaso inferior': 'Siphon-feed spray guns',
+  'Pistolas roboticas': 'Automatic spray guns',
+  'Sistemas de deposito': 'Cup systems',
+  'Tecnología de filtros': 'Filter technology',
+  'Tecnologia de filtros': 'Filter technology',
+  'Proteccion respiratoria': 'Respiratory protection',
+  'Cabinas y preparación': 'Spray booths and preparation areas',
+};
+const englishInterest = (value: string) => interestTranslations[value] || value;
+const englishFilterValue = (value: string) => ({
+  'No aplica': 'Not applicable',
+  Aerografica: 'Airbrush',
+  'Automatica / Robotica': 'Automatic / robotic',
+  Deposito: 'Cup system',
+  Filtracion: 'Filtration',
+  Seguridad: 'Safety',
+}[value] || value);
+const englishSummary = (product: (typeof initialProducts)[number]) =>
+  `${product.name} — professional SATA product for ${englishInterest(product.interest || product.category).toLowerCase()}.`;
 ---
 
 <style is:global>
@@ -83,7 +106,7 @@ const defaultInterest = interests.includes('Pistolas con vaso de gravedad')
             data-interest-filter
             class={`filter-btn ${interest === defaultInterest ? 'active' : ''}`}
           >
-            {interest}
+            {en ? englishInterest(interest) : interest}
           </button>
         ))}
       </div>
@@ -99,11 +122,11 @@ const defaultInterest = interests.includes('Pistolas con vaso de gravedad')
       <div class="select-row">
         <select data-pattern-filter class="field">
           <option value="">{en ? 'Spray pattern' : 'Forma del abanico'}</option>
-          {patterns.map((pattern) => <option value={pattern}>{pattern}</option>)}
+          {patterns.map((pattern) => <option value={pattern}>{en ? englishFilterValue(pattern) : pattern}</option>)}
         </select>
         <select data-nozzle-filter class="field">
           <option value="">{en ? 'Nozzle technology' : 'Tecnología de boquillas'}</option>
-          {nozzleTechnologies.map((technology) => <option value={technology}>{technology}</option>)}
+          {nozzleTechnologies.map((technology) => <option value={technology}>{en ? englishFilterValue(technology) : technology}</option>)}
         </select>
       </div>
 
@@ -124,9 +147,9 @@ const defaultInterest = interests.includes('Pistolas con vaso de gravedad')
                 <img src={product.image} alt={product.name} loading="lazy" />
               </div>
               <div class="product-body">
-                <small>{product.interest || product.category}</small>
+                <small>{en ? englishInterest(product.interest || product.category) : (product.interest || product.category)}</small>
                 <h3>{product.name}</h3>
-                <p>{product.summary}</p>
+                <p>{en ? englishSummary(product) : product.summary}</p>
                 <span class="arrow">→</span>
               </div>
             </a>
@@ -134,7 +157,7 @@ const defaultInterest = interests.includes('Pistolas con vaso de gravedad')
         ))}
       </div>
 
-      <p class="empty" data-catalog-empty>No hay productos con estos filtros.</p>
+      <p class="empty" data-catalog-empty>{en ? 'No products match these filters.' : 'No hay productos con estos filtros.'}</p>
     </div>
   </div>
 </section>
@@ -173,7 +196,10 @@ const defaultInterest = interests.includes('Pistolas con vaso de gravedad')
       [selectedInterest, patternSelect.value, nozzleSelect.value].filter(Boolean).forEach((value) => {
         const chip = document.createElement('button');
         chip.type = 'button';
-        chip.textContent = `${value} x`;
+        const interestLabel = interestButtons.find((button) => button.value === value)?.textContent?.trim();
+        const patternLabel = patternSelect.value === value ? patternSelect.selectedOptions[0]?.textContent : '';
+        const nozzleLabel = nozzleSelect.value === value ? nozzleSelect.selectedOptions[0]?.textContent : '';
+        chip.textContent = `${interestLabel || patternLabel || nozzleLabel || value} x`;
         chip.addEventListener('click', () => {
           if (selectedInterest === value) selectedInterest = '';
           if (patternSelect.value === value) patternSelect.value = '';

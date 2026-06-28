@@ -21,12 +21,29 @@ const translations: Array<[RegExp, string]> = [
   [/\bFicha técnica\b/gi, 'Technical data sheet'], [/\bManual de operación\b/gi, 'Operating manual'],
   [/\bKit de mantenimiento\b/gi, 'Maintenance kit'], [/\bJuntas\b/gi, 'Seals'], [/\bAccesorios\b/gi, 'Accessories'],
   [/\bForma del abanico\b/gi, 'Spray pattern'], [/\bTamaño de la boquilla\b/gi, 'Nozzle size'], [/\bTecnología de boquillas\b/gi, 'Nozzle technology'],
-  [/\bVersión de unidad digital\b/gi, 'Digital unit version'], [/\b¿Qué\b/gi, 'Which'], [/\bes la adecuada para mí\?/gi, 'is right for me?'],
+  [/\bVersión de unidad digital\b/gi, 'Digital unit version'],
   [/\bFondos, bases y barnices\b/gi, 'Primers, basecoats and clearcoats'], [/\bAcabado fino y repetible\b/gi, 'Fine, repeatable finish'],
   [/\bAsesoría Etapel para selección\b/gi, 'Etapel selection advice'], [/\bDescripción\b/gi, 'Description'],
 ];
 const tr = (value?: string) => {
   if (!value || !en) return value || '';
+  const exact: Record<string, string> = {
+    '¿Qué tecnología de boquilla es la adecuada para mí?': 'Which nozzle technology is right for me?',
+    '¿Qué unidad digital es la adecuada para mí?': 'Which digital unit is right for me?',
+    'Pistolas con vaso de gravedad': 'Gravity-feed spray guns',
+    'Pistolas con calderin': 'Pressure-feed spray guns',
+    'Pistolas aerograficas': 'Airbrush spray guns',
+    'Pistolas de vaso inferior': 'Siphon-feed spray guns',
+    'Pistolas roboticas': 'Automatic spray guns',
+    'Sistemas de deposito': 'Cup systems',
+    'Tecnología de filtros': 'Filter technology',
+    'Tecnologia de filtros': 'Filter technology',
+    'Proteccion respiratoria': 'Respiratory protection',
+    'Cabinas y preparación': 'Spray booths and preparation areas',
+    'Sí': 'Yes',
+    'Pieza': 'Piece',
+  };
+  if (exact[value]) return exact[value];
   return translations.reduce((text, [pattern, replacement]) => text.replace(pattern, replacement), value);
 };
 const familyNameEn: Record<string, string> = {
@@ -58,6 +75,7 @@ const displaySpecs = en
     ]
   : product.specs;
 const family = productFamilies.find((item) => item.slug === product.familySlug);
+const familyTitle = en ? productArea.replace(/^./, (letter) => letter.toUpperCase()) : family?.shortTitle;
 const relatedProducts = catalogProducts
   .filter((item) => item.familySlug === product.familySlug && item.slug !== product.slug)
   .slice(0, 4);
@@ -72,7 +90,7 @@ const isLinkedDownload = (download: string | ProductDownload) => typeof download
     <section class="page-hero">
       <div class="page-hero-inner">
         <div>
-          <span class="eyebrow"><span class="dot"></span> {product.brand} / {family?.shortTitle}</span>
+          <span class="eyebrow"><span class="dot"></span> {product.brand} / {familyTitle}</span>
           <h1>{product.name}</h1>
           <p>{displaySummary}</p>
           <div class="hero-actions">
@@ -93,7 +111,7 @@ const isLinkedDownload = (download: string | ProductDownload) => typeof download
             </div>
             <div class="thumbs">
               {product.gallery.map((image, index) => (
-                <button type="button" class={index === 0 ? 'active' : ''} data-gallery-thumb data-image={image} aria-label={`Imagen ${index + 1}`}>
+                <button type="button" class={index === 0 ? 'active' : ''} data-gallery-thumb data-image={image} aria-label={`${en ? 'Image' : 'Imagen'} ${index + 1}`}>
                   <img src={image} alt={product.name} loading="lazy" />
                 </button>
               ))}
@@ -101,7 +119,7 @@ const isLinkedDownload = (download: string | ProductDownload) => typeof download
           </div>
 
           <div class="detail-copy">
-            <div class="badges">{product.badges.map((badge) => <span class="badge">{badge}</span>)}</div>
+            <div class="badges">{product.badges.map((badge) => <span class="badge">{tr(badge)}</span>)}</div>
             <h1>{displaySummary}</h1>
             <p style="color:#647083;line-height:1.8;font-size:17px">{displayDescription}</p>
 
