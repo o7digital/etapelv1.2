@@ -1,4 +1,5 @@
 import { sataImportedProducts } from './sataImportedProducts.ts';
+import { clientCatalogProducts } from './clientCatalogProducts.ts';
 import type { CatalogProduct, ProductOptionGroup } from './productTypes';
 export type { CatalogProduct, ProductOptionGroup, ProductSpec, ProductVariant } from './productTypes';
 
@@ -641,5 +642,6 @@ export const catalogProducts: CatalogProduct[] = [
       sourceUrl: product.sourceUrl
     };
   }),
-  ...nonSataProducts
+  ...nonSataProducts,
+  ...clientCatalogProducts
 ];
