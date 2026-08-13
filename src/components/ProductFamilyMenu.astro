@@ -1,6 +1,7 @@
 ---
 import { catalogProducts } from '../data/products';
 import { productFamilies, type ProductFamily } from '../data/productLines';
+import { englishProductLine } from '../data/catalogTranslations';
 
 interface Props {
   family?: ProductFamily;
@@ -62,10 +63,10 @@ const groupsFor = (item: ProductFamily) => {
       <div class="line-directory">
         {groupsFor(family).map((group) => (
           <a class="line-card" href={`?tipo=${encodeURIComponent(group.name)}#catalogo-productos`}>
-            <div class="line-image"><img src={group.image} alt={group.name} loading="lazy" /></div>
+            <div class="line-image"><img src={group.image} alt={en ? englishProductLine(group.name) : group.name} loading="lazy" /></div>
             <div class="line-copy">
               <small>{`${group.products.length} ${en ? (group.products.length === 1 ? 'product' : 'products') : (group.products.length === 1 ? 'producto' : 'productos')}`}</small>
-              <h3>{group.name}</h3>
+              <h3>{en ? englishProductLine(group.name) : group.name}</h3>
               <p>{group.brands.join(' · ')}</p>
               <span>{en ? 'View products' : 'Ver productos'} →</span>
             </div>
@@ -99,7 +100,9 @@ const groupsFor = (item: ProductFamily) => {
                 <p>{en ? translation?.description || item.menuDescription : item.menuDescription}</p>
                 <div class="family-lines">
                   {groups.slice(0, 8).map((group) => (
-                    <a href={`${item.href}?tipo=${encodeURIComponent(group.name)}#catalogo-productos`}>{group.name}</a>
+                    <a href={`${item.href}?tipo=${encodeURIComponent(group.name)}#catalogo-productos`}>
+                      {en ? englishProductLine(group.name) : group.name}
+                    </a>
                   ))}
                 </div>
                 <a class="family-cta" href={item.href}>{en ? 'View all product lines' : 'Ver todas las líneas'} <span>→</span></a>

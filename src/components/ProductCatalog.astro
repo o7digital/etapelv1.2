@@ -1,6 +1,7 @@
 ---
 import { catalogProducts, productDetailPath } from '../data/products';
 import { productFamilies } from '../data/productLines';
+import { englishProductLine } from '../data/catalogTranslations';
 
 interface Props {
   familySlug?: string;
@@ -22,59 +23,6 @@ const nozzleTechnologies = Array.from(new Set(initialProducts.map((product) => p
   .sort();
 const showTechnicalFilters = patterns.length > 0 || nozzleTechnologies.length > 0;
 const defaultInterest = '';
-const interestTranslations: Record<string, string> = {
-  'Pistolas con vaso de gravedad': 'Gravity-feed spray guns',
-  'Pistolas con calderin': 'Pressure-feed spray guns',
-  'Pistolas aerograficas': 'Airbrush spray guns',
-  'Pistolas de vaso inferior': 'Siphon-feed spray guns',
-  'Pistolas roboticas': 'Automatic spray guns',
-  'Sistemas de deposito': 'Cup systems',
-  'Tecnología de filtros': 'Filter technology',
-  'Tecnologia de filtros': 'Filter technology',
-  'Proteccion respiratoria': 'Respiratory protection',
-  'Cabinas y preparación': 'Spray booths and preparation areas',
-  'ADAS': 'ADAS calibration',
-  'Accesorios car o liner': 'Car-O-Liner accessories',
-  'Accesorios pistolas': 'Spray gun accessories',
-  'Aire acondicionado': 'Air conditioning',
-  'Alineación y Enderezado Vehículos pesados': 'Heavy-vehicle alignment and straightening',
-  'Alineadoras': 'Wheel aligners',
-  'Antipiedras y selladores': 'Undercoatings and sealants',
-  'Balanceadoras': 'Wheel balancers',
-  'Bancos de enderezado autos y suv': 'Car and SUV straightening benches',
-  'Cabinas de pintura': 'Spray booths',
-  'Cargadores': 'Battery chargers',
-  'Carritos de herramientas': 'Tool carts',
-  'Compresores Denair': 'Denair compressors',
-  'Consumibles herramientas': 'Tool consumables',
-  'Desabollo de carroceria auto y SUV': 'Car and SUV dent repair',
-  'Desabollo de carroceria vehiculos pesados': 'Heavy-vehicle body repair',
-  'Desmontadora': 'Tire changers',
-  'Eléctricas': 'Electric tools',
-  'Enmascarado': 'Masking',
-  'Equipos de medición': 'Measuring equipment',
-  'Lámparas infrarrojas': 'Infrared lamps',
-  'Lijas': 'Abrasives',
-  'Líneas de aire comprimido': 'Compressed-air lines',
-  'Herramientas manuales': 'Hand tools',
-  'Masillas y rellenadores': 'Putties and fillers',
-  'Neumáticas': 'Pneumatic tools',
-  'Otros': 'Other products',
-  'PPG automotriz': 'PPG automotive coatings',
-  'PPG industrial': 'PPG industrial coatings',
-  'Pintura en Polvo': 'Powder coatings',
-  'Pulidoras': 'Polishers',
-  'Pulimento': 'Polishing compounds',
-  'Rampas y elevadores  EAE': 'EAE lifts',
-  'Reparación de plasticos': 'Plastic repair',
-  'Escáner': 'Diagnostic scanners',
-  'Seguridad Personal': 'Personal protection',
-  'Sistema de pulido': 'Polishing systems',
-  'Sistemas de lijado': 'Sanding systems',
-  'Tecnología de filtros y aire comprimido': 'Filtration and compressed air',
-  'Zonas de preparación': 'Preparation areas',
-};
-const englishInterest = (value: string) => interestTranslations[value] || value;
 const englishFilterValue = (value: string) => ({
   'No aplica': 'Not applicable',
   Aerografica: 'Airbrush',
@@ -85,7 +33,7 @@ const englishFilterValue = (value: string) => ({
   'Tecnología profesional': 'Professional technology',
 }[value] || value);
 const englishSummary = (product: (typeof initialProducts)[number]) =>
-  `${product.name} — professional ${product.brand} product for ${englishInterest(product.interest || product.category).toLowerCase()}.`;
+  `${product.name} — professional ${product.brand} product for ${englishProductLine(product.interest || product.category).toLowerCase()}.`;
 ---
 
 <style is:global>
@@ -149,7 +97,7 @@ const englishSummary = (product: (typeof initialProducts)[number]) =>
           <option value="">{en ? 'All product lines' : 'Todas las líneas de producto'}</option>
           {interests.map((interest) => (
             <option value={interest}>
-              {en ? englishInterest(interest) : interest}
+              {en ? englishProductLine(interest) : interest}
             </option>
           ))}
         </select>
@@ -193,7 +141,7 @@ const englishSummary = (product: (typeof initialProducts)[number]) =>
                 <img src={product.image} alt={product.name} loading="lazy" />
               </div>
               <div class="product-body">
-                <small>{en ? englishInterest(product.interest || product.category) : (product.interest || product.category)}</small>
+                <small>{en ? englishProductLine(product.interest || product.category) : (product.interest || product.category)}</small>
                 <h3>{product.name}</h3>
                 <p>{en ? englishSummary(product) : product.summary}</p>
                 <span class="arrow">→</span>
