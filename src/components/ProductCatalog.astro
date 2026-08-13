@@ -1,7 +1,7 @@
 ---
 import { catalogProducts, productDetailPath } from '../data/products';
 import { productFamilies } from '../data/productLines';
-import { englishProductLine } from '../data/catalogTranslations';
+import { catalogLineTranslation } from '../data/catalogHierarchy';
 
 interface Props {
   familySlug?: string;
@@ -14,7 +14,12 @@ const initialProducts = familySlug
   ? catalogProducts.filter((product) => product.familySlug === familySlug)
   : catalogProducts;
 const activeFamily = familySlug ? productFamilies.find((family) => family.slug === familySlug) : undefined;
-const interests = Array.from(new Set(initialProducts.map((product) => product.interest || product.category))).sort();
+const interests = Array.from(new Set(initialProducts.map((product) => product.catalogLine || product.interest || product.category)));
+const sublines = Array.from(new Set(initialProducts.map((product) => product.catalogSubline).filter(Boolean) as string[]));
+const sublineOptions = sublines.map((name) => ({
+  name,
+  lines: Array.from(new Set(initialProducts.filter((product) => product.catalogSubline === name).map((product) => product.catalogLine || '')))
+}));
 const patterns = Array.from(new Set(initialProducts.map((product) => product.sprayPattern || 'Standard')))
   .filter((value) => !['Standard', 'No aplica'].includes(value))
   .sort();
@@ -33,7 +38,7 @@ const englishFilterValue = (value: string) => ({
   'Tecnología profesional': 'Professional technology',
 }[value] || value);
 const englishSummary = (product: (typeof initialProducts)[number]) =>
-  `${product.name} — professional ${product.brand} product for ${englishProductLine(product.interest || product.category).toLowerCase()}.`;
+  `${product.name} — professional ${product.brand} product for ${catalogLineTranslation(product.catalogLine || product.interest || product.category).toLowerCase()}.`;
 ---
 
 <style is:global>
@@ -97,11 +102,21 @@ const englishSummary = (product: (typeof initialProducts)[number]) =>
           <option value="">{en ? 'All product lines' : 'Todas las líneas de producto'}</option>
           {interests.map((interest) => (
             <option value={interest}>
-              {en ? englishProductLine(interest) : interest}
+              {en ? catalogLineTranslation(interest) : interest}
             </option>
           ))}
         </select>
       </label>
+
+      {sublines.length > 0 && (
+        <label class="interest-filter">
+          <span class="label">{en ? 'Subcategory / model' : 'Subcategoría / modelo'}</span>
+          <select data-subline-filter class="interest-select">
+            <option value="">{en ? 'All subcategories' : 'Todas las subcategorías'}</option>
+            {sublineOptions.map((subline) => <option value={subline.name} data-lines={subline.lines.join('||')}>{en ? catalogLineTranslation(subline.name) : subline.name}</option>)}
+          </select>
+        </label>
+      )}
 
       <div class="catalog-toolbar">
         <div class="catalog-count"><span data-catalog-count>{initialProducts.length}</span> {en ? 'Results' : 'Resultados'}</div>
@@ -130,10 +145,11 @@ const englishSummary = (product: (typeof initialProducts)[number]) =>
         {initialProducts.map((product) => (
           <article
             data-catalog-card
-            data-interest={product.interest || product.category}
+            data-interest={product.catalogLine || product.interest || product.category}
+            data-subline={product.catalogSubline || ''}
             data-pattern={product.sprayPattern || 'Standard'}
             data-nozzle={product.nozzleTechnology || product.technology}
-            data-search={`${product.name} ${product.brand} ${product.category} ${product.technology} ${product.application} ${product.summary}`.toLowerCase()}
+            data-search={`${product.name} ${product.brand} ${product.category} ${product.catalogSection || ''} ${product.catalogLine || ''} ${product.catalogSubline || ''} ${product.technology} ${product.application} ${product.summary}`.toLowerCase()}
             class="product-card"
           >
             <a href={en ? `/en/product-lines/products/${product.slug}` : productDetailPath(product)}>
@@ -141,7 +157,10 @@ const englishSummary = (product: (typeof initialProducts)[number]) =>
                 <img src={product.image} alt={product.name} loading="lazy" />
               </div>
               <div class="product-body">
-                <small>{en ? englishProductLine(product.interest || product.category) : (product.interest || product.category)}</small>
+                <small>
+                  {en ? catalogLineTranslation(product.catalogLine || product.interest || product.category) : (product.catalogLine || product.interest || product.category)}
+                  {product.catalogSubline ? ` · ${en ? catalogLineTranslation(product.catalogSubline) : product.catalogSubline}` : ''}
+                </small>
                 <h3>{product.name}</h3>
                 <p>{en ? englishSummary(product) : product.summary}</p>
                 <span class="arrow">→</span>
@@ -159,6 +178,7 @@ const englishSummary = (product: (typeof initialProducts)[number]) =>
 <script>
   document.querySelectorAll('[data-product-catalog]').forEach((catalog) => {
     const interestSelect = catalog.querySelector('[data-interest-filter]');
+    const sublineSelect = catalog.querySelector('[data-subline-filter]');
     const patternSelect = catalog.querySelector('[data-pattern-filter]');
     const nozzleSelect = catalog.querySelector('[data-nozzle-filter]');
     const searchInput = catalog.querySelector('[data-catalog-search]');
@@ -171,6 +191,16 @@ const englishSummary = (product: (typeof initialProducts)[number]) =>
     if (requestedOption) interestSelect.value = requestedInterest;
     let selectedInterest = interestSelect.value || catalog.dataset.defaultInterest || '';
 
+    const syncSublineOptions = () => {
+      if (!sublineSelect) return;
+      Array.from(sublineSelect.options).slice(1).forEach((option) => {
+        const unavailable = Boolean(selectedInterest && !option.dataset.lines.split('||').includes(selectedInterest));
+        option.hidden = unavailable;
+        option.disabled = unavailable;
+      });
+    };
+    syncSublineOptions();
+
     const applyFilters = () => {
       const term = searchInput.value.trim().toLowerCase();
       let count = 0;
@@ -178,6 +208,7 @@ const englishSummary = (product: (typeof initialProducts)[number]) =>
       cards.forEach((card) => {
         const matches =
           (!selectedInterest || card.dataset.interest === selectedInterest) &&
+          (!sublineSelect?.value || card.dataset.subline === sublineSelect.value) &&
           (!patternSelect?.value || card.dataset.pattern === patternSelect.value) &&
           (!nozzleSelect?.value || card.dataset.nozzle === nozzleSelect.value) &&
           (!term || card.dataset.search.includes(term));
@@ -189,18 +220,21 @@ const englishSummary = (product: (typeof initialProducts)[number]) =>
       countNode.textContent = String(count);
       emptyNode.style.display = count > 0 ? 'none' : 'block';
       activeFilters.innerHTML = '';
-      [selectedInterest, patternSelect?.value, nozzleSelect?.value].filter(Boolean).forEach((value) => {
+      [selectedInterest, sublineSelect?.value, patternSelect?.value, nozzleSelect?.value].filter(Boolean).forEach((value) => {
         const chip = document.createElement('button');
         chip.type = 'button';
         const interestLabel = interestSelect.value === value ? interestSelect.selectedOptions[0]?.textContent : '';
+        const sublineLabel = sublineSelect?.value === value ? sublineSelect.selectedOptions[0]?.textContent : '';
         const patternLabel = patternSelect?.value === value ? patternSelect.selectedOptions[0]?.textContent : '';
         const nozzleLabel = nozzleSelect?.value === value ? nozzleSelect.selectedOptions[0]?.textContent : '';
-        chip.textContent = `${interestLabel || patternLabel || nozzleLabel || value} x`;
+        chip.textContent = `${interestLabel || sublineLabel || patternLabel || nozzleLabel || value} x`;
         chip.addEventListener('click', () => {
           if (selectedInterest === value) {
             selectedInterest = '';
             interestSelect.value = '';
+            syncSublineOptions();
           }
+          if (sublineSelect?.value === value) sublineSelect.value = '';
           if (patternSelect?.value === value) patternSelect.value = '';
           if (nozzleSelect?.value === value) nozzleSelect.value = '';
           applyFilters();
@@ -211,8 +245,11 @@ const englishSummary = (product: (typeof initialProducts)[number]) =>
 
     interestSelect.addEventListener('change', () => {
       selectedInterest = interestSelect.value;
+      if (sublineSelect) sublineSelect.value = '';
+      syncSublineOptions();
       applyFilters();
     });
+    sublineSelect?.addEventListener('change', applyFilters);
     patternSelect?.addEventListener('change', applyFilters);
     nozzleSelect?.addEventListener('change', applyFilters);
     searchInput.addEventListener('input', applyFilters);

@@ -1,5 +1,6 @@
 import { sataImportedProducts } from './sataImportedProducts.ts';
 import { clientCatalogProducts } from './clientCatalogProducts.ts';
+import { catalogPlacementFor } from './catalogHierarchy.ts';
 import type { CatalogProduct, ProductOptionGroup } from './productTypes';
 export type { CatalogProduct, ProductOptionGroup, ProductSpec, ProductVariant } from './productTypes';
 
@@ -646,22 +647,9 @@ const sourceCatalogProducts: CatalogProduct[] = [
   ...clientCatalogProducts
 ];
 
-const majorEquipmentPattern = /cabinas|zonas de preparaci[oó]n|bancos de enderezado|alineaci[oó]n|alineadoras|equipos de medici[oó]n|adas|rampas|elevadores|desmontadora|balanceadoras|compresores|l[ií]neas de aire comprimido/i;
-const consumablePattern = /abrasiv|lijas|enmascarado|masillas|rellenadores|antipiedras|selladores|pulimento|compuestos|almohadillas|foam pad|wool pad|guantes|papel|pl[aá]stico de enmascarar|seguridad personal|consumibles/i;
-const paintPattern = /pintura|ppg|coraflon|envirobase|deltron|primeron|versolon/i;
-
-const macroFamilySlug = (product: CatalogProduct) => {
-  const searchable = `${product.category} ${product.interest || ''} ${product.name} ${product.application}`;
-  const categorySearch = `${product.category} ${product.interest || ''}`;
-
-  if (product.familySlug === 'consumibles' || consumablePattern.test(searchable)) return 'consumibles';
-  if (product.familySlug === 'cabinas-y-preparacion' || majorEquipmentPattern.test(searchable)) return 'equipo-mayor';
-  if (product.brand === 'SATA' || paintPattern.test(categorySearch)) return 'pintura';
-  if (/accesorios pistolas|tecnolog[ií]a de filtros/i.test(categorySearch)) return 'pintura';
-  return 'equipo-menor';
-};
-
-export const catalogProducts: CatalogProduct[] = sourceCatalogProducts.map((product) => ({
-  ...product,
-  familySlug: macroFamilySlug(product)
-}));
+export const catalogProducts: CatalogProduct[] = sourceCatalogProducts
+  .map((product) => ({
+    ...product,
+    ...catalogPlacementFor(product)
+  }))
+  .sort((a, b) => (a.catalogOrder ?? 999) - (b.catalogOrder ?? 999));

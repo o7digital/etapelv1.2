@@ -28,6 +28,10 @@ export interface CatalogProduct {
   slug: string;
   brand: string;
   familySlug: string;
+  catalogSection?: string;
+  catalogLine?: string;
+  catalogSubline?: string;
+  catalogOrder?: number;
   category: string;
   technology: string;
   sprayPattern?: string;

@@ -1,7 +1,7 @@
 ---
 import { catalogProducts } from '../data/products';
 import { productFamilies, type ProductFamily } from '../data/productLines';
-import { englishProductLine } from '../data/catalogTranslations';
+import { catalogLinesForFamily } from '../data/catalogHierarchy';
 
 interface Props {
   family?: ProductFamily;
@@ -31,22 +31,33 @@ const familyEnglish: Record<string, { title: string; description: string }> = {
 };
 
 const groupsFor = (item: ProductFamily) => {
-  const groups = new Map<string, typeof catalogProducts>();
-  catalogProducts
-    .filter((product) => product.familySlug === item.slug)
-    .forEach((product) => {
-      const line = product.interest || product.category;
-      const products = groups.get(line) || [];
-      products.push(product);
-      groups.set(line, products);
-    });
+  return catalogLinesForFamily(item.slug).map((line) => {
+    const products = catalogProducts.filter(
+      (product) => product.familySlug === item.slug && product.catalogLine === line.name
+    );
+    return {
+      ...line,
+      products,
+      image: products.find((product) => product.image)?.image || item.image
+    };
+  });
+};
 
-  return Array.from(groups, ([name, products]) => ({
-    name,
-    products,
-    image: products.find((product) => product.image)?.image || item.image,
-    brands: Array.from(new Set(products.map((product) => product.brand))).slice(0, 3)
-  })).sort((a, b) => a.name.localeCompare(b.name, 'es'));
+const lineHref = (group: ReturnType<typeof groupsFor>[number], item?: ProductFamily) => {
+  if (group.externalHref) return group.externalHref;
+  if (group.contactOnly) return en ? '/en/contact#contact-form' : '/contacto#formulario-contacto';
+  if (en) return `/en/product-lines?tipo=${encodeURIComponent(group.name)}#product-catalog`;
+  return `${item?.href || ''}?tipo=${encodeURIComponent(group.name)}#catalogo-productos`;
+};
+
+const sectionsFor = (item: ProductFamily) => {
+  const sections = new Map<string, { name: string; nameEn: string; groups: ReturnType<typeof groupsFor> }>();
+  groupsFor(item).forEach((group) => {
+    const current = sections.get(group.section) || { name: group.section, nameEn: group.sectionEn, groups: [] };
+    current.groups.push(group);
+    sections.set(group.section, current);
+  });
+  return Array.from(sections.values());
 };
 ---
 
@@ -60,19 +71,42 @@ const groupsFor = (item: ProductFamily) => {
         </div>
         <p>{en ? 'Choose a product line to view the matching products and technical information.' : 'Elige una línea para ver los productos, marcas y fichas técnicas disponibles.'}</p>
       </div>
-      <div class="line-directory">
-        {groupsFor(family).map((group) => (
-          <a class="line-card" href={`?tipo=${encodeURIComponent(group.name)}#catalogo-productos`}>
-            <div class="line-image"><img src={group.image} alt={en ? englishProductLine(group.name) : group.name} loading="lazy" /></div>
-            <div class="line-copy">
-              <small>{`${group.products.length} ${en ? (group.products.length === 1 ? 'product' : 'products') : (group.products.length === 1 ? 'producto' : 'productos')}`}</small>
-              <h3>{en ? englishProductLine(group.name) : group.name}</h3>
-              <p>{group.brands.join(' · ')}</p>
-              <span>{en ? 'View products' : 'Ver productos'} →</span>
+      <div class="catalog-index">
+        {sectionsFor(family).map((section, sectionIndex) => (
+          <section class="catalog-index-section">
+            <header class="catalog-index-heading">
+              <small>{String(sectionIndex + 1).padStart(2, '0')}</small>
+              <h3>{en ? section.nameEn : section.name}</h3>
+            </header>
+            <div class="line-directory">
+              {section.groups.map((group) => (
+                <a class="line-card" href={lineHref(group, family)} target={group.externalHref ? '_blank' : undefined} rel={group.externalHref ? 'noreferrer' : undefined}>
+                  <div class="line-image"><img src={group.image} alt={en ? group.nameEn : group.name} loading="lazy" /></div>
+                  <div class="line-copy">
+                    <small>{en ? 'Product line' : 'Línea de producto'}</small>
+                    <h3>{en ? group.nameEn : group.name}</h3>
+                    {group.sublines.length > 0 && <p class="line-sublines">{group.sublines.map((subline) => en ? subline.nameEn : subline.name).join(' · ')}</p>}
+                    <span>
+                      {group.externalHref
+                        ? (en ? 'Open finder' : 'Abrir buscador')
+                        : group.contactOnly
+                          ? (en ? 'Contact us' : 'Contáctanos')
+                          : `${group.products.length} ${en ? (group.products.length === 1 ? 'product' : 'products') : (group.products.length === 1 ? 'producto' : 'productos')}`}
+                      {' '}→
+                    </span>
+                  </div>
+                </a>
+              ))}
             </div>
-          </a>
+          </section>
         ))}
       </div>
+      {family.slug === 'pintura' && (
+        <aside class="catalog-note">
+          <strong>{en ? 'SATA spare parts' : 'Refacciones SATA'}</strong>
+          <span>{en ? 'Available for spray guns less than seven years old, along with spray-gun cleaning accessories.' : 'Disponibles para pistolas con menos de siete años de antigüedad, junto con accesorios para limpieza de pistolas.'}</span>
+        </aside>
+      )}
     </div>
   </section>
 ) : (
@@ -99,13 +133,13 @@ const groupsFor = (item: ProductFamily) => {
                 <h3><a href={item.href}>{en ? translation?.title || item.title : item.title}</a></h3>
                 <p>{en ? translation?.description || item.menuDescription : item.menuDescription}</p>
                 <div class="family-lines">
-                  {groups.slice(0, 8).map((group) => (
-                    <a href={`${item.href}?tipo=${encodeURIComponent(group.name)}#catalogo-productos`}>
-                      {en ? englishProductLine(group.name) : group.name}
+                  {groups.map((group) => (
+                    <a href={lineHref(group, item)} target={group.externalHref ? '_blank' : undefined} rel={group.externalHref ? 'noreferrer' : undefined}>
+                      {en ? group.nameEn : group.name}
                     </a>
                   ))}
                 </div>
-                <a class="family-cta" href={item.href}>{en ? 'View all product lines' : 'Ver todas las líneas'} <span>→</span></a>
+                <a class="family-cta" href={en ? '/en/product-lines#product-catalog' : item.href}>{en ? 'View all product lines' : 'Ver todas las líneas'} <span>→</span></a>
               </div>
             </article>
           );
@@ -128,10 +162,15 @@ const groupsFor = (item: ProductFamily) => {
   .family-directory-copy h3{font-size:32px;line-height:1;letter-spacing:-.05em;color:var(--navy);margin:10px 0 12px}
   .family-directory-copy>p{color:#647083;line-height:1.6;margin:0 0 20px}
   .family-lines{display:grid;gap:7px;margin-bottom:24px}
-  .family-lines a{color:#26314f;font-size:14px;font-weight:800}
+  .family-lines a{color:#26314f;font-size:14px;font-weight:800;padding:6px 9px;background:#f3f5f8;border:1px solid #e3e8f0;box-shadow:0 2px 0 #d7dee9;transition:.18s ease}
+  .family-lines a::after{content:' →';color:var(--orange-dark)}
   .family-lines a:hover{color:var(--orange-dark)}
   .family-cta{margin-top:auto;padding-top:18px;border-top:1px solid var(--line);display:flex;justify-content:space-between;color:var(--navy);font-weight:950}
   .family-cta span{color:var(--orange-dark)}
+  .catalog-index{display:grid;gap:42px}
+  .catalog-index-heading{display:flex;align-items:center;gap:14px;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid var(--navy)}
+  .catalog-index-heading small{color:var(--orange-dark);font-weight:950;letter-spacing:.12em}
+  .catalog-index-heading h3{margin:0;color:var(--navy);font-size:24px;letter-spacing:-.035em}
   .line-directory{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
   .line-card{background:#fff;border:1px solid var(--line);display:flex;flex-direction:column;min-height:410px;transition:.2s ease;overflow:hidden}
   .line-card:hover{transform:translateY(-3px);border-color:var(--navy);box-shadow:var(--shadow-soft)}
@@ -140,8 +179,10 @@ const groupsFor = (item: ProductFamily) => {
   .line-copy{padding:20px;display:flex;flex:1;flex-direction:column}
   .line-copy small{color:var(--orange-dark);font-weight:900;text-transform:uppercase;letter-spacing:.08em}
   .line-copy h3{color:var(--navy);font-size:21px;line-height:1.08;letter-spacing:-.035em;margin:9px 0}
-  .line-copy p{color:#647083;margin:0 0 18px;font-size:14px}
+  .line-copy p{color:#647083;margin:0 0 18px;font-size:14px;line-height:1.5}
   .line-copy span{margin-top:auto;color:var(--navy);font-weight:950}
+  .catalog-note{display:flex;gap:12px;align-items:baseline;margin-top:24px;padding:18px 20px;background:#f3f5f8;border-left:4px solid var(--orange-dark);color:#4f5c70}
+  .catalog-note strong{color:var(--navy)}
   @media(max-width:1040px){.family-directory,.line-directory{grid-template-columns:repeat(2,minmax(0,1fr))}.family-directory-card{grid-template-columns:1fr}.family-directory-image{min-height:250px}}
   @media(max-width:640px){.family-directory,.line-directory{grid-template-columns:1fr}.line-card{min-height:380px}}
 </style>

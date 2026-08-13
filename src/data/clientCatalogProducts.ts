@@ -4843,6 +4843,51 @@ const uniqueClientCatalogSeeds = clientCatalogSeeds.filter(
   (seed, index, seeds) => seeds.findIndex((item) => item.brand === seed.brand && item.name === seed.name) === index
 );
 
+const workbookProductCopy: Record<string, Pick<CatalogProduct, 'summary' | 'description' | 'highlights' | 'detailBlocks'>> = {
+  'drester-classic-1050': {
+    summary: 'Lavadora manual compacta para pistolas de gravedad que trabajan con pintura base agua.',
+    description: 'La Drester Classic 1050 limpia pistolas de gravedad con un consumo reducido de agua. Su bomba de diafragma alimenta el cepillo de lavado y el sistema de doble filtración permite reutilizar el agua dentro del proceso.',
+    highlights: [
+      'Limpieza manual para pistolas de gravedad base agua.',
+      'Bomba de diafragma con cuatro años de garantía del fabricante.',
+      'Doble filtración con capacidad aproximada de 10 galones.'
+    ],
+    detailBlocks: [
+      { title: 'Proceso de limpieza', body: 'El agua circula a través del cepillo para facilitar la limpieza manual de la pistola utilizando una cantidad reducida de líquido.' },
+      { title: 'Filtración y reutilización', body: 'El sistema de doble filtración retiene residuos y permite mantener el agua dentro del circuito de trabajo.' },
+      { title: 'Selección técnica', body: 'Etapel puede confirmar alimentación de aire, espacio de instalación, consumibles y accesorios de acuerdo con la operación del taller.' }
+    ]
+  },
+  'drester-classic-3600': {
+    summary: 'Lavadora para pistolas con solvente, con ciclo automático y enjuague manual.',
+    description: 'La Drester Classic 3600 combina lavado automático con la reconocida bomba Drester, enjuague manual y extracción integrada para limpiar pistolas que trabajan con productos base solvente.',
+    highlights: [
+      'Ciclo de lavado automático para pinturas base solvente.',
+      'Enjuague manual y extracción integrados en la misma unidad.',
+      'Bomba Drester con tres años de garantía del fabricante.'
+    ],
+    detailBlocks: [
+      { title: 'Lavado automático', body: 'El compartimento de lavado permite automatizar el ciclo principal y reducir la manipulación durante la limpieza.' },
+      { title: 'Acabado manual', body: 'El enjuague manual permite completar la limpieza de las zonas críticas de la pistola antes de volver a utilizarla.' },
+      { title: 'Instalación', body: 'La unidad integra extracción; Etapel puede revisar alimentación neumática, solventes compatibles y ubicación dentro del área de pintura.' }
+    ]
+  },
+  'compresor-de-tornillo-denair-con-secador-integrado': {
+    summary: 'Compresor de tornillo Denair compacto con secador refrigerativo integrado.',
+    description: 'Solución de aire comprimido todo en uno que integra compresor, separación de condensados, secador refrigerativo y control inteligente en un conjunto compacto para talleres con espacio limitado.',
+    highlights: [
+      'Secador refrigerativo integrado para reducir humedad y condensados.',
+      'Controlador inteligente multilingüe con historial de fallas y avisos de servicio.',
+      'Tren motriz de 5 a 22 kW, disponible con transmisión por banda o directa.'
+    ],
+    detailBlocks: [
+      { title: 'Tratamiento del aire', body: 'El separador tipo spin-on y el secador refrigerativo integrado ayudan a entregar aire más seco y estable al proceso.' },
+      { title: 'Construcción industrial', body: 'Motor TEFC de alta eficiencia con protección IP54/IP55, unidad de tornillo Denair, acero de origen estadounidense y rodamientos SKF.' },
+      { title: 'Operación exigente', body: 'El conjunto está diseñado para trabajar en ambientes de hasta 55 °C. Etapel puede dimensionar capacidad, presión, depósito y red según la demanda real.' }
+    ]
+  }
+};
+
 export const clientCatalogProducts: CatalogProduct[] = uniqueClientCatalogSeeds.map((seed) => {
   const copy = familyCopy[seed.familySlug] || familyCopy.pintura;
   const category = seed.category
@@ -4873,6 +4918,7 @@ export const clientCatalogProducts: CatalogProduct[] = uniqueClientCatalogSeeds.
     { label: 'Categoría', value: category },
     ...seed.specs
   ].slice(0, 8);
+  const workbookCopy = workbookProductCopy[seed.slug];
   return {
     slug: `catalogo-${seed.slug}`,
     brand: seed.brand,
@@ -4884,19 +4930,19 @@ export const clientCatalogProducts: CatalogProduct[] = uniqueClientCatalogSeeds.
     interest: category,
     application: division,
     name: seed.name,
-    summary: `${seed.name}, solución ${seed.brand} para ${category.toLowerCase()}.`,
-    description: `Equipo o producto profesional para ${copy.process}. Etapel acompaña la selección de ${seed.name} de acuerdo con la aplicación, capacidad y condiciones reales del taller.`,
+    summary: workbookCopy?.summary || `${seed.name}, solución ${seed.brand} para ${category.toLowerCase()}.`,
+    description: workbookCopy?.description || `Equipo o producto profesional para ${copy.process}. Etapel acompaña la selección de ${seed.name} de acuerdo con la aplicación, capacidad y condiciones reales del taller.`,
     image,
     gallery,
     badges: [seed.brand, category, division],
     specs: technicalSpecs,
     variants: [{ name: 'Configuración bajo consulta', note: 'Modelo, capacidad y accesorios por confirmar según la aplicación.' }],
-    highlights: [
+    highlights: workbookCopy?.highlights || [
       `Solución ${seed.brand} para ${category.toLowerCase()}.`,
       `Puede integrarse con ${copy.integration}.`,
       'Etapel brinda orientación técnica, cotización y soporte de selección.'
     ],
-    detailBlocks: [
+    detailBlocks: workbookCopy?.detailBlocks || [
       { title: 'Uso recomendado', body: `Aplicaciones profesionales de ${category.toLowerCase()} dentro de la división ${division}.` },
       { title: 'Selección técnica', body: 'La configuración final debe confirmarse considerando el proceso, el volumen de trabajo, las instalaciones y los accesorios requeridos.' },
       { title: 'Integración con el taller', body: `Etapel puede revisar la compatibilidad con ${copy.integration}.` }
