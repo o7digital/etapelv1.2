@@ -1,0 +1,19 @@
+---
+interface Props {
+  lang?: 'es' | 'en';
+}
+
+const { lang = 'es' } = Astro.props as Props;
+const label = lang === 'en' ? 'Back to top' : 'Volver arriba';
+---
+
+<a class="back-to-top" href="#top" aria-label={label}>
+  <span aria-hidden="true">↑</span><strong>{label}</strong>
+</a>
+
+<style is:global>
+  .back-to-top{position:fixed;right:22px;bottom:22px;z-index:70;display:flex;align-items:center;gap:9px;min-height:46px;padding:0 16px;background:#fff;border:1px solid #d6dce7;color:#070b2f;font-size:13px;box-shadow:0 8px 22px rgba(7,11,47,.18);transition:transform .2s ease,background .2s ease,color .2s ease,border-color .2s ease}
+  .back-to-top span{display:grid;place-items:center;width:25px;height:25px;background:#f58220;color:#fff;font-size:17px;line-height:1}
+  .back-to-top:hover,.back-to-top:focus-visible{background:#070b2f;border-color:#070b2f;color:#fff;transform:translateY(-3px);outline:0}
+  @media(max-width:640px){.back-to-top{right:14px;bottom:14px;width:46px;padding:0;justify-content:center}.back-to-top strong{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}.back-to-top span{background:transparent;color:inherit}}
+</style>

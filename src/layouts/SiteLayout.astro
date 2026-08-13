@@ -1,4 +1,6 @@
 ---
+import BackToTop from '../components/BackToTop.astro';
+
 interface Props {
   title: string;
   description: string;
@@ -53,7 +55,7 @@ const languageHref = english
       @media(max-width:1040px){.menu{display:none}.nav-actions{display:none}.mobile-menu{display:block}.page-hero-inner,.detail-grid{grid-template-columns:1fr}.page-hero-inner>*{min-width:0}.grid-families,.catalog-grid{grid-template-columns:repeat(2,1fr)}.filter-grid{grid-template-columns:repeat(2,1fr)}.family-tile{grid-template-columns:1fr}.family-media{min-height:220px}}@media(max-width:640px){.nav{height:70px;padding:0 18px}.brand img{width:140px}.mobile-panel{right:18px}.page-hero-inner{padding:58px 20px}.page-hero h1{font-size:clamp(36px,11vw,44px);overflow-wrap:anywhere}.hero-panel{padding:22px}.hero-panel-grid,.grid-families,.catalog-grid,.panel-grid{grid-template-columns:1fr}.filter-grid{grid-template-columns:1fr}.section-head{display:block}.section-head p{margin-top:18px}.option-grid{grid-template-columns:1fr}.info-row{display:block}.info-row dd{text-align:left!important;margin-top:8px!important}.footer-inner{flex-direction:column;align-items:flex-start}}
     </style>
   </head>
-  <body>
+  <body id="top">
     <div class="topline"></div>
     <header class="site-header">
       <nav class="nav">
@@ -96,6 +98,7 @@ const languageHref = english
     ) : (
       <footer class="footer"><div class="footer-inner"><img src="/etapel-logo.svg" alt="Etapel" /><div style="display:flex;gap:18px;flex-wrap:wrap"><a href="/linea-de-producto/equipo-mayor">Equipo Mayor</a><a href="/linea-de-producto/equipo-menor">Equipo Menor</a><a href="/linea-de-producto/pintura">Pintura</a><a href="/linea-de-producto/consumibles">Consumibles</a></div><span>Copyright © 2026 Etapel.</span></div></footer>
     )}
+    <BackToTop lang={lang} />
     <style is:global>
       .footer-full{padding:58px 28px 28px}.footer-full>.footer-grid,.footer-full>.footer-bottom{max-width:var(--max);margin-left:auto;margin-right:auto}.footer-full .footer-grid{display:grid;grid-template-columns:1.15fr .95fr .75fr .9fr;gap:36px}.footer-full img{width:150px}.footer-full p{color:#aeb8cf;line-height:1.7}.footer-full h3{font-size:12px;text-transform:uppercase;letter-spacing:.18em;color:#fff;margin:0 0 18px}.footer-full ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}.footer-full a{color:#c8d2e5}.footer-full .footer-bottom{margin-top:36px;padding-top:22px;border-top:1px solid rgba(255,255,255,.12);display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}.footer-full .footer-bottom div{display:flex;gap:18px;flex-wrap:wrap}@media(max-width:800px){.footer-full .footer-grid{grid-template-columns:1fr}}
     </style>
