@@ -1,0 +1,82 @@
+---
+interface Props {
+  lang?: 'es' | 'en';
+}
+
+const { lang = 'es' } = Astro.props;
+const english = lang === 'en';
+const brands = [
+  'SATA',
+  'GYS',
+  'PPG',
+  'RUPES',
+  'Car-O-Liner',
+  'JOSAM',
+  'USI Italia',
+  'Millibar',
+  'Hedson',
+  'Polyvance',
+  'Farécla',
+  'Hofmann',
+  'ShineMate',
+  'Colad',
+  'PneuTrend',
+  'SUN',
+  'Evercoat',
+  'Prevost',
+  'Solary',
+  'Denair',
+  'EAE',
+  'Wieländer+Schill',
+  'Kovax',
+  'TELWIN',
+  'Detroit Surface Care',
+];
+---
+
+<section class="brand-marquee" aria-label={english ? 'Brands and technologies' : 'Marcas y tecnologías'}>
+  <div class="brand-marquee-inner">
+    <div class="brand-marquee-label">
+      <span></span>
+      <p>{english ? 'Brands and technologies' : 'Marcas y tecnologías'}</p>
+    </div>
+    <div class="brand-marquee-window">
+      <div class="brand-marquee-track">
+        <ul class="brand-marquee-group">
+          {brands.map((brand) => <li>{brand}</li>)}
+        </ul>
+        <ul class="brand-marquee-group" aria-hidden="true">
+          {brands.map((brand) => <li>{brand}</li>)}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .brand-marquee{padding:0;background:#fff;border-bottom:1px solid var(--line);overflow:hidden}
+  .brand-marquee-inner{max-width:var(--max);margin:0 auto;padding:22px 28px;display:grid;grid-template-columns:165px minmax(0,1fr);gap:28px;align-items:center}
+  .brand-marquee-label{display:flex;align-items:center;gap:11px;color:#747f91}
+  .brand-marquee-label>span{width:9px;height:9px;flex:0 0 auto;background:var(--orange);box-shadow:0 0 0 5px rgba(245,130,32,.12)}
+  .brand-marquee-label p{margin:0;font-size:11px;line-height:1.25;font-weight:950;letter-spacing:.12em;text-transform:uppercase}
+  .brand-marquee-window{position:relative;min-width:0;overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}
+  .brand-marquee-track{display:flex;width:max-content;will-change:transform;animation:brand-scroll 46s linear infinite}
+  .brand-marquee-group{display:flex;flex:none;align-items:center;gap:12px;margin:0;padding:3px 12px 3px 0;list-style:none}
+  .brand-marquee-group li{white-space:nowrap;padding:11px 15px;background:#f5f7fa;border:1px solid #e3e8f0;box-shadow:0 2px 0 #dce2eb;color:#101a5f;font-size:12px;font-weight:900;letter-spacing:.055em;text-transform:uppercase;transition:.2s ease}
+  .brand-marquee:hover .brand-marquee-track,.brand-marquee:focus-within .brand-marquee-track{animation-play-state:paused}
+  .brand-marquee-group li:hover{background:#fff;border-color:var(--orange);color:var(--orange-dark);transform:translateY(-1px)}
+  @keyframes brand-scroll{to{transform:translate3d(-50%,0,0)}}
+  @media(max-width:700px){
+    .brand-marquee-inner{padding:18px 0;grid-template-columns:1fr;gap:14px}
+    .brand-marquee-label{padding:0 20px}
+    .brand-marquee-window{mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent)}
+    .brand-marquee-track{animation-duration:38s}
+    .brand-marquee-group{gap:10px;padding-right:10px}
+    .brand-marquee-group li{padding:10px 13px;font-size:11px}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .brand-marquee-window{overflow-x:auto;mask-image:none;-webkit-mask-image:none;scrollbar-width:thin}
+    .brand-marquee-track{animation:none}
+    .brand-marquee-group[aria-hidden="true"]{display:none}
+  }
+</style>
