@@ -14,11 +14,14 @@ const initialProducts = familySlug
   : catalogProducts;
 const activeFamily = familySlug ? productFamilies.find((family) => family.slug === familySlug) : undefined;
 const interests = Array.from(new Set(initialProducts.map((product) => product.interest || product.category))).sort();
-const patterns = Array.from(new Set(initialProducts.map((product) => product.sprayPattern || 'Standard'))).sort();
-const nozzleTechnologies = Array.from(new Set(initialProducts.map((product) => product.nozzleTechnology || product.technology))).sort();
-const defaultInterest = interests.includes('Pistolas con vaso de gravedad')
-  ? 'Pistolas con vaso de gravedad'
-  : interests[0];
+const patterns = Array.from(new Set(initialProducts.map((product) => product.sprayPattern || 'Standard')))
+  .filter((value) => !['Standard', 'No aplica'].includes(value))
+  .sort();
+const nozzleTechnologies = Array.from(new Set(initialProducts.map((product) => product.nozzleTechnology || product.technology)))
+  .filter((value) => !['Tecnología profesional', 'No aplica'].includes(value))
+  .sort();
+const showTechnicalFilters = patterns.length > 0 || nozzleTechnologies.length > 0;
+const defaultInterest = '';
 const interestTranslations: Record<string, string> = {
   'Pistolas con vaso de gravedad': 'Gravity-feed spray guns',
   'Pistolas con calderin': 'Pressure-feed spray guns',
@@ -133,19 +136,19 @@ const englishSummary = (product: (typeof initialProducts)[number]) =>
     <div class="section-head">
       <div>
         <div class="label">{en ? 'Product catalog' : 'Catálogo de productos'}</div>
-        <h2>{activeFamily ? activeFamily.shortTitle : en ? 'Etapel products' : 'Productos Etapel'}</h2>
+        <h2>{activeFamily ? (en ? `${activeFamily.shortTitle} products` : `Productos de ${activeFamily.shortTitle}`) : en ? 'Complete Etapel catalog' : 'Catálogo completo Etapel'}</h2>
       </div>
-      <p>{en ? 'Filter by product type, spray pattern and technology. Each card opens a detailed product page.' : 'Filtra por tipo de producto, forma del abanico y tecnología. Cada tarjeta abre una ficha con galería, datos técnicos y recursos.'}</p>
+      <p>{en ? 'Choose a product line or search by product and brand. Each card opens a detailed product page.' : 'Elige una línea de producto o busca por producto y marca. Cada tarjeta abre una ficha con galería, datos técnicos y recursos.'}</p>
     </div>
 
     <div class="catalog-shell" data-product-catalog data-default-interest={defaultInterest}>
-      <h3 class="section-title" style="font-size:32px">{en ? 'What are you looking for?' : '¿Qué te interesa?'}</h3>
+      <h3 class="section-title" style="font-size:32px">{en ? 'What are you looking for?' : '¿Qué estás buscando?'}</h3>
       <label class="interest-filter">
-        <span class="label">{en ? 'Product type' : 'Tipo de producto'}</span>
+        <span class="label">{en ? 'Product line' : 'Línea de producto'}</span>
         <select data-interest-filter class="interest-select">
-          <option value="">{en ? 'All product types' : 'Todos los tipos de producto'}</option>
+          <option value="">{en ? 'All product lines' : 'Todas las líneas de producto'}</option>
           {interests.map((interest) => (
-            <option value={interest} selected={interest === defaultInterest}>
+            <option value={interest}>
               {en ? englishInterest(interest) : interest}
             </option>
           ))}
@@ -160,16 +163,18 @@ const englishSummary = (product: (typeof initialProducts)[number]) =>
         </label>
       </div>
 
-      <div class="select-row">
-        <select data-pattern-filter class="field">
-          <option value="">{en ? 'Spray pattern' : 'Forma del abanico'}</option>
-          {patterns.map((pattern) => <option value={pattern}>{en ? englishFilterValue(pattern) : pattern}</option>)}
-        </select>
-        <select data-nozzle-filter class="field">
-          <option value="">{en ? 'Nozzle technology' : 'Tecnología de boquillas'}</option>
-          {nozzleTechnologies.map((technology) => <option value={technology}>{en ? englishFilterValue(technology) : technology}</option>)}
-        </select>
-      </div>
+      {showTechnicalFilters && (
+        <div class="select-row">
+          {patterns.length > 0 && <select data-pattern-filter class="field">
+            <option value="">{en ? 'Spray pattern' : 'Forma del abanico'}</option>
+            {patterns.map((pattern) => <option value={pattern}>{en ? englishFilterValue(pattern) : pattern}</option>)}
+          </select>}
+          {nozzleTechnologies.length > 0 && <select data-nozzle-filter class="field">
+            <option value="">{en ? 'Nozzle technology' : 'Tecnología de boquillas'}</option>
+            {nozzleTechnologies.map((technology) => <option value={technology}>{en ? englishFilterValue(technology) : technology}</option>)}
+          </select>}
+        </div>
+      )}
 
       <div class="chips" data-active-filters></div>
 
@@ -213,6 +218,9 @@ const englishSummary = (product: (typeof initialProducts)[number]) =>
     const activeFilters = catalog.querySelector('[data-active-filters]');
     const emptyNode = catalog.querySelector('[data-catalog-empty]');
     const cards = Array.from(catalog.querySelectorAll('[data-catalog-card]'));
+    const requestedInterest = new URL(window.location.href).searchParams.get('tipo') || '';
+    const requestedOption = Array.from(interestSelect.options).find((option) => option.value === requestedInterest);
+    if (requestedOption) interestSelect.value = requestedInterest;
     let selectedInterest = interestSelect.value || catalog.dataset.defaultInterest || '';
 
     const applyFilters = () => {
@@ -222,8 +230,8 @@ const englishSummary = (product: (typeof initialProducts)[number]) =>
       cards.forEach((card) => {
         const matches =
           (!selectedInterest || card.dataset.interest === selectedInterest) &&
-          (!patternSelect.value || card.dataset.pattern === patternSelect.value) &&
-          (!nozzleSelect.value || card.dataset.nozzle === nozzleSelect.value) &&
+          (!patternSelect?.value || card.dataset.pattern === patternSelect.value) &&
+          (!nozzleSelect?.value || card.dataset.nozzle === nozzleSelect.value) &&
           (!term || card.dataset.search.includes(term));
 
         card.classList.toggle('hidden', !matches);
@@ -233,20 +241,20 @@ const englishSummary = (product: (typeof initialProducts)[number]) =>
       countNode.textContent = String(count);
       emptyNode.style.display = count > 0 ? 'none' : 'block';
       activeFilters.innerHTML = '';
-      [selectedInterest, patternSelect.value, nozzleSelect.value].filter(Boolean).forEach((value) => {
+      [selectedInterest, patternSelect?.value, nozzleSelect?.value].filter(Boolean).forEach((value) => {
         const chip = document.createElement('button');
         chip.type = 'button';
         const interestLabel = interestSelect.value === value ? interestSelect.selectedOptions[0]?.textContent : '';
-        const patternLabel = patternSelect.value === value ? patternSelect.selectedOptions[0]?.textContent : '';
-        const nozzleLabel = nozzleSelect.value === value ? nozzleSelect.selectedOptions[0]?.textContent : '';
+        const patternLabel = patternSelect?.value === value ? patternSelect.selectedOptions[0]?.textContent : '';
+        const nozzleLabel = nozzleSelect?.value === value ? nozzleSelect.selectedOptions[0]?.textContent : '';
         chip.textContent = `${interestLabel || patternLabel || nozzleLabel || value} x`;
         chip.addEventListener('click', () => {
           if (selectedInterest === value) {
             selectedInterest = '';
             interestSelect.value = '';
           }
-          if (patternSelect.value === value) patternSelect.value = '';
-          if (nozzleSelect.value === value) nozzleSelect.value = '';
+          if (patternSelect?.value === value) patternSelect.value = '';
+          if (nozzleSelect?.value === value) nozzleSelect.value = '';
           applyFilters();
         });
         activeFilters.appendChild(chip);
@@ -257,8 +265,8 @@ const englishSummary = (product: (typeof initialProducts)[number]) =>
       selectedInterest = interestSelect.value;
       applyFilters();
     });
-    patternSelect.addEventListener('change', applyFilters);
-    nozzleSelect.addEventListener('change', applyFilters);
+    patternSelect?.addEventListener('change', applyFilters);
+    nozzleSelect?.addEventListener('change', applyFilters);
     searchInput.addEventListener('input', applyFilters);
     applyFilters();
   });

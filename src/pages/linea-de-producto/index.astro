@@ -1,6 +1,7 @@
 ---
 import SiteLayout from '../../layouts/SiteLayout.astro';
 import ProductCatalog from '../../components/ProductCatalog.astro';
+import ProductFamilyMenu from '../../components/ProductFamilyMenu.astro';
 import { productFamilies } from '../../data/productLines';
 ---
 
@@ -14,7 +15,7 @@ import { productFamilies } from '../../data/productLines';
         <div>
           <span class="eyebrow"><span class="dot"></span> Línea de Producto</span>
           <h1>Soluciones organizadas por familias para talleres profesionales.</h1>
-          <p>El catálogo del sitio actual se integra al nuevo diseño para navegar por categorías, subfamilias y fichas de producto sin volver al hero slider anterior.</p>
+          <p>Navega desde cuatro grandes familias hacia cada línea de producto y consulta después las fichas, marcas y datos técnicos disponibles.</p>
           <div class="hero-actions">
             <a class="btn orange" href="#catalogo-productos">Ver productos</a>
             <a class="btn outline" href="#familias">Ver familias</a>
@@ -28,31 +29,7 @@ import { productFamilies } from '../../data/productLines';
       </div>
     </section>
 
-    <section id="familias">
-      <div class="container">
-        <div class="section-head">
-          <div>
-            <div class="label">Familias principales</div>
-            <h2>Cuatro accesos claros para orientar la compra.</h2>
-          </div>
-          <p>La navegación mantiene el contenido del sitio actual, pero lo presenta con una lectura más premium y directa.</p>
-        </div>
-        <div class="grid-families">
-          {productFamilies.map((family) => (
-            <article class="family-tile">
-              <div class="family-copy">
-                <div class="label">{family.shortTitle}</div>
-                <h3>{family.title}</h3>
-                <p>{family.menuDescription}</p>
-                <ul>{family.items.slice(0, 4).map((item) => <li>{item}</li>)}</ul>
-                <div style="margin-top:24px"><a class="btn outline-dark" href={family.href}>Ver categoría</a></div>
-              </div>
-              <div class="family-media"><img src={family.image} alt={family.title} loading="lazy" /></div>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
+    <ProductFamilyMenu />
 
     <ProductCatalog />
   </main>

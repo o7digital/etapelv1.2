@@ -1,0 +1,144 @@
+---
+import { catalogProducts } from '../data/products';
+import { productFamilies, type ProductFamily } from '../data/productLines';
+
+interface Props {
+  family?: ProductFamily;
+  lang?: 'es' | 'en';
+}
+
+const { family, lang = 'es' } = Astro.props as Props;
+const en = lang === 'en';
+const families = family ? [family] : productFamilies;
+const familyEnglish: Record<string, { title: string; description: string }> = {
+  'equipo-mayor': {
+    title: 'Major equipment',
+    description: 'Large-format installations and equipment for body shops.'
+  },
+  'equipo-menor': {
+    title: 'Tools & small equipment',
+    description: 'Mobile equipment and tools for repair, diagnostics, welding and finishing.'
+  },
+  pintura: {
+    title: 'Paint',
+    description: 'Automotive and industrial coatings, application, filtration and finishing systems.'
+  },
+  consumibles: {
+    title: 'Consumables',
+    description: 'Preparation, protection, repair and finishing materials for daily use.'
+  }
+};
+
+const groupsFor = (item: ProductFamily) => {
+  const groups = new Map<string, typeof catalogProducts>();
+  catalogProducts
+    .filter((product) => product.familySlug === item.slug)
+    .forEach((product) => {
+      const line = product.interest || product.category;
+      const products = groups.get(line) || [];
+      products.push(product);
+      groups.set(line, products);
+    });
+
+  return Array.from(groups, ([name, products]) => ({
+    name,
+    products,
+    image: products.find((product) => product.image)?.image || item.image,
+    brands: Array.from(new Set(products.map((product) => product.brand))).slice(0, 3)
+  })).sort((a, b) => a.name.localeCompare(b.name, 'es'));
+};
+---
+
+{family ? (
+  <section class="product-lines-menu" id="lineas-de-producto">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <div class="label">{en ? 'Product lines' : 'Líneas de producto'}</div>
+          <h2>{en ? `Explore ${familyEnglish[family.slug]?.title || family.title}` : `Explora ${family.title}`}</h2>
+        </div>
+        <p>{en ? 'Choose a product line to view the matching products and technical information.' : 'Elige una línea para ver los productos, marcas y fichas técnicas disponibles.'}</p>
+      </div>
+      <div class="line-directory">
+        {groupsFor(family).map((group) => (
+          <a class="line-card" href={`?tipo=${encodeURIComponent(group.name)}#catalogo-productos`}>
+            <div class="line-image"><img src={group.image} alt={group.name} loading="lazy" /></div>
+            <div class="line-copy">
+              <small>{`${group.products.length} ${en ? (group.products.length === 1 ? 'product' : 'products') : (group.products.length === 1 ? 'producto' : 'productos')}`}</small>
+              <h3>{group.name}</h3>
+              <p>{group.brands.join(' · ')}</p>
+              <span>{en ? 'View products' : 'Ver productos'} →</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+) : (
+  <section class="product-family-menu" id={en ? 'families' : 'familias'}>
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <div class="label">{en ? 'Main families' : 'Familias principales'}</div>
+          <h2>{en ? 'Four clear ways into the catalog.' : 'Cuatro accesos claros al catálogo.'}</h2>
+        </div>
+        <p>{en ? 'Start with a major family, then choose a product line just as you would in a professional catalog.' : 'Primero elige una familia grande y después una línea de producto, como en un catálogo profesional.'}</p>
+      </div>
+      <div class="family-directory">
+        {families.map((item) => {
+          const groups = groupsFor(item);
+          const translation = familyEnglish[item.slug];
+          return (
+            <article class="family-directory-card">
+              <a class="family-directory-image" href={item.href}>
+                <img src={item.image} alt={translation?.title || item.title} loading="lazy" />
+              </a>
+              <div class="family-directory-copy">
+                <div class="family-number">{String(productFamilies.indexOf(item) + 1).padStart(2, '0')}</div>
+                <h3><a href={item.href}>{en ? translation?.title || item.title : item.title}</a></h3>
+                <p>{en ? translation?.description || item.menuDescription : item.menuDescription}</p>
+                <div class="family-lines">
+                  {groups.slice(0, 8).map((group) => (
+                    <a href={`${item.href}?tipo=${encodeURIComponent(group.name)}#catalogo-productos`}>{group.name}</a>
+                  ))}
+                </div>
+                <a class="family-cta" href={item.href}>{en ? 'View all product lines' : 'Ver todas las líneas'} <span>→</span></a>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  .product-family-menu{background:#f5f7fb}
+  .product-lines-menu{background:#fff}
+  .family-directory{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+  .family-directory-card{display:grid;grid-template-columns:220px 1fr;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow-soft);overflow:hidden}
+  .family-directory-image{display:flex;align-items:center;justify-content:center;background:#f1f4f8;padding:20px;min-height:360px}
+  .family-directory-image img{width:100%;height:100%;max-height:320px;object-fit:contain;transition:transform .25s ease}
+  .family-directory-card:hover .family-directory-image img{transform:scale(1.04)}
+  .family-directory-copy{padding:28px;display:flex;flex-direction:column}
+  .family-number{font-size:12px;font-weight:950;letter-spacing:.16em;color:var(--orange-dark)}
+  .family-directory-copy h3{font-size:32px;line-height:1;letter-spacing:-.05em;color:var(--navy);margin:10px 0 12px}
+  .family-directory-copy>p{color:#647083;line-height:1.6;margin:0 0 20px}
+  .family-lines{display:grid;gap:7px;margin-bottom:24px}
+  .family-lines a{color:#26314f;font-size:14px;font-weight:800}
+  .family-lines a:hover{color:var(--orange-dark)}
+  .family-cta{margin-top:auto;padding-top:18px;border-top:1px solid var(--line);display:flex;justify-content:space-between;color:var(--navy);font-weight:950}
+  .family-cta span{color:var(--orange-dark)}
+  .line-directory{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+  .line-card{background:#fff;border:1px solid var(--line);display:flex;flex-direction:column;min-height:410px;transition:.2s ease;overflow:hidden}
+  .line-card:hover{transform:translateY(-3px);border-color:var(--navy);box-shadow:var(--shadow-soft)}
+  .line-image{height:230px;display:flex;align-items:center;justify-content:center;padding:20px;background:#f5f6f8}
+  .line-image img{width:100%;height:100%;object-fit:contain}
+  .line-copy{padding:20px;display:flex;flex:1;flex-direction:column}
+  .line-copy small{color:var(--orange-dark);font-weight:900;text-transform:uppercase;letter-spacing:.08em}
+  .line-copy h3{color:var(--navy);font-size:21px;line-height:1.08;letter-spacing:-.035em;margin:9px 0}
+  .line-copy p{color:#647083;margin:0 0 18px;font-size:14px}
+  .line-copy span{margin-top:auto;color:var(--navy);font-weight:950}
+  @media(max-width:1040px){.family-directory,.line-directory{grid-template-columns:repeat(2,minmax(0,1fr))}.family-directory-card{grid-template-columns:1fr}.family-directory-image{min-height:250px}}
+  @media(max-width:640px){.family-directory,.line-directory{grid-template-columns:1fr}.line-card{min-height:380px}}
+</style>

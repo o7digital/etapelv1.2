@@ -1,10 +1,16 @@
 ---
 import SiteLayout from '../../layouts/SiteLayout.astro';
 import ProductCatalog from '../../components/ProductCatalog.astro';
-import { productFamilies, type ProductFamily } from '../../data/productLines';
+import ProductFamilyMenu from '../../components/ProductFamilyMenu.astro';
+import { legacyFamilyRoutes, productFamilies, type ProductFamily } from '../../data/productLines';
 
 export function getStaticPaths() {
-  return productFamilies.map((family) => ({ params: { slug: family.slug }, props: { family } }));
+  const currentPaths = productFamilies.map((family) => ({ params: { slug: family.slug }, props: { family } }));
+  const legacyPaths = Object.entries(legacyFamilyRoutes).map(([slug, target]) => ({
+    params: { slug },
+    props: { family: productFamilies.find((item) => item.slug === target)! }
+  }));
+  return [...currentPaths, ...legacyPaths];
 }
 
 const { family } = Astro.props as { family: ProductFamily };
@@ -19,7 +25,7 @@ const { family } = Astro.props as { family: ProductFamily };
           <h1>{family.title}</h1>
           <p>{family.pageDescription}</p>
           <div class="hero-actions">
-            <a class="btn orange" href="#catalogo-productos">Ver productos</a>
+            <a class="btn orange" href="#lineas-de-producto">Ver líneas de producto</a>
             <a class="btn outline" href="/linea-de-producto">Todas las líneas</a>
           </div>
         </div>
@@ -27,26 +33,7 @@ const { family } = Astro.props as { family: ProductFamily };
       </div>
     </section>
 
-    <section>
-      <div class="container">
-        <div class="section-head">
-          <div>
-            <div class="label">Subproductos</div>
-            <h2>Subfamilias y soluciones.</h2>
-          </div>
-          <p>Esta categoría agrupa las sublíneas principales para hacer más útil el recorrido comercial.</p>
-        </div>
-        <div class="catalog-grid">
-          {family.items.map((item, index) => (
-            <article class="detail-panel" style="padding:24px">
-              <div class="label">{String(index + 1).padStart(2, '0')}</div>
-              <h3 style="margin:8px 0 10px;color:var(--navy);font-size:24px;letter-spacing:-.04em">{item}</h3>
-              <p style="color:#647083;line-height:1.65">Línea integrada dentro de {family.shortTitle.toLowerCase()} con asesoría técnica Etapel.</p>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
+    <ProductFamilyMenu family={family} />
 
     <ProductCatalog familySlug={family.slug} />
   </main>

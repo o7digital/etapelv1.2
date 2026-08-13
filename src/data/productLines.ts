@@ -10,76 +10,63 @@ export interface ProductFamily {
   items: string[];
 }
 
+/**
+ * Grandes familias comerciales definidas por Etapel. Las lineas de producto
+ * que aparecen dentro de cada una se generan a partir del catalogo real.
+ */
 export const productFamilies: ProductFamily[] = [
   {
-    slug: 'pintura',
-    title: 'Pistolas y Pintura',
-    shortTitle: 'Pistolas y Pintura',
-    href: '/linea-de-producto/pintura',
-    menuDescription: 'Pistolas, consumibles y sistemas para procesos de pintura y acabado.',
+    slug: 'equipo-mayor',
+    title: 'Equipo Mayor',
+    shortTitle: 'Equipo Mayor',
+    href: '/linea-de-producto/equipo-mayor',
+    menuDescription: 'Instalaciones y equipos de gran formato para estructurar y equipar el taller.',
     pageDescription:
-      'Soluciones para pintura automotriz y repintado con equipos, consumibles y sistemas diseñados para mejorar el acabado, la productividad y la consistencia del taller.',
+      'Cabinas de pintura, zonas de preparación, bancos de enderezado, sistemas de medición, alineación, elevación, aire comprimido y otros equipos de gran formato para el taller.',
+    image: '/images/products/client-catalog/benchracktm-versa.png',
+    accent: 'from-blue-500/16 to-slate-500/8',
+    items: [
+      'Cabinas y zonas de preparación',
+      'Bancos de enderezado',
+      'Alineación y medición',
+      'Elevación y servicio de ruedas',
+      'Compresores y redes de aire'
+    ]
+  },
+  {
+    slug: 'equipo-menor',
+    title: 'Equipo Menor',
+    shortTitle: 'Equipo Menor',
+    href: '/linea-de-producto/equipo-menor',
+    menuDescription: 'Herramientas y equipos móviles para reparación, diagnóstico, soldadura y acabado.',
+    pageDescription:
+      'Herramientas neumáticas, eléctricas y manuales, soldadura, desabollado, reparación de plásticos, diagnóstico, cargadores y equipos móviles para la operación diaria.',
+    image: '/images/products/client-catalog/gyspot-3902.png',
+    accent: 'from-amber-500/16 to-orange-500/8',
+    items: [
+      'Soldadura y desabollado',
+      'Herramientas neumáticas',
+      'Herramientas eléctricas y manuales',
+      'Diagnóstico y cargadores',
+      'Lámparas y equipos móviles'
+    ]
+  },
+  {
+    slug: 'pintura',
+    title: 'Pintura',
+    shortTitle: 'Pintura',
+    href: '/linea-de-producto/pintura',
+    menuDescription: 'Pinturas automotrices e industriales, aplicación, filtración y sistemas de acabado.',
+    pageDescription:
+      'Pintura automotriz PPG, pintura industrial y en polvo, primers, bases y acabados, junto con pistolas SATA, filtración, equipos de aplicación y asesoría para configurar el proceso completo de pintura.',
     image: '/images/products/sata/jet-x/1200394-main.webp',
     accent: 'from-sky-500/18 to-cyan-500/8',
     items: [
+      'Pintura automotriz PPG',
+      'Pintura industrial y en polvo',
       'Pistolas de pintura',
-      'Mascarillas y vaso RPS',
-      'Sistema de lijado',
-      'Sistema de pulido',
-      'Consumibles'
-    ]
-  },
-  {
-    slug: 'cabinas-y-preparacion',
-    title: 'Cabinas y Preparación',
-    shortTitle: 'Cabinas y Preparación',
-    href: '/linea-de-producto/cabinas-y-preparacion',
-    menuDescription: 'Cabinas, cuartos de mezclado y espacios de preparación para repintado.',
-    pageDescription:
-      'Equipamiento para áreas de pintura y preparación con soluciones de cabinas, cuartos de mezclado y zonas de trabajo orientadas a la eficiencia y al control del proceso.',
-    image: '/images/cabinas-preparacion.webp',
-    accent: 'from-blue-500/16 to-slate-500/8',
-    items: [
-      'Cabinas USI',
-      'Cabinas Millibar',
-      'Cuartos de mezclado',
-      'Zonas de preparación',
-      'Complementos'
-    ]
-  },
-  {
-    slug: 'soldadura-y-enderezado',
-    title: 'Soldadura y Enderezado',
-    shortTitle: 'Soldadura y Enderezado',
-    href: '/linea-de-producto/soldadura-y-enderezado',
-    menuDescription: 'Soldadoras, bancos y soluciones para reparación estructural y de carrocería.',
-    pageDescription:
-      'Tecnología para reparación y enderezado con equipos de soldadura, bancos y soluciones especializadas para trabajos de carrocería y estructura.',
-    image: '/images/category-soldadoras.webp',
-    accent: 'from-amber-500/16 to-orange-500/8',
-    items: [
-      'Soldadoras',
-      'Banco de enderezado',
-      'Car-O-Liner',
-      'Josam'
-    ]
-  },
-  {
-    slug: 'mecanica-y-aire',
-    title: 'Mecánica y Aire',
-    shortTitle: 'Mecánica y Aire',
-    href: '/linea-de-producto/mecanica-y-aire',
-    menuDescription: 'Mecánica, aire comprimido, infrarrojo y equipos complementarios.',
-    pageDescription:
-      'Líneas de apoyo para operación de taller con soluciones de mecánica, aire comprimido, secado, equipos de repintado y productos PPG.',
-    image: '/images/mecanica-aire.webp',
-    accent: 'from-cyan-500/16 to-slate-500/8',
-    items: [
-      'Mecánica',
-      'Aire comprimido',
-      'Lámparas infrarrojo',
-      'Otros equipos de repintado',
-      'Pintura y productos PPG'
+      'Filtración y aire para pintura',
+      'Accesorios de aplicación'
     ]
   },
   {
@@ -87,18 +74,23 @@ export const productFamilies: ProductFamily[] = [
     title: 'Consumibles',
     shortTitle: 'Consumibles',
     href: '/linea-de-producto/consumibles',
-    menuDescription: 'Lijas, masking, plásticos, pulimentos y consumibles de operación diaria.',
+    menuDescription: 'Materiales de preparación, protección, reparación y acabado de uso recurrente.',
     pageDescription:
-      'Consumibles para mantener el flujo del taller con materiales de preparación, protección, acabado y pulido disponibles para compra recurrente.',
-    image: '/images/products/sata/catalog/rps-the-original.webp',
+      'Abrasivos, enmascarado, plásticos, papel, masillas, selladores, pulimentos, almohadillas, protección personal y consumibles para mantener el flujo diario del taller.',
+    image: '/images/products/client-catalog/cinta-de-enmascarar-premium.jpg',
     accent: 'from-orange-500/16 to-amber-500/8',
     items: [
-      'Lijas',
-      'Masking',
-      'Plásticos',
-      'Borlas',
-      'Pulimentos',
-      'Papel'
+      'Lijas y abrasivos',
+      'Enmascarado, plásticos y papel',
+      'Masillas y selladores',
+      'Pulimentos y almohadillas',
+      'Protección personal'
     ]
   }
 ];
+
+export const legacyFamilyRoutes: Record<string, string> = {
+  'cabinas-y-preparacion': 'equipo-mayor',
+  'soldadura-y-enderezado': 'equipo-menor',
+  'mecanica-y-aire': 'equipo-menor'
+};

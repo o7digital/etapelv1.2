@@ -624,7 +624,7 @@ const curatedCatalogProducts: CatalogProduct[] = [
 const jetXProduct = curatedCatalogProducts.find((product) => product.slug === 'sata-jet-x');
 const nonSataProducts = curatedCatalogProducts.filter((product) => product.brand !== 'SATA');
 
-export const catalogProducts: CatalogProduct[] = [
+const sourceCatalogProducts: CatalogProduct[] = [
   ...sataImportedProducts.map((product) => {
     if (product.slug !== 'jet-x' || !jetXProduct) {
       return product;
@@ -645,3 +645,23 @@ export const catalogProducts: CatalogProduct[] = [
   ...nonSataProducts,
   ...clientCatalogProducts
 ];
+
+const majorEquipmentPattern = /cabinas|zonas de preparaci[oó]n|bancos de enderezado|alineaci[oó]n|alineadoras|equipos de medici[oó]n|adas|rampas|elevadores|desmontadora|balanceadoras|compresores|l[ií]neas de aire comprimido/i;
+const consumablePattern = /abrasiv|lijas|enmascarado|masillas|rellenadores|antipiedras|selladores|pulimento|compuestos|almohadillas|foam pad|wool pad|guantes|papel|pl[aá]stico de enmascarar|seguridad personal|consumibles/i;
+const paintPattern = /pintura|ppg|coraflon|envirobase|deltron|primeron|versolon/i;
+
+const macroFamilySlug = (product: CatalogProduct) => {
+  const searchable = `${product.category} ${product.interest || ''} ${product.name} ${product.application}`;
+  const categorySearch = `${product.category} ${product.interest || ''}`;
+
+  if (product.familySlug === 'consumibles' || consumablePattern.test(searchable)) return 'consumibles';
+  if (product.familySlug === 'cabinas-y-preparacion' || majorEquipmentPattern.test(searchable)) return 'equipo-mayor';
+  if (product.brand === 'SATA' || paintPattern.test(categorySearch)) return 'pintura';
+  if (/accesorios pistolas|tecnolog[ií]a de filtros/i.test(categorySearch)) return 'pintura';
+  return 'equipo-menor';
+};
+
+export const catalogProducts: CatalogProduct[] = sourceCatalogProducts.map((product) => ({
+  ...product,
+  familySlug: macroFamilySlug(product)
+}));
