@@ -7,9 +7,9 @@ export type { CatalogProduct, ProductOptionGroup, ProductSpec, ProductVariant } 
 export const productDetailPath = (product: CatalogProduct) =>
   `/linea-de-producto/productos/${product.slug}`;
 
-const sataJetXDigitalPro = '/images/products/sata/product-jetx-digitalpro-es.png';
-const sataJetXDigital = '/images/products/sata/product-jetx-digital-es.png';
-const sataJetXDigitalReady = '/images/products/sata/product-jetx-digitalready-es.png';
+const sataJetXDigitalPro = '/images/products/sata/product-jetx-digitalpro-es.webp';
+const sataJetXDigital = '/images/products/sata/product-jetx-digital-es.webp';
+const sataJetXDigitalReady = '/images/products/sata/product-jetx-digitalready-es.webp';
 const sataJetXMain = '/images/products/sata/jet-x/1200394-main.webp';
 const sataJetXPt01 = '/images/products/sata/jet-x/1200394-pt01.webp';
 const sataJetXPt02 = '/images/products/sata/jet-x/1200394-pt02.webp';

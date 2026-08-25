@@ -22,7 +22,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Pintura y Aplicación",
     "category": "Accesorios pistolas",
     "sourceUrl": "https://www.hedson.com/products/drester-classic-1050/",
-    "image": "/images/products/client-catalog/drester-classic-1050.png",
+    "image": "/images/products/client-catalog/drester-classic-1050.webp",
     "specs": [
       {
         "label": "Drester Classic 1050",
@@ -68,7 +68,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Pintura y Aplicación",
     "category": "Accesorios pistolas",
     "sourceUrl": "https://www.hedson.com/products/drester-classic-3600/",
-    "image": "/images/products/client-catalog/drester-classic-3600.png",
+    "image": "/images/products/client-catalog/drester-classic-3600.webp",
     "specs": [
       {
         "label": "Drester Cleaning 3600",
@@ -269,7 +269,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Pintura y Aplicación",
     "category": "Lamparas Infrarojo",
     "sourceUrl": "https://www.hedson.com/products/irt-prep-3/",
-    "image": "/images/products/client-catalog/prepcure.jpg",
+    "image": "/images/products/client-catalog/prepcure.webp",
     "specs": [],
     "downloads": [
       {
@@ -298,7 +298,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Pintura y Aplicación",
     "category": "Lamparas Infrarojo",
     "sourceUrl": "https://www.hedson.com/products/irt-prep-x-ldp/",
-    "image": "/images/products/client-catalog/prepcure-42.jpg",
+    "image": "/images/products/client-catalog/prepcure-42.webp",
     "specs": [],
     "downloads": [
       {
@@ -327,7 +327,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Pintura y Aplicación",
     "category": "Lamparas Infrarojo",
     "sourceUrl": "https://www.hedson.com/products/irt-prep-4/",
-    "image": "/images/products/client-catalog/prepcure-43.jpg",
+    "image": "/images/products/client-catalog/prepcure-43.webp",
     "specs": [],
     "downloads": [
       {
@@ -356,7 +356,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Preparación y acabado",
     "category": "Sistemas de lijado",
     "sourceUrl": "https://www.rupes.com/es/product/random-orbital-palm-pneumatic-sander-with-150mm-pad-and-3mm-orbit-skorpioiii/",
-    "image": "/images/products/client-catalog/lijadora-neumatica-de-palma-orbital-aleatoria-con-plato-de-12-mm-y-orbita-de-3mm-skorpioiii.jpg",
+    "image": "/images/products/client-catalog/lijadora-neumatica-de-palma-orbital-aleatoria-con-plato-de-12-mm-y-orbita-de-3mm-skorpioiii.webp",
     "specs": [],
     "downloads": [
       {
@@ -414,7 +414,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Preparación y acabado",
     "category": "Sistema de pulido",
     "sourceUrl": "https://www.shinemate.com/",
-    "image": "/images/products/client-catalog/sistema-de-pulido-shinemate.png",
+    "image": "/images/products/client-catalog/sistema-de-pulido-shinemate.webp",
     "specs": [],
     "downloads": [
       {
@@ -497,7 +497,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Enderezado de carroceria",
     "category": "Bancos de enderezado autos y suv",
     "sourceUrl": "https://car-o-liner.com/es/producto/benchrack/",
-    "image": "/images/products/client-catalog/benchracktm.jpg",
+    "image": "/images/products/client-catalog/benchracktm.webp",
     "specs": [],
     "downloads": [
       {
@@ -518,7 +518,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Enderezado de carroceria",
     "category": "Bancos de enderezado autos y suv",
     "sourceUrl": "https://car-o-liner.com/es/producto/benchrack-versa/",
-    "image": "/images/products/client-catalog/benchracktm-versa.png",
+    "image": "/images/products/client-catalog/benchracktm-versa.webp",
     "specs": [],
     "downloads": [
       {
@@ -539,7 +539,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Enderezado de carroceria",
     "category": "Bancos de enderezado autos y suv",
     "sourceUrl": "https://car-o-liner.com/es/producto/speed-speed-plus/",
-    "image": "/images/products/client-catalog/speedtm-3t-speedtm-3t-plus.jpg",
+    "image": "/images/products/client-catalog/speedtm-3t-speedtm-3t-plus.webp",
     "specs": [],
     "downloads": [
       {
@@ -560,7 +560,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Enderezado de carroceria",
     "category": "Equipos de medición",
     "sourceUrl": "https://car-o-liner.com/es/producto/pointx-ii/",
-    "image": "/images/products/client-catalog/pointx-ii.jpg",
+    "image": "/images/products/client-catalog/pointx-ii.webp",
     "specs": [],
     "downloads": [
       {
@@ -581,7 +581,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Enderezado de carroceria",
     "category": "Equipos de medición",
     "sourceUrl": "https://car-o-liner.com/es/producto/car-o-tronic/",
-    "image": "/images/products/client-catalog/car-o-tronic.jpg",
+    "image": "/images/products/client-catalog/car-o-tronic.webp",
     "specs": [],
     "downloads": [
       {
@@ -602,7 +602,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Enderezado de carroceria",
     "category": "Accesorios car o liner",
     "sourceUrl": "https://car-o-liner.com/es/producto/b731/",
-    "image": "/images/products/client-catalog/b731.png",
+    "image": "/images/products/client-catalog/b731.webp",
     "specs": [],
     "downloads": [
       {
@@ -652,7 +652,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Enderezado de carroceria",
     "category": "Alineacion y Enderezado Vehiculos pesados",
     "sourceUrl": "https://josam.se/es/product/frame-press/",
-    "image": "/images/products/client-catalog/frame-press.jpg",
+    "image": "/images/products/client-catalog/frame-press.webp",
     "specs": [],
     "downloads": [
       {
@@ -698,7 +698,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Desabollo de carroceria",
     "category": "Desabollo de carroceria auto y SUV",
     "sourceUrl": "https://planet.gys.fr/prod-055353-/_/_/es?lang=es",
-    "image": "/images/products/client-catalog/gyspot-27-02.jpg",
+    "image": "/images/products/client-catalog/gyspot-27-02.webp",
     "specs": [
       {
         "label": "Referencia",
@@ -728,7 +728,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Desabollo de carroceria",
     "category": "Desabollo de carroceria auto y SUV",
     "sourceUrl": "https://planet.gys.fr/prod-065741-/-/-/es?lang=es",
-    "image": "/images/products/client-catalog/gyspot-34-02.jpg",
+    "image": "/images/products/client-catalog/gyspot-34-02.webp",
     "specs": [
       {
         "label": "Referencia",
@@ -758,7 +758,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Desabollo de carroceria",
     "category": "Desabollo de carroceria auto y SUV",
     "sourceUrl": "https://planet.gys.fr/prod-052215-/_/_/es?lang=es",
-    "image": "/images/products/client-catalog/gyspot-3902.png",
+    "image": "/images/products/client-catalog/gyspot-3902.webp",
     "specs": [
       {
         "label": "Referencia",
@@ -788,7 +788,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Desabollo de carroceria",
     "category": "Desabollo de carroceria auto y SUV",
     "sourceUrl": "https://planet.gys.fr/prod-021990-/_/_/es?lang=es",
-    "image": "/images/products/client-catalog/gyspot-alu-pro-fv.jpg",
+    "image": "/images/products/client-catalog/gyspot-alu-pro-fv.webp",
     "specs": [
       {
         "label": "Referencia",
@@ -818,7 +818,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Desabollo de carroceria",
     "category": "Desabollo de carroceria auto y SUV",
     "sourceUrl": "https://planet.gys.fr/prod-057470-/-/-/es?lang=es",
-    "image": "/images/products/client-catalog/gyspot-arcpull-200-collision-repair.jpg",
+    "image": "/images/products/client-catalog/gyspot-arcpull-200-collision-repair.webp",
     "specs": [
       {
         "label": "Referencia",
@@ -848,7 +848,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Desabollo de carroceria",
     "category": "Desabollo de carroceria auto y SUV",
     "sourceUrl": "https://planet.gys.fr/prod-074446-/_/_/es?lang=es",
-    "image": "/images/products/client-catalog/speedliner-v2-pro-230.jpg",
+    "image": "/images/products/client-catalog/speedliner-v2-pro-230.webp",
     "specs": [
       {
         "label": "Referencia",
@@ -870,7 +870,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Desabollo de carroceria",
     "category": "Desabollo de carroceria auto y SUV",
     "sourceUrl": "https://planet.gys.fr/prod-074552-/_/_/es?lang=es",
-    "image": "/images/products/client-catalog/speedliner-v2-alu-pro-fv.jpg",
+    "image": "/images/products/client-catalog/speedliner-v2-alu-pro-fv.webp",
     "specs": [
       {
         "label": "Referencia",
@@ -896,7 +896,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Desabollo de carroceria",
     "category": "Desabollo de carroceria auto y SUV",
     "sourceUrl": "https://planet.gys.fr/prod-078161-/_/_/es?lang=es",
-    "image": "/images/products/client-catalog/dentstation-39-02.jpg",
+    "image": "/images/products/client-catalog/dentstation-39-02.webp",
     "specs": [
       {
         "label": "Referencia",
@@ -918,7 +918,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Desabollo de carroceria",
     "category": "Desabollo de carroceria auto y SUV",
     "sourceUrl": "https://planet.gys.fr/prod-073999-/_/_/es?lang=es",
-    "image": "/images/products/client-catalog/speedliner-premium-v2-arcpull-200.jpg",
+    "image": "/images/products/client-catalog/speedliner-premium-v2-arcpull-200.webp",
     "specs": [
       {
         "label": "Referencia",
@@ -957,7 +957,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Desabollo de carroceria",
     "category": "Desabollo de carroceria auto y SUV",
     "sourceUrl": "https://planet.gys.fr/prod-084841-K502/_K502/GYSPOT_PTI_NEO_COMPLETE_(G1+G2+G4)_-_208_240V/en?lang=en",
-    "image": "/images/products/client-catalog/gyspot-pti-neo-complete-g1-g2-g4-208-240v.png",
+    "image": "/images/products/client-catalog/gyspot-pti-neo-complete-g1-g2-g4-208-240v.webp",
     "specs": [
       {
         "label": "Referencia",
@@ -987,7 +987,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Desabollo de carroceria",
     "category": "Desabollo de carroceria auto y SUV",
     "sourceUrl": "https://planet.gys.fr/prod-083950-/_/_/en?lang=en",
-    "image": "/images/products/client-catalog/gyspot-pti-expert-5m-208-240v.jpg",
+    "image": "/images/products/client-catalog/gyspot-pti-expert-5m-208-240v.webp",
     "specs": [
       {
         "label": "Referencia",
@@ -1009,7 +1009,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Desabollo de carroceria",
     "category": "Desabollo de carroceria auto y SUV",
     "sourceUrl": "https://planet.gys.fr/prod-077065-/_/_/es?lang=es",
-    "image": "/images/products/client-catalog/remachadora-gyspress-premium-10t-push-pull.png",
+    "image": "/images/products/client-catalog/remachadora-gyspress-premium-10t-push-pull.webp",
     "specs": [
       {
         "label": "Referencia",
@@ -1039,7 +1039,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Desabollo de carroceria",
     "category": "Desabollo de carroceria auto y SUV",
     "sourceUrl": "https://planet.gys.fr/prod-033160-/_/_/en?lang=en",
-    "image": "/images/products/client-catalog/smartmig-162-regulator-not-included.png",
+    "image": "/images/products/client-catalog/smartmig-162-regulator-not-included.webp",
     "specs": [
       {
         "label": "Referencia",
@@ -1069,7 +1069,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Desabollo de carroceria",
     "category": "Desabollo de carroceria auto y SUV",
     "sourceUrl": "https://planet.gys.fr/prod-087675-/_/_/en?lang=en",
-    "image": "/images/products/client-catalog/carmig-e-auto-with-accessories.png",
+    "image": "/images/products/client-catalog/carmig-e-auto-with-accessories.webp",
     "specs": [
       {
         "label": "Referencia",
@@ -1099,7 +1099,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Desabollo de carroceria",
     "category": "Desabollo de carroceria auto y SUV",
     "sourceUrl": "https://planet.gys.fr/prod-075139-/_/_/en?lang=en",
-    "image": "/images/products/client-catalog/e2-gys-auto-with-accessories.png",
+    "image": "/images/products/client-catalog/e2-gys-auto-with-accessories.webp",
     "specs": [
       {
         "label": "Referencia",
@@ -1129,7 +1129,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Desabollo de carroceria",
     "category": "Desabollo de carroceria auto y SUV",
     "sourceUrl": "https://planet.gys.fr/prod-075160-/_/_/en?lang=en",
-    "image": "/images/products/client-catalog/e3-gys-auto-with-accessories.png",
+    "image": "/images/products/client-catalog/e3-gys-auto-with-accessories.webp",
     "specs": [
       {
         "label": "Referencia",
@@ -1159,7 +1159,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Desabollo de carroceria",
     "category": "Desabollo de carroceria auto y SUV",
     "sourceUrl": "https://planet.gys.fr/prod-036703-/_/_/en?lang=en",
-    "image": "/images/products/client-catalog/autopulse-220-m3-3-torches-included.jpg",
+    "image": "/images/products/client-catalog/autopulse-220-m3-3-torches-included.webp",
     "specs": [
       {
         "label": "Referencia",
@@ -1189,7 +1189,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Desabollo de carroceria",
     "category": "Desabollo de carroceria auto y SUV",
     "sourceUrl": "https://planet.gys.fr/prod-013858-/_/_/en?lang=en",
-    "image": "/images/products/client-catalog/easycut-30-fv-with-torch.jpg",
+    "image": "/images/products/client-catalog/easycut-30-fv-with-torch.webp",
     "specs": [
       {
         "label": "Referencia",
@@ -1219,7 +1219,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Desabollo de carroceria",
     "category": "Desabollo de carroceria auto y SUV",
     "sourceUrl": "https://planet.gys.fr/prod-014787-/_/_/en?lang=en",
-    "image": "/images/products/client-catalog/cutter-45-ct-16-without-torch.jpg",
+    "image": "/images/products/client-catalog/cutter-45-ct-16-without-torch.webp",
     "specs": [
       {
         "label": "Referencia",
@@ -1249,7 +1249,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Desabollo de carroceria",
     "category": "Desabollo de carroceria auto y SUV",
     "sourceUrl": "https://planet.gys.fr/prod-054981-/_/_/en?lang=en",
-    "image": "/images/products/client-catalog/gysduction-auto-dent-repair-generator-dent-pulling-inductor.png",
+    "image": "/images/products/client-catalog/gysduction-auto-dent-repair-generator-dent-pulling-inductor.webp",
     "specs": [
       {
         "label": "Referencia",
@@ -1279,7 +1279,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Desabollo de carroceria",
     "category": "Desabollo de carroceria auto y SUV",
     "sourceUrl": "https://planet.gys.fr/prod-053380-/_/_/en?lang=en",
-    "image": "/images/products/client-catalog/gysduction-auto-complete-generator-3-inductors.jpg",
+    "image": "/images/products/client-catalog/gysduction-auto-complete-generator-3-inductors.webp",
     "specs": [
       {
         "label": "Referencia",
@@ -1309,7 +1309,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Desabollo de carroceria",
     "category": "Desabollo de carroceria vehiculos pesados",
     "sourceUrl": "https://josam.se/es/producto/frame-press/",
-    "image": "/images/products/client-catalog/frame-press-95.jpg",
+    "image": "/images/products/client-catalog/frame-press-95.webp",
     "specs": [],
     "downloads": [
       {
@@ -1338,7 +1338,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Desabollo de carroceria",
     "category": "Desabollo de carroceria vehiculos pesados",
     "sourceUrl": "https://josam.se/es/producto/cam-aligner/",
-    "image": "/images/products/client-catalog/cam-aligner.jpg",
+    "image": "/images/products/client-catalog/cam-aligner.webp",
     "specs": [],
     "downloads": [
       {
@@ -1367,7 +1367,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Desabollo de carroceria",
     "category": "Desabollo de carroceria vehiculos pesados",
     "sourceUrl": "https://josam.se/es/producto/jh1500/",
-    "image": "/images/products/client-catalog/jh1500.jpg",
+    "image": "/images/products/client-catalog/jh1500.webp",
     "specs": [],
     "downloads": [
       {
@@ -1396,7 +1396,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Desabollo de carroceria",
     "category": "Desabollo de carroceria vehiculos pesados",
     "sourceUrl": "https://www.wielanderschill.com/en/mec-600-metal-edge-cutter-full-set-with-case-640080",
-    "image": "/images/products/client-catalog/mec-600-metal-edge-cutter.png",
+    "image": "/images/products/client-catalog/mec-600-metal-edge-cutter.webp",
     "specs": [
       {
         "label": "Air consumption",
@@ -1450,7 +1450,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Desabollo de carroceria",
     "category": "Desabollo de carroceria vehiculos pesados",
     "sourceUrl": "https://www.gys.fr/prod-063136-/-/-/fr?lang=fr",
-    "image": "/images/products/client-catalog/trolley-iw1.jpg",
+    "image": "/images/products/client-catalog/trolley-iw1.webp",
     "specs": [
       {
         "label": "Referencia",
@@ -1472,7 +1472,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Desabollo de carroceria",
     "category": "Desabollo de carroceria vehiculos pesados",
     "sourceUrl": "https://planet.gys.fr/prod-088399-/_/_/en?lang=en",
-    "image": "/images/products/client-catalog/plasma-cutter-45-ct-32-with-torch.jpg",
+    "image": "/images/products/client-catalog/plasma-cutter-45-ct-32-with-torch.webp",
     "specs": [
       {
         "label": "Referencia",
@@ -1502,7 +1502,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Desabollo de carroceria",
     "category": "Desabollo de carroceria vehiculos pesados",
     "sourceUrl": "https://planet.gys.fr/prod-074538-/_/_/en?lang=en",
-    "image": "/images/products/client-catalog/speedliner-expert-230-arcpull-200.jpg",
+    "image": "/images/products/client-catalog/speedliner-expert-230-arcpull-200.webp",
     "specs": [
       {
         "label": "Referencia",
@@ -1524,7 +1524,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Desabollo de carroceria",
     "category": "Desabollo de carroceria vehiculos pesados",
     "sourceUrl": "https://planet.gys.fr/prod-058859-/_/_/en?lang=en",
-    "image": "/images/products/client-catalog/gyspot-expert-400.jpg",
+    "image": "/images/products/client-catalog/gyspot-expert-400.webp",
     "specs": [
       {
         "label": "Referencia",
@@ -1554,7 +1554,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Desabollo de carroceria",
     "category": "Desabollo de carroceria vehiculos pesados",
     "sourceUrl": "https://planet.gys.fr/prod-083288-/_/_/en?lang=en",
-    "image": "/images/products/client-catalog/gyspot-pti-genius-plus-6m-208-240v.png",
+    "image": "/images/products/client-catalog/gyspot-pti-genius-plus-6m-208-240v.webp",
     "specs": [
       {
         "label": "Referencia",
@@ -1697,7 +1697,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Cargadores  y arrancadores de  baterias",
     "category": "Cargadores",
     "sourceUrl": "https://planet.gys.fr/prod-026988-/_/_/en?lang=en",
-    "image": "/images/products/client-catalog/gysflash-101-12-cnt-fv-5m-cables.png",
+    "image": "/images/products/client-catalog/gysflash-101-12-cnt-fv-5m-cables.webp",
     "specs": [
       {
         "label": "Referencia",
@@ -1727,7 +1727,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Cargadores  y arrancadores de  baterias",
     "category": "Cargadores",
     "sourceUrl": "https://planet.gys.fr/prod-026483-/_/_/en?lang=en",
-    "image": "/images/products/client-catalog/startium-480e-12-24-v.jpg",
+    "image": "/images/products/client-catalog/startium-480e-12-24-v.webp",
     "specs": [
       {
         "label": "Referencia",
@@ -1757,7 +1757,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Cargadores  y arrancadores de  baterias",
     "category": "Cargadores",
     "sourceUrl": "https://www.gys.fr/prod-088306-/-/-/es?lang=es",
-    "image": "/images/products/client-catalog/comprobador-de-baterias-pbt-924-compatible-start-stop.png",
+    "image": "/images/products/client-catalog/comprobador-de-baterias-pbt-924-compatible-start-stop.webp",
     "specs": [
       {
         "label": "Referencia",
@@ -1787,7 +1787,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Cargadores  y arrancadores de  baterias",
     "category": "Líneas de aire comprimido",
     "sourceUrl": "https://www.prevost.es/redes-aire-comprimido-53386",
-    "image": "/images/products/client-catalog/redes-aire-comprimido.png",
+    "image": "/images/products/client-catalog/redes-aire-comprimido.webp",
     "specs": [],
     "downloads": [
       {
@@ -1804,7 +1804,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Cargadores  y arrancadores de  baterias",
     "category": "Compresores Denair",
     "sourceUrl": "",
-    "image": "/images/products/client-catalog/denair-compresor-integrado.png",
+    "image": "/images/products/client-catalog/denair-compresor-integrado.webp",
     "specs": [
       {
         "label": "Potencia disponible",
@@ -1837,7 +1837,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Pintura",
     "category": "PPG automotriz",
     "sourceUrl": "https://www.ppg.com/en-US/refinish/products/deltron-nxt",
-    "image": "/images/products/client-catalog/deltron-nxt.jpg",
+    "image": "/images/products/client-catalog/deltron-nxt.webp",
     "specs": [],
     "downloads": [
       {
@@ -1895,7 +1895,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Pintura",
     "category": "PPG automotriz",
     "sourceUrl": "https://www.ppg.com/en-US/refinish/products/envirobase-high-performance",
-    "image": "/images/products/client-catalog/envirobase-high-performance.jpg",
+    "image": "/images/products/client-catalog/envirobase-high-performance.webp",
     "specs": [],
     "downloads": [
       {
@@ -1924,7 +1924,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Pintura",
     "category": "PPG industrial",
     "sourceUrl": "https://www.ppg.com/en-US/refinish/products/ppg-versolon",
-    "image": "/images/products/client-catalog/ppg-versolontm.jpg",
+    "image": "/images/products/client-catalog/ppg-versolontm.webp",
     "specs": [],
     "downloads": [
       {
@@ -1970,7 +1970,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Pintura",
     "category": "Pintura en Polvo",
     "sourceUrl": "https://www.ppg.com/en-US/industrialcoatings/powder-coatings/envirocron-high-transfer-efficiency",
-    "image": "/images/products/client-catalog/envirocron-high-transfer-efficiency-hte-powder.png",
+    "image": "/images/products/client-catalog/envirocron-high-transfer-efficiency-hte-powder.webp",
     "specs": [],
     "downloads": [
       {
@@ -1999,7 +1999,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Pintura",
     "category": "Pintura en Polvo",
     "sourceUrl": "https://www.ppg.com/en-US/industrialcoatings/powder-coatings/coraflon-platinum-powder-coating",
-    "image": "/images/products/client-catalog/coraflon-platinum-powder-coating.png",
+    "image": "/images/products/client-catalog/coraflon-platinum-powder-coating.webp",
     "specs": [],
     "downloads": [
       {
@@ -2028,7 +2028,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Pintura",
     "category": "Pintura en Polvo",
     "sourceUrl": "https://www.ppg.com/en-US/industrialcoatings/primeron",
-    "image": "/images/products/client-catalog/ppg-primeron.jpg",
+    "image": "/images/products/client-catalog/ppg-primeron.webp",
     "specs": [],
     "downloads": [
       {
@@ -2081,7 +2081,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Mecanica",
     "category": "Alineadoras",
     "sourceUrl": "https://hofmann-equipment.com/la-es/geoliner-609",
-    "image": "/images/products/client-catalog/geoliner-609.png",
+    "image": "/images/products/client-catalog/geoliner-609.webp",
     "specs": [
       {
         "label": "EAK0363J88A",
@@ -2111,7 +2111,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Mecanica",
     "category": "Alineadoras",
     "sourceUrl": "https://hofmann-equipment.com/la-es/geoliner-630",
-    "image": "/images/products/client-catalog/geoliner-630.jpg",
+    "image": "/images/products/client-catalog/geoliner-630.webp",
     "specs": [],
     "downloads": [
       {
@@ -2132,7 +2132,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Mecanica",
     "category": "Desmontadora",
     "sourceUrl": "https://hofmann-equipment.com/la-es/monty-3300-20",
-    "image": "/images/products/client-catalog/monty-3300-20-smart-gp-plus.png",
+    "image": "/images/products/client-catalog/monty-3300-20-smart-gp-plus.webp",
     "specs": [
       {
         "label": "EEWH765AEP",
@@ -2170,7 +2170,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Mecanica",
     "category": "Balanceadoras",
     "sourceUrl": "https://hofmann-equipment.com/la-es/geodyna-7100",
-    "image": "/images/products/client-catalog/geodyna-7100.png",
+    "image": "/images/products/client-catalog/geodyna-7100.webp",
     "specs": [],
     "downloads": [
       {
@@ -2191,7 +2191,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Mecanica",
     "category": "Aire acondicionado",
     "sourceUrl": "https://eu.sun-workshopsolutions.com/es/products/airconditioning/breeze-iv",
-    "image": "/images/products/client-catalog/breeze-iv.jpg",
+    "image": "/images/products/client-catalog/breeze-iv.webp",
     "specs": [],
     "downloads": [
       {
@@ -2212,7 +2212,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Mecanica",
     "category": "Aire acondicionado",
     "sourceUrl": "https://eu.sun-workshopsolutions.com/es/products/airconditioning/blizzard-qtech-iv",
-    "image": "/images/products/client-catalog/blizzard-qtech-iv.jpg",
+    "image": "/images/products/client-catalog/blizzard-qtech-iv.webp",
     "specs": [],
     "downloads": [
       {
@@ -2233,7 +2233,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Mecanica",
     "category": "ADAS",
     "sourceUrl": "https://eu.sun-workshopsolutions.com/es/node/1471",
-    "image": "/images/products/client-catalog/ez-adas-recalibration-system.png",
+    "image": "/images/products/client-catalog/ez-adas-recalibration-system.webp",
     "specs": [
       {
         "label": "Basic",
@@ -2291,7 +2291,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles pintura",
     "category": "Lijas",
     "sourceUrl": "https://en.kovax.com/products/premium/",
-    "image": "/images/products/client-catalog/premium.png",
+    "image": "/images/products/client-catalog/premium.webp",
     "specs": [],
     "downloads": [
       {
@@ -2316,7 +2316,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles pintura",
     "category": "Lijas",
     "sourceUrl": "https://eagleabrasives.com/sp/info/buflex",
-    "image": "/images/products/client-catalog/sistema-buflex-eagle-abrasives.jpg",
+    "image": "/images/products/client-catalog/sistema-buflex-eagle-abrasives.webp",
     "specs": [
       {
         "label": "Disponible en",
@@ -2354,7 +2354,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles pintura",
     "category": "Enmascarado",
     "sourceUrl": "https://colad.com/es/enmascarado/papel-de-enmascarar/papel-de-enmascarar-premium",
-    "image": "/images/products/client-catalog/papel-de-enmascarar-premium.jpg",
+    "image": "/images/products/client-catalog/papel-de-enmascarar-premium.webp",
     "specs": [
       {
         "label": "Marca",
@@ -2408,7 +2408,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles pintura",
     "category": "Enmascarado",
     "sourceUrl": "https://colad.com/es/enmascarado/cinta-de-enmascarar/cinta-de-enmascarar-premium",
-    "image": "/images/products/client-catalog/cinta-de-enmascarar-premium.jpg",
+    "image": "/images/products/client-catalog/cinta-de-enmascarar-premium.webp",
     "specs": [
       {
         "label": "Marca",
@@ -2438,7 +2438,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles pintura",
     "category": "Enmascarado",
     "sourceUrl": "https://colad.com/es/enmascarado/film-de-enmascarar/plastico-de-enmascarar-premium",
-    "image": "/images/products/client-catalog/plastico-de-enmascarar-premium.jpg",
+    "image": "/images/products/client-catalog/plastico-de-enmascarar-premium.webp",
     "specs": [
       {
         "label": "Marca",
@@ -2613,7 +2613,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles pintura",
     "category": "Seguridad Personal",
     "sourceUrl": "https://colad.com/en-gb/personal-protection/gloves/disposable-nitrile-gloves-black-60-gloves",
-    "image": "/images/products/client-catalog/disposable-nitrile-gloves-black-60-gloves.jpg",
+    "image": "/images/products/client-catalog/disposable-nitrile-gloves-black-60-gloves.webp",
     "specs": [
       {
         "label": "Brand",
@@ -2667,7 +2667,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles pintura",
     "category": "Seguridad Personal",
     "sourceUrl": "https://colad.com/en-gb/personal-protection/gloves/disposable-nitrile-gloves-grey",
-    "image": "/images/products/client-catalog/disposable-nitrile-gloves-grey.jpg",
+    "image": "/images/products/client-catalog/disposable-nitrile-gloves-grey.webp",
     "specs": [
       {
         "label": "Brand",
@@ -2721,7 +2721,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles pintura",
     "category": "Seguridad Personal",
     "sourceUrl": "https://colad.com/en-gb/personal-protection/gloves/disposable-nitrile-gloves-blue",
-    "image": "/images/products/client-catalog/disposable-nitrile-gloves-blue.jpg",
+    "image": "/images/products/client-catalog/disposable-nitrile-gloves-blue.webp",
     "specs": [
       {
         "label": "Brand",
@@ -2775,7 +2775,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles pintura",
     "category": "Seguridad Personal",
     "sourceUrl": "https://colad.com/en-gb/personal-protection/gloves/industrial-neoprene-gloves",
-    "image": "/images/products/client-catalog/industrial-neoprene-gloves.jpg",
+    "image": "/images/products/client-catalog/industrial-neoprene-gloves.webp",
     "specs": [
       {
         "label": "Brand",
@@ -2829,7 +2829,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles pintura",
     "category": "Seguridad Personal",
     "sourceUrl": "https://colad.com/en-gb/personal-protection/gloves/industrial-nitrile-gloves",
-    "image": "/images/products/client-catalog/industrial-nitrile-gloves.jpg",
+    "image": "/images/products/client-catalog/industrial-nitrile-gloves.webp",
     "specs": [
       {
         "label": "Brand",
@@ -2883,7 +2883,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles pintura",
     "category": "Seguridad Personal",
     "sourceUrl": "https://colad.com/en-gb/personal-protection/paint-overalls/bodyguard-overall",
-    "image": "/images/products/client-catalog/bodyguard-overall.jpg",
+    "image": "/images/products/client-catalog/bodyguard-overall.webp",
     "specs": [
       {
         "label": "Brand",
@@ -2937,7 +2937,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles pintura",
     "category": "Seguridad Personal",
     "sourceUrl": "https://colad.com/en-gb/personal-protection/dust-spray-masks-head-protection/respirator-a1p2",
-    "image": "/images/products/client-catalog/respirator-a1p2.jpg",
+    "image": "/images/products/client-catalog/respirator-a1p2.webp",
     "specs": [
       {
         "label": "Brand",
@@ -3066,7 +3066,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles pintura",
     "category": "Otros",
     "sourceUrl": "https://colad.com/en-gb/paint-preparation/spray-samples/paper-spray-samples-with-hole",
-    "image": "/images/products/client-catalog/paper-spray-samples-with-hole.png",
+    "image": "/images/products/client-catalog/paper-spray-samples-with-hole.webp",
     "specs": [
       {
         "label": "Brand",
@@ -3100,7 +3100,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles pintura",
     "category": "Otros",
     "sourceUrl": "https://colad.com/en-gb/paint-preparation/spray-samples/metal-spray-samples",
-    "image": "/images/products/client-catalog/metal-spray-samples.jpg",
+    "image": "/images/products/client-catalog/metal-spray-samples.webp",
     "specs": [
       {
         "label": "Brand",
@@ -3159,7 +3159,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles de hojalateria",
     "category": "Masillas y rellenadores",
     "sourceUrl": "https://www.evercoat.com/es/product/polyflex/",
-    "image": "/images/products/client-catalog/100411.jpg",
+    "image": "/images/products/client-catalog/100411.webp",
     "specs": [],
     "downloads": [
       {
@@ -3188,7 +3188,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles de hojalateria",
     "category": "Masillas y rellenadores",
     "sourceUrl": "https://www.evercoat.com/es/product/rage-optex-gallon/",
-    "image": "/images/products/client-catalog/100135.jpg",
+    "image": "/images/products/client-catalog/100135.webp",
     "specs": [],
     "downloads": [
       {
@@ -3217,7 +3217,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles de hojalateria",
     "category": "Masillas y rellenadores",
     "sourceUrl": "https://www.evercoat.com/es/product/100356-lite-weight-optex-gallon/",
-    "image": "/images/products/client-catalog/100356.png",
+    "image": "/images/products/client-catalog/100356.webp",
     "specs": [],
     "downloads": [
       {
@@ -3263,7 +3263,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles de hojalateria",
     "category": "Masillas y rellenadores",
     "sourceUrl": "https://www.evercoat.com/es/product/spot-lite-1-2-gallon-3-3-lbs/",
-    "image": "/images/products/client-catalog/100446.jpg",
+    "image": "/images/products/client-catalog/100446.webp",
     "specs": [],
     "downloads": [
       {
@@ -3304,7 +3304,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles de hojalateria",
     "category": "Antipiedras y selladores",
     "sourceUrl": "https://www.emm.com/en-gb/repair-bonding-sealing/undercoating/undercoating-m80-repaintable",
-    "image": "/images/products/client-catalog/undercoating-m80-repaintable.jpg",
+    "image": "/images/products/client-catalog/undercoating-m80-repaintable.webp",
     "specs": [
       {
         "label": "Brand",
@@ -3366,7 +3366,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles de hojalateria",
     "category": "Consumibles herramientas",
     "sourceUrl": "https://planet.gys.fr/prod-049444-/_/_/es?lang=es",
-    "image": "/images/products/client-catalog/100-arandelas-8x16mm.jpg",
+    "image": "/images/products/client-catalog/100-arandelas-8x16mm.webp",
     "specs": [
       {
         "label": "Referencia",
@@ -3408,7 +3408,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles de hojalateria",
     "category": "Consumibles herramientas",
     "sourceUrl": "https://planet.gys.fr/prod-049727-/_/_/es?lang=es",
-    "image": "/images/products/client-catalog/kit-hilo-ondulado-50-hebras-diam-1-8-long-290.jpg",
+    "image": "/images/products/client-catalog/kit-hilo-ondulado-50-hebras-diam-1-8-long-290.webp",
     "specs": [
       {
         "label": "Referencia",
@@ -3438,7 +3438,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles de hojalateria",
     "category": "Consumibles herramientas",
     "sourceUrl": "https://planet.gys.fr/prod-050631-/_/_/es?lang=es",
-    "image": "/images/products/client-catalog/50-anillas-de-tiro-torcidas.png",
+    "image": "/images/products/client-catalog/50-anillas-de-tiro-torcidas.webp",
     "specs": [
       {
         "label": "Referencia",
@@ -3468,7 +3468,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles de hojalateria",
     "category": "Consumibles herramientas",
     "sourceUrl": "https://planet.gys.fr/prod-050648-/_/_/es?lang=es",
-    "image": "/images/products/client-catalog/100-anillas-de-tiro-recto.png",
+    "image": "/images/products/client-catalog/100-anillas-de-tiro-recto.webp",
     "specs": [
       {
         "label": "Referencia",
@@ -3498,7 +3498,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles de hojalateria",
     "category": "Consumibles herramientas",
     "sourceUrl": "https://planet.gys.fr/prod-052239-/_/_/es?lang=es",
-    "image": "/images/products/client-catalog/20-estrellas-tiraclavos-proteccion-cobre.png",
+    "image": "/images/products/client-catalog/20-estrellas-tiraclavos-proteccion-cobre.webp",
     "specs": [
       {
         "label": "Referencia",
@@ -3528,7 +3528,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles de hojalateria",
     "category": "Consumibles herramientas",
     "sourceUrl": "https://planet.gys.fr/prod-086111-/_/_/es?lang=es",
-    "image": "/images/products/client-catalog/hilo-mag-acero-0-6-bobina-plastico-s200-5kg-er70s-6-g3si1.jpg",
+    "image": "/images/products/client-catalog/hilo-mag-acero-0-6-bobina-plastico-s200-5kg-er70s-6-g3si1.webp",
     "specs": [
       {
         "label": "Referencia",
@@ -3582,7 +3582,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Herramientas hojalateria",
     "category": "Neumáticas",
     "sourceUrl": "https://www.pneutrend.com.tw/product.aspx?productid=2098",
-    "image": "/images/products/client-catalog/82202-air-caulking-gun.jpg",
+    "image": "/images/products/client-catalog/82202-air-caulking-gun.webp",
     "specs": [
       {
         "label": "Modelo",
@@ -3632,7 +3632,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Herramientas hojalateria",
     "category": "Neumáticas",
     "sourceUrl": "https://www.pneutrend.com.tw/product.aspx?productid=3577",
-    "image": "/images/products/client-catalog/82100-punch-flange-tool.jpg",
+    "image": "/images/products/client-catalog/82100-punch-flange-tool.webp",
     "specs": [
       {
         "label": "Modelo",
@@ -3682,7 +3682,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Herramientas hojalateria",
     "category": "Neumáticas",
     "sourceUrl": "https://www.pneutrend.com.tw/product.aspx?productid=2439",
-    "image": "/images/products/client-catalog/74020-1-4-angle-die-grinder.jpg",
+    "image": "/images/products/client-catalog/74020-1-4-angle-die-grinder.webp",
     "specs": [
       {
         "label": "Modelo",
@@ -3732,7 +3732,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Herramientas hojalateria",
     "category": "Neumáticas",
     "sourceUrl": "https://www.pneutrend.com.tw/product.aspx?productid=2032",
-    "image": "/images/products/client-catalog/71000-1-4-die-grinder.jpg",
+    "image": "/images/products/client-catalog/71000-1-4-die-grinder.webp",
     "specs": [
       {
         "label": "Modelo",
@@ -3782,7 +3782,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Herramientas hojalateria",
     "category": "Neumáticas",
     "sourceUrl": "https://www.pneutrend.com.tw/product.aspx?productid=1919",
-    "image": "/images/products/client-catalog/14200b-3-8-palm-ratchet-wrench.jpg",
+    "image": "/images/products/client-catalog/14200b-3-8-palm-ratchet-wrench.webp",
     "specs": [
       {
         "label": "Modelo",
@@ -3836,7 +3836,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Herramientas hojalateria",
     "category": "Neumáticas",
     "sourceUrl": "https://www.pneutrend.com.tw/product.aspx?productid=2073",
-    "image": "/images/products/client-catalog/80031-air-body-saw.jpg",
+    "image": "/images/products/client-catalog/80031-air-body-saw.webp",
     "specs": [
       {
         "label": "Modelo",
@@ -3890,7 +3890,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Herramientas hojalateria",
     "category": "Neumáticas",
     "sourceUrl": "https://www.pneutrend.com.tw/product.aspx?productid=3223",
-    "image": "/images/products/client-catalog/80038-vibration-reduced-air-saw.jpg",
+    "image": "/images/products/client-catalog/80038-vibration-reduced-air-saw.webp",
     "specs": [
       {
         "label": "Modelo",
@@ -3940,7 +3940,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Herramientas hojalateria",
     "category": "Neumáticas",
     "sourceUrl": "https://www.pneutrend.com.tw/product.aspx?productid=1997",
-    "image": "/images/products/client-catalog/55010-belt-sander-10-x-330-mm.jpg",
+    "image": "/images/products/client-catalog/55010-belt-sander-10-x-330-mm.webp",
     "specs": [
       {
         "label": "Modelo",
@@ -3974,7 +3974,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Herramientas hojalateria",
     "category": "Neumáticas",
     "sourceUrl": "https://www.pneutrend.com.tw/product.aspx?productid=1946",
-    "image": "/images/products/client-catalog/33500-1-air-spot-drill-with-hook.jpg",
+    "image": "/images/products/client-catalog/33500-1-air-spot-drill-with-hook.webp",
     "specs": [
       {
         "label": "Modelo",
@@ -4024,7 +4024,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Herramientas hojalateria",
     "category": "Neumáticas",
     "sourceUrl": "https://www.pneutrend.com.tw/product.aspx?productid=3042",
-    "image": "/images/products/client-catalog/24238-1-2-stubby-impact-wrench-ecd.jpg",
+    "image": "/images/products/client-catalog/24238-1-2-stubby-impact-wrench-ecd.webp",
     "specs": [
       {
         "label": "Modelo",
@@ -4078,7 +4078,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Herramientas hojalateria",
     "category": "Neumáticas",
     "sourceUrl": "https://www.pneutrend.com.tw/product.aspx?productid=1952",
-    "image": "/images/products/client-catalog/b-41102hk-190-mm-barrel-air-hammer-combo-kit-hex-shank.jpg",
+    "image": "/images/products/client-catalog/b-41102hk-190-mm-barrel-air-hammer-combo-kit-hex-shank.webp",
     "specs": [
       {
         "label": "Modelo",
@@ -4128,7 +4128,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Herramientas hojalateria",
     "category": "Eléctricas",
     "sourceUrl": "https://planet.gys.fr/prod-057449-/_/_/es?lang=es",
-    "image": "/images/products/client-catalog/cofre-cilindro-hidraulico-10t-pro.jpg",
+    "image": "/images/products/client-catalog/cofre-cilindro-hidraulico-10t-pro.webp",
     "specs": [
       {
         "label": "Referencia",
@@ -4158,7 +4158,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Herramientas hojalateria",
     "category": "Carritos de herramientas",
     "sourceUrl": "https://www.jonnesway.com/en_US/product/show_products.asp?catalog=1&subtree=32&p=049135113054141035060041050115118033192066235215252149133167110",
-    "image": "/images/products/client-catalog/c-7dw136.jpg",
+    "image": "/images/products/client-catalog/c-7dw136.webp",
     "specs": [],
     "downloads": [
       {
@@ -4199,7 +4199,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Herramientas hojalateria",
     "category": "Manuales??",
     "sourceUrl": "https://www.wielanderschill.com/en/file-with-handle-cut-3-fine-521203",
-    "image": "/images/products/client-catalog/file-with-handle.png",
+    "image": "/images/products/client-catalog/file-with-handle.webp",
     "specs": [
       {
         "label": "Content",
@@ -4245,7 +4245,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Herramientas hojalateria",
     "category": "Manuales??",
     "sourceUrl": "https://www.wielanderschill.com/en/file-with-handle-cut-1-medium-521201",
-    "image": "/images/products/client-catalog/file-with-handle-228.png",
+    "image": "/images/products/client-catalog/file-with-handle-228.webp",
     "specs": [
       {
         "label": "Content",
@@ -4291,7 +4291,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Herramientas hojalateria",
     "category": "Manuales??",
     "sourceUrl": "https://www.emm.com/en-gb/putties-uv/accessories/japanese-putty-knives",
-    "image": "/images/products/client-catalog/japanese-putty-knives.jpg",
+    "image": "/images/products/client-catalog/japanese-putty-knives.webp",
     "specs": [
       {
         "label": "Brand",
@@ -4325,7 +4325,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Herramientas hojalateria",
     "category": "Manuales??",
     "sourceUrl": "https://www.emm.com/en-gb/putties-uv/accessories/plastic-spreader",
-    "image": "/images/products/client-catalog/plastic-spreader.jpg",
+    "image": "/images/products/client-catalog/plastic-spreader.webp",
     "specs": [
       {
         "label": "Brand",
@@ -4355,7 +4355,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Detallado",
     "category": "Pulidoras",
     "sourceUrl": "https://shinemate.com/products/info/2.html",
-    "image": "/images/products/client-catalog/orbital-polisher-eb351-5-15-shinemate-global.png",
+    "image": "/images/products/client-catalog/orbital-polisher-eb351-5-15-shinemate-global.webp",
     "specs": [],
     "downloads": [
       {
@@ -4372,7 +4372,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Detallado",
     "category": "Pulidoras",
     "sourceUrl": "https://shinemate.com/products/info/17.html",
-    "image": "/images/products/client-catalog/rotary-polisher-ep802-shinemate-global.png",
+    "image": "/images/products/client-catalog/rotary-polisher-ep802-shinemate-global.webp",
     "specs": [],
     "downloads": [
       {
@@ -4389,7 +4389,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Detallado",
     "category": "Pulidoras",
     "sourceUrl": "https://shinemate.com/products/info/34.html",
-    "image": "/images/products/client-catalog/orbital-polisher-ex603-shinemate-global.png",
+    "image": "/images/products/client-catalog/orbital-polisher-ex603-shinemate-global.webp",
     "specs": [],
     "downloads": [
       {
@@ -4406,7 +4406,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Detallado",
     "category": "Pulidoras",
     "sourceUrl": "https://shinemate.com/products/info/22.html",
-    "image": "/images/products/client-catalog/orbital-polisher-eb350-5-9-shinemate-global.png",
+    "image": "/images/products/client-catalog/orbital-polisher-eb350-5-9-shinemate-global.webp",
     "specs": [],
     "downloads": [
       {
@@ -4423,7 +4423,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Detallado",
     "category": "Pulidoras",
     "sourceUrl": "https://www.rupes.com/es/product/pneumatic-mini-random-orbital-polisher-15mm-orbit-lhr75/",
-    "image": "/images/products/client-catalog/mini-pulidora-orbital-neumatica-aletoria-lhr75.jpg",
+    "image": "/images/products/client-catalog/mini-pulidora-orbital-neumatica-aletoria-lhr75.webp",
     "specs": [
       {
         "label": "Regulación de la velocidad",
@@ -4585,7 +4585,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Detallado",
     "category": "Pulidoras",
     "sourceUrl": "https://shinemate.com/products/info/56.html",
-    "image": "/images/products/client-catalog/diamond-foam-pad-t120-shinemate-global.png",
+    "image": "/images/products/client-catalog/diamond-foam-pad-t120-shinemate-global.webp",
     "specs": [],
     "downloads": [
       {
@@ -4619,7 +4619,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Detallado",
     "category": "Pulidoras",
     "sourceUrl": "https://shinemate.com/products/info/69.html",
-    "image": "/images/products/client-catalog/flat-face-foam-pad-t120-shinemate-global.png",
+    "image": "/images/products/client-catalog/flat-face-foam-pad-t120-shinemate-global.webp",
     "specs": [],
     "downloads": [
       {
@@ -4636,7 +4636,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Detallado",
     "category": "Pulidoras",
     "sourceUrl": "https://shinemate.com/products/info/68.html",
-    "image": "/images/products/client-catalog/flat-face-foam-pad-t80-shinemate-global.png",
+    "image": "/images/products/client-catalog/flat-face-foam-pad-t80-shinemate-global.webp",
     "specs": [],
     "downloads": [
       {
@@ -4653,7 +4653,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Detallado",
     "category": "Pulidoras",
     "sourceUrl": "https://shinemate.com/products/info/64.html",
-    "image": "/images/products/client-catalog/flat-face-foam-pad-t10-shinemate-global.png",
+    "image": "/images/products/client-catalog/flat-face-foam-pad-t10-shinemate-global.webp",
     "specs": [],
     "downloads": [
       {
@@ -4670,7 +4670,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Detallado",
     "category": "Pulidoras",
     "sourceUrl": "https://shinemate.com/products/info/59.html",
-    "image": "/images/products/client-catalog/heavy-cut-wool-pad-t160-shinemate-global.png",
+    "image": "/images/products/client-catalog/heavy-cut-wool-pad-t160-shinemate-global.webp",
     "specs": [],
     "downloads": [
       {
@@ -4687,7 +4687,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Detallado",
     "category": "Pulidoras",
     "sourceUrl": "https://shinemate.com/products/info/58.html",
-    "image": "/images/products/client-catalog/heavy-cut-wool-pad-t140-shinemate-global.png",
+    "image": "/images/products/client-catalog/heavy-cut-wool-pad-t140-shinemate-global.webp",
     "specs": [],
     "downloads": [
       {
@@ -4910,7 +4910,7 @@ export const clientCatalogProducts: CatalogProduct[] = uniqueClientCatalogSeeds.
     ? '/images/products/sata/imported/rps-the-original.webp'
     : seed.image;
   const gallery = seed.brand === 'Denair'
-    ? [image, '/images/products/client-catalog/denair-compresor-integrado-vista.png']
+    ? [image, '/images/products/client-catalog/denair-compresor-integrado-vista.webp']
     : [image];
   const technicalSpecs = [
     { label: 'Marca', value: seed.brand },
