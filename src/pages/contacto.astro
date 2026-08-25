@@ -11,8 +11,8 @@ import BackToTop from '../components/BackToTop.astro';
   <style>
     :root{--navy:#070b2f;--navy-2:#0b1145;--ink:#111827;--line:#e8edf5;--soft:#f5f7fb;--orange:#f58220;--orange-dark:#d96e12;--green:#559a17;--shadow:0 26px 70px rgba(7,11,47,.18);--shadow-soft:0 16px 44px rgba(7,11,47,.1);--max:1180px}
     *{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:#f6f8fc}a{text-decoration:none;color:inherit}img{max-width:100%;display:block}.topline{height:7px;background:linear-gradient(90deg,var(--green),var(--orange) 38%,var(--navy) 72%)}.site-header{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid rgba(7,11,47,.09);box-shadow:0 10px 28px rgba(7,11,47,.06)}.nav{max-width:var(--max);margin:0 auto;height:82px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;gap:24px}.brand{min-width:190px}.brand img{width:168px}.menu{display:flex;align-items:center;gap:26px;font-size:14px;font-weight:700;color:#17203b;white-space:nowrap}.menu a:hover{color:var(--orange-dark)}.nav-actions{display:flex;align-items:center;gap:12px}.lang{width:40px;height:40px;display:grid;place-items:center;border:1px solid var(--line);font-weight:800;font-size:12px;color:var(--navy)}.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 20px;border:1px solid transparent;font-weight:850;font-size:14px;transition:.2s ease}.btn.orange{background:var(--orange);color:#fff;box-shadow:0 14px 32px rgba(245,130,32,.28)}.btn.orange:hover{background:var(--orange-dark);transform:translateY(-1px)}.btn.outline-dark{background:#fff;color:var(--navy);border-color:var(--line)}.btn.outline-dark:hover{border-color:var(--navy);transform:translateY(-1px)}
-    main{background:linear-gradient(180deg,#f6f8fc 0%,#fff 100%)}section{padding:92px 28px}.container{max-width:var(--max);margin:0 auto}.label{font-size:12px;font-weight:950;letter-spacing:.14em;text-transform:uppercase;color:var(--orange-dark);margin-bottom:12px}.contact-hero{display:grid;grid-template-columns:.94fr 1.06fr;gap:0;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden}.contact-copy{padding:52px}.contact-copy h1{font-size:clamp(42px,5vw,64px);line-height:.96;letter-spacing:-.07em;margin:0 0 18px;color:var(--navy)}.contact-copy p{color:#647083;line-height:1.75;font-size:17px}.contact-actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:28px}.contact-media{min-height:470px;background:#f6f8fc;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px;text-align:center}.contact-media img{width:min(320px,75%);height:auto}.contact-media p{margin:36px 0 0;color:#14609d;font-size:clamp(25px,3vw,43px);font-weight:400;line-height:1.05;text-transform:uppercase}.contact-media p strong{display:block;font-size:1.12em}.contact-main{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:34px}.office-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.office-card,.contact-data,.contact-form,.map-card{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow-soft)}.office-card{padding:22px;font-weight:950;color:var(--navy);text-transform:uppercase;letter-spacing:.12em;font-size:12px}.contact-data{padding:30px;margin-top:18px}.contact-data h2,.contact-form h2{margin:0 0 18px;color:var(--navy);font-size:30px;letter-spacing:-.045em}.contact-links{display:grid;grid-template-columns:1fr 1fr;gap:14px}.contact-link{background:#f7f8fb;border:1px solid var(--line);padding:18px}.contact-link small{display:block;color:var(--orange-dark);font-weight:950;letter-spacing:.16em;text-transform:uppercase}.contact-link a{display:block;margin-top:10px;color:var(--navy);font-weight:900}.map-card{overflow:hidden;min-height:360px}.map-card img{width:100%;height:100%;object-fit:cover;object-position:top}.contact-form{margin-top:34px;padding:36px;display:grid;grid-template-columns:.85fr 1.15fr;gap:28px}.contact-form p{color:#647083;line-height:1.7;margin:0}.form-grid{display:grid;gap:12px}.form-grid input,.form-grid select,.form-grid textarea{width:100%;border:1px solid var(--line);background:#f7f8fb;padding:14px 15px;font:inherit;color:var(--ink)}.form-grid textarea{min-height:140px;resize:vertical}.footer{padding:58px 28px 28px;background:linear-gradient(145deg,#050720 0%,var(--navy) 58%,#0b1145 100%);color:#d8e0ef}.footer-shell{max-width:var(--max);margin:0 auto}.footer-grid{display:grid;grid-template-columns:1.15fr .95fr .75fr .9fr;gap:36px}.footer img{width:150px;filter:brightness(0) invert(1)}.footer p{color:#aeb8cf;line-height:1.7}.footer h3{font-size:12px;text-transform:uppercase;letter-spacing:.18em;color:#fff;margin:0 0 18px}.footer ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}.footer a{color:#c8d2e5}.footer a:hover{color:#fff}.footer-bottom{margin-top:36px;padding-top:22px;border-top:1px solid rgba(255,255,255,.12);display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap;color:#aeb8cf;font-size:13px}.footer-bottom-links{display:flex;gap:18px;flex-wrap:wrap}
-    @media(max-width:980px){.menu{display:none}.contact-hero,.contact-main,.contact-form,.footer-grid{grid-template-columns:1fr}.contact-copy{padding:36px}}@media(max-width:640px){.nav{height:auto;padding:18px;align-items:flex-start}.nav-actions .btn{display:none}.brand img{width:140px}.office-grid,.contact-links{grid-template-columns:1fr}.contact-copy h1{font-size:40px}.footer-bottom{align-items:flex-start;flex-direction:column}}
+    main{background:linear-gradient(180deg,#f6f8fc 0%,#fff 100%)}section{padding:92px 28px}.container{max-width:var(--max);margin:0 auto}.label{font-size:12px;font-weight:950;letter-spacing:.14em;text-transform:uppercase;color:var(--orange-dark);margin-bottom:12px}.contact-hero{display:grid;grid-template-columns:.94fr 1.06fr;gap:0;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden}.contact-copy{padding:52px}.contact-copy h1{font-size:clamp(42px,5vw,64px);line-height:.96;letter-spacing:-.07em;margin:0 0 18px;color:var(--navy)}.contact-copy h1 strong{display:block;color:var(--orange-dark)}.contact-copy p{color:#647083;line-height:1.75;font-size:17px}.contact-actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:28px}.contact-media{min-height:470px;background:#f6f8fc;display:flex;align-items:center;justify-content:center;padding:38px}.contact-media img{width:100%;height:100%;max-height:400px;object-fit:contain}.feature-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-top:1px;background:var(--navy);color:#fff;padding:1px}.feature{background:var(--navy-2);padding:22px}.feature b{display:block;color:var(--orange);font-size:12px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px}.feature span{color:#c9d3e5;line-height:1.5}.section-head{text-align:center;margin:48px 0 26px}.section-head h2{font-size:clamp(34px,4vw,52px);line-height:1;letter-spacing:-.055em;margin:0;color:var(--navy)}.branches{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.branch,.contact-data,.contact-form,.map-card{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow-soft)}.branch{padding:28px}.branch-number{display:grid;place-items:center;width:44px;height:44px;background:var(--navy);color:#fff;font-weight:950;margin-bottom:18px}.branch h3{font-size:26px;color:var(--navy);margin:0 0 14px}.branch p{color:#647083;line-height:1.6;min-height:52px}.branch a{display:inline-block;margin-top:12px;color:var(--orange-dark);font-weight:900}.contact-data{padding:30px;margin-top:18px}.contact-data h2,.contact-form h2{margin:0 0 18px;color:var(--navy);font-size:30px;letter-spacing:-.045em}.contact-links{display:grid;grid-template-columns:1fr 1fr;gap:14px}.contact-link{background:#f7f8fb;border:1px solid var(--line);padding:18px}.contact-link small{display:block;color:var(--orange-dark);font-weight:950;letter-spacing:.16em;text-transform:uppercase}.contact-link a{display:block;margin-top:10px;color:var(--navy);font-weight:900}.contact-form{margin-top:34px;padding:36px;display:grid;grid-template-columns:.72fr 1.28fr;gap:32px}.contact-form p{color:#647083;line-height:1.7;margin:0}.contact-promises{display:grid;gap:14px;margin-top:24px}.contact-promise{border-top:1px solid var(--line);padding-top:14px}.contact-promise strong{display:block;color:var(--navy);margin-bottom:4px}.contact-promise span{color:#647083;font-size:14px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form-grid input,.form-grid select,.form-grid textarea{width:100%;border:1px solid var(--line);background:#f7f8fb;padding:14px 15px;font:inherit;color:var(--ink)}.form-grid textarea,.form-grid button,.form-grid .wide{grid-column:1/-1}.form-grid textarea{min-height:140px;resize:vertical}.coverage-strip{display:grid;grid-template-columns:1fr 1.6fr;gap:30px;align-items:center;margin-top:34px;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow-soft);padding:28px}.coverage-strip img{max-height:240px;width:100%;object-fit:contain}.coverage-copy h2{font-size:32px;line-height:1.05;letter-spacing:-.045em;color:var(--navy);margin:0 0 12px}.coverage-copy p{color:#647083;line-height:1.65}.coverage-benefits{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}.coverage-benefits span{border:1px solid var(--line);padding:12px;color:var(--navy);font-weight:800;font-size:13px}.footer{padding:58px 28px 28px;background:linear-gradient(145deg,#050720 0%,var(--navy) 58%,#0b1145 100%);color:#d8e0ef}.footer-shell{max-width:var(--max);margin:0 auto}.footer-grid{display:grid;grid-template-columns:1.15fr .95fr .75fr .9fr;gap:36px}.footer img{width:150px;filter:brightness(0) invert(1)}.footer p{color:#aeb8cf;line-height:1.7}.footer h3{font-size:12px;text-transform:uppercase;letter-spacing:.18em;color:#fff;margin:0 0 18px}.footer ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}.footer a{color:#c8d2e5}.footer a:hover{color:#fff}.footer-bottom{margin-top:36px;padding-top:22px;border-top:1px solid rgba(255,255,255,.12);display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap;color:#aeb8cf;font-size:13px}.footer-bottom-links{display:flex;gap:18px;flex-wrap:wrap}
+    @media(max-width:980px){.menu{display:none}.contact-hero,.contact-form,.coverage-strip,.footer-grid{grid-template-columns:1fr}.feature-strip,.branches{grid-template-columns:repeat(2,1fr)}.contact-copy{padding:36px}}@media(max-width:640px){.nav{height:auto;padding:18px;align-items:flex-start}.nav-actions .btn{display:none}.brand img{width:140px}.feature-strip,.branches,.contact-links,.form-grid,.coverage-benefits{grid-template-columns:1fr}.contact-copy h1{font-size:40px}.contact-media{min-height:300px;padding:24px}.footer-bottom{align-items:flex-start;flex-direction:column}}
     .mobile-menu{display:none}.mobile-menu summary{width:46px;height:46px;border:1px solid var(--line);display:grid;place-items:center;cursor:pointer;list-style:none;background:#fff}.mobile-menu summary::-webkit-details-marker{display:none}.hamburger,.hamburger:before,.hamburger:after{display:block;width:22px;height:2px;background:var(--navy);content:"";transition:.2s ease}.hamburger:before{transform:translateY(-7px)}.hamburger:after{transform:translateY(5px)}.mobile-menu[open] .hamburger{background:transparent}.mobile-menu[open] .hamburger:before{transform:translateY(2px) rotate(45deg)}.mobile-menu[open] .hamburger:after{transform:translateY(0) rotate(-45deg)}.mobile-panel{position:absolute;right:28px;top:calc(100% + 12px);width:min(88vw,360px);background:#fff;border:1px solid var(--line);box-shadow:0 22px 60px rgba(7,11,47,.18);padding:12px;display:grid;gap:4px}.mobile-panel a{padding:14px 16px;font-weight:850;color:#17203b}.mobile-panel a:hover{background:#f6f8fc;color:var(--orange-dark)}.mobile-panel .mobile-cta{margin-top:6px;background:var(--orange);color:#fff;text-align:center}@media(max-width:980px){.nav{position:relative}.nav-actions{display:none}.mobile-menu{display:block}}@media(max-width:640px){.nav{height:70px!important;padding:0 18px!important;align-items:center!important}.brand{min-width:0!important}.mobile-panel{right:18px}section{padding-left:20px!important;padding-right:20px!important}.field,.form-grid input,.form-grid select,.form-grid textarea{min-width:0;width:100%}.catalog-shell,.training-copy,.post-copy,.contact-copy,.about-copy,.product-copy{padding:24px!important}}
   </style>
 </head>
@@ -47,60 +47,93 @@ import BackToTop from '../components/BackToTop.astro';
       <div class="container">
         <div class="contact-hero">
           <div class="contact-copy">
-            <div class="label">Contacta con un experto</div>
-            <h1>Estamos aquí para ayudarte</h1>
-            <p>Escríbenos para recibir atención comercial, seguimiento y orientación sobre las soluciones de Etapel.</p>
+            <div class="label">Cobertura nacional</div>
+            <h1>Estamos en México.<strong>Llegamos a todo México.</strong></h1>
+            <p>Contamos con presencia en CDMX, Monterrey y Veracruz, además de envíos, distribución y soporte en toda la República Mexicana.</p>
             <div class="contact-actions">
-              <a href="mailto:ventas@etapel.com.mx" class="btn orange">ventas@etapel.com.mx</a>
-              <a href="https://wa.link/oowyzu" class="btn outline-dark" target="_blank" rel="noreferrer">WhatsApp</a>
+              <a href="#formulario-contacto" class="btn orange">Contactar a un especialista</a>
+              <a href="#sucursales" class="btn outline-dark">Ver sucursales</a>
             </div>
           </div>
           <div class="contact-media">
-            <img src="/etapel-logo.svg" alt="Etapel" loading="eager">
-            <p>Somos proveedores<strong>exclusivos a nivel nacional</strong></p>
+            <img src="/images/mapa-etapel.webp" alt="Cobertura de Etapel en México" loading="eager">
           </div>
         </div>
 
-        <div class="contact-main">
-          <div>
-            <div class="office-grid">
-              <article class="office-card">Monterrey</article>
-              <article class="office-card">CDMX</article>
-              <article class="office-card">Veracruz</article>
-            </div>
-            <div class="contact-data">
-              <h2>Datos de contacto</h2>
-              <div class="contact-links">
-                <div class="contact-link"><small>Email</small><a href="mailto:ventas@etapel.com.mx">ventas@etapel.com.mx</a></div>
-                <div class="contact-link"><small>Teléfono</small><a href="tel:+525556895055">55 5689 5055</a></div>
-              </div>
-              <div style="margin-top:20px"><a href="https://wa.link/oowyzu" class="btn orange" target="_blank" rel="noreferrer">contactanos</a></div>
-            </div>
-          </div>
-          <div class="map-card"><img src="/images/mapa-etapel.webp" alt="Mapa de referencia Etapel" loading="lazy"></div>
+        <div class="feature-strip">
+          <div class="feature"><b>Presencia</b><span>CDMX, Monterrey y Veracruz</span></div>
+          <div class="feature"><b>Distribución</b><span>Envíos a toda la República Mexicana</span></div>
+          <div class="feature"><b>Atención</b><span>Asesoría personalizada y especializada</span></div>
+          <div class="feature"><b>Soluciones</b><span>Soporte comercial y técnico</span></div>
+        </div>
+
+        <div class="section-head" id="sucursales">
+          <div class="label">Presencia nacional</div>
+          <h2>Nuestras sucursales</h2>
+        </div>
+        <div class="branches">
+          <article class="branch"><span class="branch-number">01</span><h3>CDMX</h3><p>Atención comercial, asesoría técnica y seguimiento de proyectos.</p><a href="#formulario-contacto">Contactar sucursal →</a></article>
+          <article class="branch"><span class="branch-number">02</span><h3>Monterrey</h3><p>Atención regional para clientes y proyectos del norte de México.</p><a href="#formulario-contacto">Contactar sucursal →</a></article>
+          <article class="branch"><span class="branch-number">03</span><h3>Veracruz</h3><p>Atención regional, soporte y distribución para el Golfo y sureste.</p><a href="#formulario-contacto">Contactar sucursal →</a></article>
         </div>
 
         <div class="contact-form" id="formulario-contacto">
           <div>
-            <div class="label">Formulario</div>
-            <h2>Contactanos, estamos para servirte</h2>
-            <p>Comparte tus datos y el tema sobre el cual requieres información.</p>
+            <div class="label">Contáctanos</div>
+            <h2>¿Qué necesitas?</h2>
+            <p>Cuéntanos sobre tu proyecto o necesidad y te pondremos en contacto con el especialista adecuado.</p>
+            <div class="contact-promises">
+              <div class="contact-promise"><strong>Te escuchamos</strong><span>Entendemos tu necesidad y objetivos.</span></div>
+              <div class="contact-promise"><strong>Te conectamos</strong><span>Asignamos al especialista indicado.</span></div>
+              <div class="contact-promise"><strong>Te acompañamos</strong><span>Buscamos contigo la solución adecuada.</span></div>
+            </div>
           </div>
           <form class="form-grid" action="https://formspree.io/f/xeewlkng" method="POST">
+            <select name="perfil" required>
+              <option value="">Soy... *</option>
+              <option>Taller automotriz</option>
+              <option>Centro de colisión</option>
+              <option>Industria</option>
+              <option>Transporte pesado</option>
+              <option>Distribuidor</option>
+              <option>Otro</option>
+            </select>
+            <select name="necesidad" required>
+              <option value="">Necesito... *</option>
+              <option>Equipo</option>
+              <option>Proyecto integral</option>
+              <option>Pintura y consumibles</option>
+              <option>Capacitación o demostración</option>
+              <option>Servicio técnico</option>
+              <option>Mantenimiento</option>
+              <option>Otro</option>
+            </select>
             <input type="text" name="nombre" placeholder="Nombre *" required>
             <input type="text" name="empresa" placeholder="Empresa">
             <input type="tel" name="telefono" placeholder="Teléfono">
             <input type="email" name="email" placeholder="Correo *" required>
-            <select name="tema" required>
-              <option value="">Seleccione el tema del cual requiere información *</option>
-              <option>Suscripción a ofertas especiales</option>
-              <option>Atención personalizada</option>
-              <option>Quejas o sugerencias</option>
+            <select class="wide" name="estado">
+              <option value="">Estado de la República</option>
+              <option>CDMX</option>
+              <option>Estado de México</option>
+              <option>Nuevo León</option>
+              <option>Veracruz</option>
+              <option>Otro estado</option>
             </select>
-            <textarea name="mensaje" placeholder="Mensaje opcional"></textarea>
+            <textarea name="mensaje" placeholder="Cuéntanos sobre tu proyecto, necesidad o comentario"></textarea>
             <input type="hidden" name="_subject" value="Nuevo contacto desde Etapel">
-            <button type="submit" class="btn orange">Enviar</button>
+            <button type="submit" class="btn orange">Quiero que me contacte un especialista</button>
           </form>
+        </div>
+
+        <div class="coverage-strip">
+          <img src="/images/mapa-etapel.webp" alt="Envíos y distribución nacional Etapel" loading="lazy">
+          <div class="coverage-copy">
+            <div class="label">Cobertura nacional</div>
+            <h2>Envíos y distribución a toda la República Mexicana</h2>
+            <p>Llegamos a donde nos necesitas con atención especializada, cobertura nacional y respuesta ágil.</p>
+            <div class="coverage-benefits"><span>Atención especializada</span><span>Cobertura nacional</span><span>Soporte comercial y técnico</span></div>
+          </div>
         </div>
       </div>
     </section>

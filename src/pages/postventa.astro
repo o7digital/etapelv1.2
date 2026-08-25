@@ -11,9 +11,9 @@ import BackToTop from '../components/BackToTop.astro';
   <style>
     :root{--navy:#070b2f;--navy-2:#0b1145;--ink:#111827;--line:#e8edf5;--soft:#f5f7fb;--orange:#f58220;--orange-dark:#d96e12;--green:#559a17;--shadow:0 26px 70px rgba(7,11,47,.18);--shadow-soft:0 16px 44px rgba(7,11,47,.1);--max:1180px}
     *{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:#fff}a{text-decoration:none;color:inherit}img{max-width:100%;display:block}.topline{height:7px;background:linear-gradient(90deg,var(--green),var(--orange) 38%,var(--navy) 72%)}.site-header{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid rgba(7,11,47,.09);box-shadow:0 10px 28px rgba(7,11,47,.06)}.nav{max-width:var(--max);margin:0 auto;height:82px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;gap:24px}.brand{min-width:190px}.brand img{width:168px}.menu{display:flex;align-items:center;gap:26px;font-size:14px;font-weight:700;color:#17203b;white-space:nowrap}.menu a:hover{color:var(--orange-dark)}.nav-actions{display:flex;align-items:center;gap:12px}.lang{width:40px;height:40px;display:grid;place-items:center;border:1px solid var(--line);font-weight:800;font-size:12px;color:var(--navy)}.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 20px;border:1px solid transparent;font-weight:850;font-size:14px;transition:.2s ease}.btn.orange{background:var(--orange);color:#fff;box-shadow:0 14px 32px rgba(245,130,32,.28)}.btn.orange:hover{background:var(--orange-dark);transform:translateY(-1px)}.btn.outline-dark{background:#fff;color:var(--navy);border-color:var(--line)}.btn.outline-dark:hover{border-color:var(--navy);transform:translateY(-1px)}
-    main{background:linear-gradient(180deg,#f6f8fc 0%,#fff 100%)}section{padding:92px 28px}.container{max-width:var(--max);margin:0 auto}.label{font-size:12px;font-weight:950;letter-spacing:.14em;text-transform:uppercase;color:var(--orange-dark);margin-bottom:12px}.post-hero{display:grid;grid-template-columns:1fr 1fr;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden}.post-copy{padding:56px}.post-copy h1{font-size:clamp(42px,5vw,64px);line-height:.96;letter-spacing:-.07em;margin:0 0 18px;color:var(--navy)}.post-copy p{color:#647083;line-height:1.75;font-size:17px}.post-actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:28px}.post-media{min-height:430px;background:#f6f8fc}.post-media img{width:100%;height:100%;object-fit:cover;object-position:center 38%}.section-head{display:flex;align-items:end;justify-content:space-between;gap:28px;margin:44px 0 28px}.section-head h2{font-size:clamp(34px,4vw,56px);line-height:.98;letter-spacing:-.065em;margin:0;color:var(--navy)}.section-head p{max-width:430px;color:#647083;line-height:1.7}.services{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.service{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow-soft);padding:24px}.service span{display:inline-grid;place-items:center;width:44px;height:44px;border:1px solid var(--line);color:var(--orange-dark);font-weight:950;margin-bottom:18px}.service h3{margin:0;color:var(--navy);font-size:22px;letter-spacing:-.035em}.form-box{margin-top:34px;display:grid;grid-template-columns:.85fr 1.15fr;gap:30px;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);padding:34px}.form-box h2{font-size:38px;line-height:1;letter-spacing:-.055em;margin:0 0 14px;color:var(--navy)}.form-box p{color:#647083;line-height:1.7}.form-grid{display:grid;gap:12px}.form-grid input,.form-grid select,.form-grid textarea{width:100%;border:1px solid var(--line);background:#f7f8fb;padding:14px 15px;font:inherit;color:var(--ink)}.form-grid textarea{min-height:140px;resize:vertical}
+    main{background:linear-gradient(180deg,#f6f8fc 0%,#fff 100%)}section{padding:92px 28px}.container{max-width:var(--max);margin:0 auto}.label{font-size:12px;font-weight:950;letter-spacing:.14em;text-transform:uppercase;color:var(--orange-dark);margin-bottom:12px}.post-hero{display:grid;grid-template-columns:1fr 1fr;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden}.post-copy{padding:56px}.post-copy h1{font-size:clamp(42px,5vw,64px);line-height:.96;letter-spacing:-.07em;margin:0 0 18px;color:var(--navy)}.post-copy p{color:#647083;line-height:1.75;font-size:17px}.post-actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:28px}.post-media{min-height:430px;background:#f6f8fc}.post-media img{width:100%;height:100%;object-fit:cover;object-position:center 38%}.section-head{display:flex;align-items:end;justify-content:space-between;gap:28px;margin:44px 0 28px}.section-head h2{font-size:clamp(34px,4vw,56px);line-height:.98;letter-spacing:-.065em;margin:0;color:var(--navy)}.section-head p{max-width:430px;color:#647083;line-height:1.7}.services{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.service{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow-soft);padding:24px}.service span{display:inline-grid;place-items:center;width:44px;height:44px;border:1px solid var(--line);color:var(--orange-dark);font-weight:950;margin-bottom:18px}.service h3{margin:0;color:var(--navy);font-size:22px;letter-spacing:-.035em}.service p{margin:10px 0 0;color:#647083;line-height:1.65}.process-band{margin-top:44px;background:linear-gradient(145deg,#050720,var(--navy-2));color:#fff;padding:38px}.process-band .label{color:var(--orange)}.process-band h2{font-size:clamp(32px,4vw,50px);line-height:1;letter-spacing:-.055em;margin:0}.maintenance-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:28px}.maintenance-step{padding:22px 0;border-top:1px solid rgba(255,255,255,.18)}.maintenance-step b{display:block;color:var(--orange);font-size:13px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px}.maintenance-step h3{margin:0 0 8px;font-size:20px}.maintenance-step p{margin:0;color:#b9c4d8;line-height:1.55}.benefits{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.benefit{background:#fff;border:1px solid var(--line);padding:22px;box-shadow:var(--shadow-soft)}.benefit strong{display:block;color:var(--navy);font-size:19px;margin-bottom:8px}.benefit p{margin:0;color:#647083;line-height:1.55}.coverage-box{display:grid;grid-template-columns:.9fr 1.1fr;align-items:center;gap:34px;margin-top:44px;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow-soft);padding:34px}.coverage-box h2{font-size:clamp(32px,4vw,48px);line-height:1;letter-spacing:-.055em;color:var(--navy);margin:0 0 14px}.coverage-box p{color:#647083;line-height:1.7}.coverage-locations{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.coverage-locations span{border:1px solid var(--line);padding:10px 13px;color:var(--navy);font-weight:850}.coverage-box img{width:100%;max-height:310px;object-fit:contain}.form-box{margin-top:34px;display:grid;grid-template-columns:.85fr 1.15fr;gap:30px;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);padding:34px}.form-box h2{font-size:38px;line-height:1;letter-spacing:-.055em;margin:0 0 14px;color:var(--navy)}.form-box p{color:#647083;line-height:1.7}.form-grid{display:grid;gap:12px}.form-grid input,.form-grid select,.form-grid textarea{width:100%;border:1px solid var(--line);background:#f7f8fb;padding:14px 15px;font:inherit;color:var(--ink)}.form-grid textarea{min-height:140px;resize:vertical}
     .footer{padding:58px 28px 28px;background:linear-gradient(145deg,#050720 0%,var(--navy) 58%,#0b1145 100%);color:#d8e0ef}.footer-shell{max-width:var(--max);margin:0 auto}.footer-grid{display:grid;grid-template-columns:1.15fr .95fr .75fr .9fr;gap:36px}.footer img{width:150px;filter:brightness(0) invert(1)}.footer p{color:#aeb8cf;line-height:1.7}.footer h3{font-size:12px;text-transform:uppercase;letter-spacing:.18em;color:#fff;margin:0 0 18px}.footer ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}.footer a{color:#c8d2e5}.footer a:hover{color:#fff}.footer-bottom{margin-top:36px;padding-top:22px;border-top:1px solid rgba(255,255,255,.12);display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap;color:#aeb8cf;font-size:13px}.footer-bottom-links{display:flex;gap:18px;flex-wrap:wrap}.footer-keywords{margin-top:18px;padding-top:18px;border-top:1px solid rgba(255,255,255,.1);font-size:11px;line-height:1.8;color:#8f9ab2;text-align:center}
-    @media(max-width:980px){.menu{display:none}.post-hero,.form-box{grid-template-columns:1fr}.services,.footer-grid{grid-template-columns:repeat(2,1fr)}.post-copy{padding:36px}}@media(max-width:640px){.nav{height:auto;padding:18px;align-items:flex-start}.nav-actions .btn{display:none}.brand img{width:140px}.services,.footer-grid{grid-template-columns:1fr}.section-head{display:block}.post-copy h1{font-size:40px}.footer-bottom{align-items:flex-start;flex-direction:column}}
+    @media(max-width:980px){.menu{display:none}.post-hero,.form-box,.coverage-box{grid-template-columns:1fr}.services,.maintenance-steps,.benefits,.footer-grid{grid-template-columns:repeat(2,1fr)}.post-copy{padding:36px}}@media(max-width:640px){.nav{height:auto;padding:18px;align-items:flex-start}.nav-actions .btn{display:none}.brand img{width:140px}.services,.maintenance-steps,.benefits,.footer-grid{grid-template-columns:1fr}.section-head{display:block}.post-copy h1{font-size:40px}.process-band,.coverage-box{padding:24px}.footer-bottom{align-items:flex-start;flex-direction:column}}
     .mobile-menu{display:none}.mobile-menu summary{width:46px;height:46px;border:1px solid var(--line);display:grid;place-items:center;cursor:pointer;list-style:none;background:#fff}.mobile-menu summary::-webkit-details-marker{display:none}.hamburger,.hamburger:before,.hamburger:after{display:block;width:22px;height:2px;background:var(--navy);content:"";transition:.2s ease}.hamburger:before{transform:translateY(-7px)}.hamburger:after{transform:translateY(5px)}.mobile-menu[open] .hamburger{background:transparent}.mobile-menu[open] .hamburger:before{transform:translateY(2px) rotate(45deg)}.mobile-menu[open] .hamburger:after{transform:translateY(0) rotate(-45deg)}.mobile-panel{position:absolute;right:28px;top:calc(100% + 12px);width:min(88vw,360px);background:#fff;border:1px solid var(--line);box-shadow:0 22px 60px rgba(7,11,47,.18);padding:12px;display:grid;gap:4px}.mobile-panel a{padding:14px 16px;font-weight:850;color:#17203b}.mobile-panel a:hover{background:#f6f8fc;color:var(--orange-dark)}.mobile-panel .mobile-cta{margin-top:6px;background:var(--orange);color:#fff;text-align:center}@media(max-width:980px){.nav{position:relative}.nav-actions{display:none}.mobile-menu{display:block}}@media(max-width:640px){.nav{height:70px!important;padding:0 18px!important;align-items:center!important}.brand{min-width:0!important}.mobile-panel{right:18px}section{padding-left:20px!important;padding-right:20px!important}.field,.form-grid input,.form-grid select,.form-grid textarea{min-width:0;width:100%}.catalog-shell,.training-copy,.post-copy,.contact-copy,.about-copy,.product-copy{padding:24px!important}}
   </style>
 </head>
@@ -48,36 +48,67 @@ import BackToTop from '../components/BackToTop.astro';
       <div class="container">
         <div class="post-hero">
           <div class="post-copy">
-            <div class="label">Servicio</div>
-            <h1>Posventa</h1>
-            <p>Soporte técnico y acompañamiento para mantener tus equipos y procesos en operación.</p>
+            <div class="label">Servicio técnico</div>
+            <h1>Servicio técnico que protege tu inversión.</h1>
+            <p>Acompañamos tus equipos después de la compra para mantenerlos operando de manera segura, eficiente y productiva.</p>
             <div class="post-actions">
-              <a class="btn orange" href="/contacto">Contactar con un experto</a>
-              <a class="btn outline-dark" href="#formulario-postventa">Ir al formulario</a>
+              <a class="btn orange" href="#formulario-postventa">Solicita servicio técnico</a>
+              <a class="btn outline-dark" href="#mantenimiento">Plan de mantenimiento</a>
             </div>
           </div>
           <div class="post-media"><img src="/images/postventa.webp" alt="Servicio Posventa Etapel" loading="eager"></div>
         </div>
 
         <div class="section-head">
-          <div><div class="label">Posventa</div><h2>Servicios</h2></div>
-          <p>Atención especializada para instalación, mantenimiento, reparación, seguimiento técnico y demostraciones.</p>
+          <div><div class="label">Posventa Etapel</div><h2>Más que reparaciones, somos tu socio estratégico.</h2></div>
+          <p>Protegemos el desempeño de tus equipos, la seguridad de tus operaciones y la continuidad de tu trabajo.</p>
         </div>
         <div class="services">
-          <article class="service"><span>01</span><h3>Levantamientos</h3></article>
-          <article class="service"><span>02</span><h3>Mantenimientos</h3></article>
-          <article class="service"><span>03</span><h3>Reparaciones</h3></article>
-          <article class="service"><span>04</span><h3>Instalaciones</h3></article>
-          <article class="service"><span>05</span><h3>Desinstalaciones</h3></article>
-          <article class="service"><span>06</span><h3>Capacitaciones</h3></article>
-          <article class="service"><span>07</span><h3>Demostraciones</h3></article>
+          <article class="service"><span>01</span><h3>Instalación y puesta en marcha</h3><p>Configuración, instalación y puesta en operación de equipos.</p></article>
+          <article class="service"><span>02</span><h3>Mantenimiento de equipos mayores</h3><p>Servicio preventivo y correctivo para prolongar su vida útil.</p></article>
+          <article class="service"><span>03</span><h3>Servicio especializado de cabinas</h3><p>Revisión de componentes y condiciones de operación.</p></article>
+          <article class="service"><span>04</span><h3>Cambio de filtros</h3><p>Suministro y cambio para conservar el flujo de aire adecuado.</p></article>
+          <article class="service"><span>05</span><h3>Armado y desarmado de cabinas</h3><p>Desmontaje, reubicación, reinstalación y pruebas.</p></article>
+          <article class="service"><span>06</span><h3>Diagnóstico y reparación</h3><p>Evaluación técnica, reparación y acciones correctivas.</p></article>
+        </div>
+
+        <div class="process-band" id="mantenimiento">
+          <div class="label">Nuestro enfoque</div>
+          <h2>Mantenimiento preventivo para mantener tu operación en marcha.</h2>
+          <div class="maintenance-steps">
+            <article class="maintenance-step"><b>01</b><h3>Diagnóstico</h3><p>Evaluamos el estado actual de tus equipos e identificamos riesgos.</p></article>
+            <article class="maintenance-step"><b>02</b><h3>Programa</h3><p>Diseñamos un plan preventivo adaptado a tu operación.</p></article>
+            <article class="maintenance-step"><b>03</b><h3>Servicio</h3><p>Ejecutamos el mantenimiento con técnicos especializados.</p></article>
+            <article class="maintenance-step"><b>04</b><h3>Seguimiento</h3><p>Damos continuidad para asegurar un desempeño consistente.</p></article>
+          </div>
+        </div>
+
+        <div class="section-head">
+          <div><div class="label">Beneficios</div><h2>Resultados que se reflejan en tu operación.</h2></div>
+          <p>Un servicio técnico planificado reduce riesgos y protege la productividad de tu taller.</p>
+        </div>
+        <div class="benefits">
+          <article class="benefit"><strong>Mayor vida útil</strong><p>Mantenimiento adecuado que prolonga el rendimiento de tus equipos.</p></article>
+          <article class="benefit"><strong>Menos paros no programados</strong><p>Prevención de fallas y atención oportuna.</p></article>
+          <article class="benefit"><strong>Operación segura y eficiente</strong><p>Trabajo conforme a estándares y mejores prácticas.</p></article>
+          <article class="benefit"><strong>Mejor desempeño</strong><p>Equipos optimizados para mantener productividad y calidad.</p></article>
+        </div>
+
+        <div class="coverage-box">
+          <div>
+            <div class="label">Cobertura nacional</div>
+            <h2>Estamos cerca de ti, estamos en México.</h2>
+            <p>Atendemos y damos soporte a nuestros clientes desde CDMX, Monterrey y Veracruz, con cobertura en toda la República Mexicana.</p>
+            <div class="coverage-locations"><span>CDMX</span><span>Monterrey</span><span>Veracruz</span><span>Cobertura nacional</span></div>
+          </div>
+          <img src="/images/mapa-etapel.webp" alt="Cobertura nacional de Etapel" loading="lazy">
         </div>
 
         <div class="form-box" id="formulario-postventa">
           <div>
             <div class="label">Contacta con un experto</div>
-            <h2>Estamos aquí para ayudarte</h2>
-            <p>Compártenos tu requerimiento y nuestro equipo dará seguimiento al servicio que necesitas.</p>
+            <h2>Mantén tu operación en marcha.</h2>
+            <p>Cuéntanos qué equipo o servicio necesitas y un especialista dará seguimiento a tu solicitud.</p>
             <a class="btn outline-dark" style="margin-top:18px" href="https://wa.me/525570111515?text=Hola%2C%20quiero%20informaci%C3%B3n%20de%20Posventa" target="_blank" rel="noreferrer">WhatsApp</a>
           </div>
           <form class="form-grid" action="https://formspree.io/f/xeewlkng" method="POST">
