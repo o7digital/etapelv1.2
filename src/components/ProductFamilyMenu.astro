@@ -12,22 +12,17 @@ const { family, lang = 'es' } = Astro.props as Props;
 const en = lang === 'en';
 const families = family ? [family] : productFamilies;
 const familyEnglish: Record<string, { title: string; description: string }> = {
-  'equipo-mayor': {
-    title: 'Major equipment',
-    description: 'Large-format installations and equipment for body shops.'
-  },
-  'equipo-menor': {
-    title: 'Tools & small equipment',
-    description: 'Mobile equipment and tools for repair, diagnostics, welding and finishing.'
-  },
-  pintura: {
-    title: 'Paint',
-    description: 'Automotive and industrial coatings, application, filtration and finishing systems.'
-  },
-  consumibles: {
-    title: 'Consumables',
-    description: 'Preparation, protection, repair and finishing materials for daily use.'
-  }
+  'pintura-y-aplicacion': { title: 'Paint & application', description: 'Professional paint application equipment, systems and accessories.' },
+  'preparacion-y-acabado': { title: 'Preparation & finishing', description: 'Professional sanding, extraction, polishing and finishing systems.' },
+  'enderezado-de-carroceria': { title: 'Body straightening', description: 'Straightening, measuring and alignment equipment.' },
+  'desabollado-de-carroceria': { title: 'Body dent repair', description: 'Dent repair, welding, pulling and plastic-repair solutions.' },
+  'cargadores-y-arrancadores-de-baterias': { title: 'Battery chargers & starters', description: 'Battery charging, starting and testing, plus compressed-air solutions.' },
+  pintura: { title: 'Paint', description: 'Automotive, industrial and powder coatings.' },
+  mecanica: { title: 'Mechanical service', description: 'Lifting, diagnostics, wheel service, A/C and ADAS equipment.' },
+  'consumibles-de-pintura': { title: 'Paint consumables', description: 'Abrasives, masking, polishing and personal protection.' },
+  'consumibles-de-hojalateria': { title: 'Bodywork consumables', description: 'Fillers, sealants and body-repair tool consumables.' },
+  'herramientas-de-hojalateria': { title: 'Bodywork tools', description: 'Pneumatic, hydraulic and manual bodywork tools.' },
+  detallado: { title: 'Detailing', description: 'Professional polishers and pads for surface correction and finishing.' }
 };
 
 const groupsFor = (item: ProductFamily) => {
@@ -51,13 +46,11 @@ const lineHref = (group: ReturnType<typeof groupsFor>[number], item?: ProductFam
 };
 
 const sectionsFor = (item: ProductFamily) => {
-  const sections = new Map<string, { name: string; nameEn: string; groups: ReturnType<typeof groupsFor> }>();
-  groupsFor(item).forEach((group) => {
-    const current = sections.get(group.section) || { name: group.section, nameEn: group.sectionEn, groups: [] };
-    current.groups.push(group);
-    sections.set(group.section, current);
-  });
-  return Array.from(sections.values());
+  return [{
+    name: item.title,
+    nameEn: familyEnglish[item.slug]?.title || item.title,
+    groups: groupsFor(item)
+  }];
 };
 ---
 
@@ -114,10 +107,10 @@ const sectionsFor = (item: ProductFamily) => {
     <div class="container">
       <div class="section-head">
         <div>
-          <div class="label">{en ? 'Main families' : 'Familias principales'}</div>
-          <h2>{en ? 'Four clear ways into the catalog.' : 'Cuatro accesos claros al catálogo.'}</h2>
+          <div class="label">{en ? 'Catalog families' : 'Familias del catálogo'}</div>
+          <h2>{en ? 'Choose a family, then explore its details.' : 'Elige una familia y entra después en su detalle.'}</h2>
         </div>
-        <p>{en ? 'Start with a major family, then choose a product line just as you would in a professional catalog.' : 'Primero elige una familia grande y después una línea de producto, como en un catálogo profesional.'}</p>
+        <p>{en ? 'These families follow the customer catalog index. Each one opens its product lines, subcategories and detailed product pages.' : 'Estas familias siguen el índice del catálogo. Cada una abre sus líneas, subcategorías y fichas detalladas de producto.'}</p>
       </div>
       <div class="family-directory">
         {families.map((item) => {

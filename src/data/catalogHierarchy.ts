@@ -1,6 +1,6 @@
 import type { CatalogProduct } from './productTypes';
 
-export type CatalogFamilySlug = 'equipo-mayor' | 'equipo-menor' | 'pintura' | 'consumibles';
+export type CatalogFamilySlug = string;
 
 export interface CatalogLineDefinition {
   familySlug: CatalogFamilySlug;
@@ -45,10 +45,8 @@ export const catalogHierarchy: CatalogLineDefinition[] = [
   { familySlug: 'equipo-menor', section: 'Baterías', sectionEn: 'Batteries', name: 'Probadores de baterías', nameEn: 'Battery testers', sublines: children(['GYS', 'GYS']) },
   { familySlug: 'equipo-menor', section: 'Mecánica', sectionEn: 'Mechanical service', name: 'Escáner', nameEn: 'Diagnostic scanners', sublines: children(['SUN', 'SUN']) },
   { familySlug: 'equipo-menor', section: 'Mecánica', sectionEn: 'Mechanical service', name: 'Aire acondicionado', nameEn: 'Air conditioning', sublines: children(['SUN', 'SUN']) },
-  { familySlug: 'equipo-menor', section: 'Herramientas de hojalatería', sectionEn: 'Bodywork tools', name: 'Neumáticas', nameEn: 'Pneumatic tools', sublines: children(['PneuTrend', 'PneuTrend']) },
-  { familySlug: 'equipo-menor', section: 'Herramientas de hojalatería', sectionEn: 'Bodywork tools', name: 'Eléctricas', nameEn: 'Electric tools', sublines: children(['Porto Power', 'Porto Power']) },
-  { familySlug: 'equipo-menor', section: 'Herramientas de hojalatería', sectionEn: 'Bodywork tools', name: 'Carritos de herramientas', nameEn: 'Tool carts', sublines: children(['Jonnesway', 'Jonnesway'], ['SUN', 'SUN']) },
-  { familySlug: 'equipo-menor', section: 'Herramientas de hojalatería', sectionEn: 'Bodywork tools', name: 'Herramientas manuales', nameEn: 'Hand tools', sublines: children(['Garlopas ShineMate', 'ShineMate sanding blocks'], ['Limas Wieländer+Schill', 'Wieländer+Schill files'], ['Cuñas Colad', 'Colad spreaders']) },
+  { familySlug: 'equipo-menor', section: 'Herramientas de hojalatería', sectionEn: 'Bodywork tools', name: 'Neumáticas', nameEn: 'Pneumatic tools', sublines: children(['PneuTrend', 'PneuTrend'], ['Porto Power', 'Porto Power']) },
+  { familySlug: 'equipo-menor', section: 'Herramientas de hojalatería', sectionEn: 'Bodywork tools', name: 'Herramientas manuales', nameEn: 'Hand tools', sublines: children(['Herramientas de mecánica', 'Mechanical tools'], ['Garlopas ShineMate', 'ShineMate sanding blocks'], ['Limas Wieländer+Schill', 'Wieländer+Schill files'], ['Cuñas Colad', 'Colad spreaders']) },
   { familySlug: 'equipo-menor', section: 'Detallado', sectionEn: 'Detailing', name: 'Pulidoras', nameEn: 'Polishers', sublines: children(['ShineMate', 'ShineMate'], ['RUPES', 'RUPES'], ['Borlas ShineMate', 'ShineMate polishing pads'], ['Borlas RUPES', 'RUPES polishing pads']) },
 
   { familySlug: 'pintura', section: 'Pintura y Aplicación', sectionEn: 'Paint & application', name: 'Pistolas para pintar', nameEn: 'Paint spray guns', sublines: children(['Pistolas de gravedad', 'Gravity-feed spray guns'], ['Pistolas de olla de presión', 'Pressure-feed spray guns'], ['Pistolas aerográficas', 'Airbrush spray guns'], ['Pistolas de vaso inferior', 'Siphon-feed spray guns'], ['Pistolas para robot', 'Automatic spray guns']) },
@@ -73,6 +71,24 @@ export const catalogHierarchy: CatalogLineDefinition[] = [
 const normalize = (value: string) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().replace(/\s+/g, ' ').toLowerCase();
 const definitionByName = new Map(catalogHierarchy.map((line) => [normalize(line.name), line]));
 
+/** La columna B del Excel es la familia. Algunas filas históricas tenían una
+ * etiqueta interna distinta (Baterías / Aire comprimido), pero pertenecen a
+ * una misma familia de la columna B. */
+const familySlugForSection = (section: string) => ({
+  [normalize('Pintura y Aplicación')]: 'pintura-y-aplicacion',
+  [normalize('Preparación y acabado')]: 'preparacion-y-acabado',
+  [normalize('Enderezado de carrocería')]: 'enderezado-de-carroceria',
+  [normalize('Desabollado de carrocería')]: 'desabollado-de-carroceria',
+  [normalize('Baterías')]: 'cargadores-y-arrancadores-de-baterias',
+  [normalize('Aire comprimido')]: 'cargadores-y-arrancadores-de-baterias',
+  [normalize('Pintura')]: 'pintura',
+  [normalize('Mecánica')]: 'mecanica',
+  [normalize('Consumibles de pintura')]: 'consumibles-de-pintura',
+  [normalize('Consumibles de hojalatería')]: 'consumibles-de-hojalateria',
+  [normalize('Herramientas de hojalatería')]: 'herramientas-de-hojalateria',
+  [normalize('Detallado')]: 'detallado',
+}[normalize(section)] || 'pintura-y-aplicacion');
+
 const aliases: Record<string, string> = {
   'cabinas y areas': 'Cabinas de pintura', 'cabinas y preparacion': 'Cabinas de pintura',
   'pistolas de pintura': 'Pistolas para pintar', 'pistolas con vaso de gravedad': 'Pistolas para pintar',
@@ -86,6 +102,8 @@ const aliases: Record<string, string> = {
   'reparacion de plasticos': 'Reparación de plásticos', 'rampas y elevadores eae': 'Rampas y elevadores EAE',
   desmontadora: 'Desmontadoras', 'pintura en polvo': 'Pintura en polvo', 'seguridad personal': 'Seguridad personal',
   scanner: 'Escáner',
+  electricas: 'Neumáticas',
+  'carritos de herramientas': 'Herramientas manuales',
 };
 
 const canonicalLine = (product: CatalogProduct) => {
@@ -130,10 +148,8 @@ const sublineFor = (product: CatalogProduct, line: string) => {
   if (line === 'Reparación de plásticos') return 'Polyvance';
   if (line === 'Cargadores') return /startium/i.test(product.name) ? 'STARTIUM' : 'GYSFLASH';
   if (line === 'Probadores de baterías') return 'GYS';
-  if (line === 'Neumáticas') return 'PneuTrend';
-  if (line === 'Eléctricas') return 'Porto Power';
-  if (line === 'Carritos de herramientas') return product.brand;
-  if (line === 'Herramientas manuales') return product.brand === 'ShineMate' ? 'Garlopas ShineMate' : product.brand.includes('Wiel') ? 'Limas Wieländer+Schill' : 'Cuñas Colad';
+  if (line === 'Neumáticas') return product.brand === 'PneuTrend' ? 'PneuTrend' : 'Porto Power';
+  if (line === 'Herramientas manuales') return ['Jonnesway', 'SUN'].includes(product.brand) ? 'Herramientas de mecánica' : product.brand === 'ShineMate' ? 'Garlopas ShineMate' : product.brand.includes('Wiel') ? 'Limas Wieländer+Schill' : 'Cuñas Colad';
   if (line === 'Pulidoras') return /foam|wool|pad|borla/i.test(product.name) ? `Borlas ${product.brand}` : product.brand;
   if (line === 'PPG automotriz') return slug.includes('deltron') ? 'Deltron' : slug.includes('autolux') ? 'Autolux' : 'Envirobase';
   if (line === 'PPG industrial') return 'Versolon';
@@ -163,7 +179,7 @@ export const catalogPlacementFor = (product: CatalogProduct) => {
   const lineName = canonicalLine(product);
   const definition = definitionByName.get(normalize(lineName));
   return {
-    familySlug: definition?.familySlug || product.familySlug,
+    familySlug: definition ? familySlugForSection(definition.section) : product.familySlug,
     catalogSection: definition?.section || product.application,
     catalogLine: definition?.name || lineName,
     catalogSubline: sublineFor(product, definition?.name || lineName),
@@ -171,7 +187,26 @@ export const catalogPlacementFor = (product: CatalogProduct) => {
   };
 };
 
-export const catalogLinesForFamily = (familySlug: string) => catalogHierarchy.filter((line) => line.familySlug === familySlug);
+const workbookLineOrder: Record<string, string[]> = {
+  'pintura-y-aplicacion': ['Pistolas para pintar', 'Buscador de refacciones SATA', 'Accesorios pistolas', 'Cabinas de pintura', 'Zonas de preparación', 'Protección respiratoria', 'Tecnología de filtros y aire comprimido', 'Lámparas infrarrojas'],
+  'preparacion-y-acabado': ['Sistemas de lijado', 'Sistema de pulido'],
+  'enderezado-de-carroceria': ['Bancos de enderezado autos y SUV', 'Equipos de medición', 'Accesorios Car-O-Liner', 'Alineación y enderezado de vehículos pesados'],
+  'desabollado-de-carroceria': ['Desabollado de carrocería auto y SUV', 'Desabollado de carrocería de vehículos pesados', 'Reparación de plásticos'],
+  'cargadores-y-arrancadores-de-baterias': ['Cargadores', 'Arrancadores', 'Probadores de baterías', 'Líneas de aire comprimido', 'Compresores Denair'],
+  pintura: ['PPG automotriz', 'PPG industrial', 'Pintura en polvo'],
+  mecanica: ['Rampas y elevadores EAE', 'Escáner', 'Alineadoras', 'Desmontadoras', 'Balanceadoras', 'Aire acondicionado', 'ADAS'],
+  'consumibles-de-pintura': ['Lijas', 'Enmascarado', 'Pulimento', 'Seguridad personal', 'Otros'],
+  'consumibles-de-hojalateria': ['Masillas y rellenadores', 'Antipiedras y selladores', 'Consumibles herramientas'],
+  'herramientas-de-hojalateria': ['Neumáticas', 'Herramientas manuales'],
+  detallado: ['Pulidoras']
+};
+
+export const catalogLinesForFamily = (familySlug: string) => {
+  const order = workbookLineOrder[familySlug] || [];
+  return catalogHierarchy
+    .filter((line) => familySlugForSection(line.section) === familySlug)
+    .sort((a, b) => order.indexOf(a.name) - order.indexOf(b.name));
+};
 
 export const catalogLineTranslation = (value: string) => {
   const key = normalize(value);
