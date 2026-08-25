@@ -51,14 +51,14 @@ import BrandMarquee from '../components/BrandMarquee.astro';
     .hero-slider{position:absolute;inset:0;z-index:0;background:#050720}.hero-slide{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:0;animation:heroFade 36s infinite;transform:scale(.94)}.hero-slide:nth-child(2){animation-delay:6s;transform:scale(1.12)}.hero-slide:nth-child(3){animation-delay:12s}.hero-slide:nth-child(4){animation-delay:18s}.hero-slide:nth-child(5){animation-delay:24s}.hero-slide:nth-child(6){animation-delay:30s}.hero-slider:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,11,47,.72),rgba(7,11,47,.34))}@keyframes heroFade{0%{opacity:0}3%{opacity:1}16.66%{opacity:1}19.66%{opacity:0}100%{opacity:0}}
     .hero:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.055) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px);background-size:72px 72px;mask-image:linear-gradient(to bottom,#000,transparent 88%);opacity:.7}
     .hero:after{content:"";position:absolute;width:540px;height:540px;border:1px solid rgba(245,130,32,.24);right:-130px;top:50px;transform:rotate(22deg);opacity:.72}
-    .hero-inner{position:relative;z-index:1;max-width:var(--max);margin:0 auto;padding:86px 28px 92px}
+    .hero-inner{position:relative;z-index:1;max-width:var(--max);margin:0 auto;padding:86px 28px 42px}
     .eyebrow{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);font-size:12px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:#f8fafc}
     .dot{width:8px;height:8px;background:var(--orange);box-shadow:0 0 0 6px rgba(245,130,32,.17)}
     h1{font-size:clamp(42px,5.2vw,72px);line-height:.93;letter-spacing:-.06em;margin:26px 0 22px;max-width:1040px;text-transform:uppercase}.hero-title span{display:block;white-space:nowrap}
     .hero p{font-size:18px;line-height:1.7;color:#dbe4f2;margin:0;max-width:630px}
     .hero-inner>div:first-child>p{background:rgba(5,7,32,.46);border:1px solid rgba(255,255,255,.1);padding:14px 18px;backdrop-filter:blur(5px);box-shadow:0 10px 28px rgba(5,7,32,.18)}
     .hero-actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:34px}.hero .hero-actions .btn{text-transform:uppercase;font-size:12px;letter-spacing:.06em}
-    .hero-features{display:grid;grid-template-columns:repeat(5,1fr);margin-top:46px;border-top:1px solid rgba(255,255,255,.2);border-bottom:1px solid rgba(255,255,255,.2);background:rgba(5,7,32,.5);backdrop-filter:blur(8px)}
+    .hero-features{position:relative;z-index:2;display:grid;grid-template-columns:repeat(5,1fr);max-width:var(--max);margin:0 auto;border-top:1px solid rgba(255,255,255,.2);border-bottom:1px solid rgba(255,255,255,.2);background:rgba(5,7,32,.5);backdrop-filter:blur(8px)}
     .hero-feature{min-height:70px;display:flex;align-items:center;gap:12px;padding:16px 18px;border-right:1px solid rgba(255,255,255,.18);color:#fff;font-size:11px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;transition:.2s ease}.hero-feature:last-child{border-right:0}.hero-feature:before{content:"";width:9px;height:9px;background:var(--orange);box-shadow:0 0 0 5px rgba(245,130,32,.14);flex:0 0 9px}.hero-feature:hover{background:rgba(255,255,255,.1);color:#fff}
     .visual{position:relative;min-height:720px}
     .machine-card{position:absolute;right:0;top:170px;width:min(560px,100%);min-height:500px;background:linear-gradient(145deg,#fff,#f4f7fb);box-shadow:var(--shadow);border:1px solid rgba(255,255,255,.75);padding:28px;overflow:hidden}
@@ -124,14 +124,14 @@ import BrandMarquee from '../components/BrandMarquee.astro';
           <h1 class="hero-title"><span>Tecnología que</span><span>transforma tu operación.</span></h1>
           <p>Soluciones integrales para talleres automotrices, centros de colisión, industria y transporte pesado.</p>
           <div class="hero-actions"><a class="btn orange" href="#sectores">Conoce nuestras soluciones</a><a class="btn outline" href="/contacto#formulario-contacto">Hablar con un experto</a></div>
-          <div class="hero-features" aria-label="Accesos a soluciones Etapel">
-            <a class="hero-feature" href="/linea-de-producto">Tecnología global</a>
-            <a class="hero-feature" href="/quienes-somos">Experiencia local</a>
-            <a class="hero-feature" href="/contacto#sucursales">Distribución nacional</a>
-            <a class="hero-feature" href="/capacitacion">Capacitación</a>
-            <a class="hero-feature" href="/postventa">Servicio técnico</a>
-          </div>
         </div>
+      </div>
+      <div class="hero-features" aria-label="Accesos a soluciones Etapel">
+        <a class="hero-feature" href="/linea-de-producto">Tecnología global</a>
+        <a class="hero-feature" href="/quienes-somos">Experiencia local</a>
+        <a class="hero-feature" href="/contacto#sucursales">Distribución nacional</a>
+        <a class="hero-feature" href="/capacitacion">Capacitación</a>
+        <a class="hero-feature" href="/postventa">Servicio técnico</a>
       </div>
     </section>
 
