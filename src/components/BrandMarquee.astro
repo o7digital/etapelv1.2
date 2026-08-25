@@ -6,32 +6,33 @@ interface Props {
 const { lang = 'es' } = Astro.props;
 const english = lang === 'en';
 const brands = [
-  'SATA',
-  'GYS',
-  'PPG',
-  'RUPES',
-  'Car-O-Liner',
-  'JOSAM',
-  'USI Italia',
-  'Millibar',
-  'Hedson',
-  'Polyvance',
-  'Farécla',
-  'Hofmann',
-  'ShineMate',
-  'Colad',
-  'PneuTrend',
-  'SUN',
-  'Evercoat',
-  'Prevost',
-  'Solary',
-  'Denair',
-  'EAE',
-  'Wieländer+Schill',
-  'Kovax',
-  'TELWIN',
-  'Detroit Surface Care',
+  { name: 'SATA', slug: 'sata' },
+  { name: 'GYS', slug: 'gys' },
+  { name: 'PPG', slug: 'ppg' },
+  { name: 'RUPES', slug: 'rupes' },
+  { name: 'CAR-O-LINER', slug: 'caroliner' },
+  { name: 'JOSAM', slug: 'josam' },
+  { name: 'USI ITALIA', slug: 'usi', note: 'PAINTING TECHNOLOGY' },
+  { name: 'millibar', slug: 'millibar' },
+  { name: 'Hedson', slug: 'hedson' },
+  { name: 'POLYVANCE', slug: 'polyvance' },
+  { name: 'FARECLA', slug: 'farecla' },
+  { name: 'hofmann', slug: 'hofmann' },
+  { name: 'ShineMate', slug: 'shinemate' },
+  { name: 'COLAD', slug: 'colad' },
+  { name: 'PNEUTREND', slug: 'pneutrend' },
+  { name: 'SUN', slug: 'sun' },
+  { name: 'EVERCOAT', slug: 'evercoat' },
+  { name: 'PREVOST', slug: 'prevost' },
+  { name: 'SOLARY', slug: 'solary' },
+  { name: 'DENAIR', slug: 'denair' },
+  { name: 'EAE', slug: 'eae' },
+  { name: 'WIELÄNDER+SCHILL', slug: 'wielander' },
+  { name: 'KOVAX', slug: 'kovax' },
+  { name: 'TELWIN', slug: 'telwin' },
+  { name: 'DETROIT', slug: 'detroit', note: 'SURFACE CARE' },
 ];
+
 ---
 
 <section class="brand-marquee" aria-label={english ? 'Brands and technologies' : 'Marcas y tecnologías'}>
@@ -43,10 +44,10 @@ const brands = [
     <div class="brand-marquee-window">
       <div class="brand-marquee-track">
         <ul class="brand-marquee-group">
-          {brands.map((brand) => <li>{brand}</li>)}
+          {brands.map((brand) => <li><span class={`brand-logo brand-logo--${brand.slug}`} role="img" aria-label={brand.name}><span class="brand-logo-mark" aria-hidden="true"></span><span class="brand-logo-copy"><span class="brand-logo-name">{brand.name}</span>{brand.note && <span class="brand-logo-note">{brand.note}</span>}</span></span></li>)}
         </ul>
         <ul class="brand-marquee-group" aria-hidden="true">
-          {brands.map((brand) => <li>{brand}</li>)}
+          {brands.map((brand) => <li><span class={`brand-logo brand-logo--${brand.slug}`}><span class="brand-logo-mark"></span><span class="brand-logo-copy"><span class="brand-logo-name">{brand.name}</span>{brand.note && <span class="brand-logo-note">{brand.note}</span>}</span></span></li>)}
         </ul>
       </div>
     </div>
@@ -62,9 +63,43 @@ const brands = [
   .brand-marquee-window{position:relative;min-width:0;overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}
   .brand-marquee-track{display:flex;width:max-content;will-change:transform;animation:brand-scroll 46s linear infinite}
   .brand-marquee-group{display:flex;flex:none;align-items:center;gap:12px;margin:0;padding:3px 12px 3px 0;list-style:none}
-  .brand-marquee-group li{white-space:nowrap;padding:11px 15px;background:#f5f7fa;border:1px solid #e3e8f0;box-shadow:0 2px 0 #dce2eb;color:#101a5f;font-size:12px;font-weight:900;letter-spacing:.055em;text-transform:uppercase;transition:.2s ease}
+  .brand-marquee-group li{width:142px;height:62px;display:grid;place-items:center;white-space:nowrap;padding:8px 14px;background:#fff;border:1px solid #e3e8f0;box-shadow:0 2px 0 #dce2eb;transition:.2s ease}
+  .brand-logo{display:flex;align-items:center;justify-content:center;gap:7px;max-width:100%;color:#121b5d;line-height:.88}
+  .brand-logo-copy{display:flex;flex-direction:column;align-items:center}
+  .brand-logo-name{font-family:Arial,Helvetica,sans-serif;font-size:17px;font-weight:950;letter-spacing:-.055em}
+  .brand-logo-note{margin-top:3px;font:700 5px/1 Arial,sans-serif;letter-spacing:.15em}
+  .brand-logo-mark{display:none;flex:0 0 auto}
+  .brand-logo--sata{color:#e1272f;transform:skew(-10deg)}
+  .brand-logo--sata .brand-logo-name{font-size:22px;letter-spacing:-.08em;text-shadow:.7px .7px 0 #9f1720}
+  .brand-logo--gys .brand-logo-copy{padding:4px 8px;background:linear-gradient(#263f98 0 68%,#ffd327 68%);color:#fff}
+  .brand-logo--gys .brand-logo-name{font-style:italic;font-size:19px}
+  .brand-logo--ppg .brand-logo-mark{display:block;width:34px;height:34px;border-radius:50%;background:#1273b9;box-shadow:inset 0 0 0 3px #1273b9;border:2px solid #fff;outline:2px solid #1273b9}
+  .brand-logo--ppg .brand-logo-name{color:#1273b9;font-size:19px}
+  .brand-logo--rupes .brand-logo-copy{padding:8px 10px;background:#df252f;color:#fff}
+  .brand-logo--rupes .brand-logo-name{font-size:16px;font-style:italic}
+  .brand-logo--caroliner{color:#00549b}.brand-logo--caroliner .brand-logo-name{font-size:14px;font-style:italic}
+  .brand-logo--josam{color:#e4232e}.brand-logo--josam .brand-logo-name{font-size:20px;font-style:italic}
+  .brand-logo--usi .brand-logo-name{font-size:16px;font-style:italic}.brand-logo--usi .brand-logo-note{color:#e3332b}
+  .brand-logo--millibar{color:#ee302c}.brand-logo--millibar .brand-logo-name{font-size:20px;font-weight:500;letter-spacing:-.07em}
+  .brand-logo--hedson{color:#25265f}.brand-logo--hedson .brand-logo-name{font-size:19px;font-weight:700}
+  .brand-logo--polyvance{color:#222}.brand-logo--polyvance .brand-logo-name{font-size:15px;letter-spacing:.01em}
+  .brand-logo--farecla{color:#153f8f}.brand-logo--farecla .brand-logo-name{font-size:17px;font-style:italic;letter-spacing:.01em}
+  .brand-logo--hofmann{color:#e41f2b}.brand-logo--hofmann .brand-logo-name{font-size:18px;font-style:italic;font-weight:800}
+  .brand-logo--shinemate{color:#e22b2d}.brand-logo--shinemate .brand-logo-name{font-size:17px;font-style:italic;font-weight:700}
+  .brand-logo--colad{color:#111}.brand-logo--colad .brand-logo-name{font-size:20px;letter-spacing:-.03em}.brand-logo--colad .brand-logo-mark{display:block;width:10px;height:24px;background:#f5a623;transform:skew(-18deg)}
+  .brand-logo--pneutrend{color:#0867a9}.brand-logo--pneutrend .brand-logo-name{font-size:14px;font-style:italic;letter-spacing:0}
+  .brand-logo--sun .brand-logo-copy{padding:6px 12px;background:#f5c400;color:#111}.brand-logo--sun .brand-logo-name{font-size:20px;letter-spacing:.03em}
+  .brand-logo--evercoat{color:#0869ac}.brand-logo--evercoat .brand-logo-name{font-size:16px;font-style:italic;letter-spacing:-.02em}
+  .brand-logo--prevost{color:#df2132}.brand-logo--prevost .brand-logo-name{font-size:18px;font-style:italic;letter-spacing:.02em}
+  .brand-logo--solary{color:#f08123}.brand-logo--solary .brand-logo-name{font-size:19px;font-style:italic;letter-spacing:.01em}
+  .brand-logo--denair{color:#166caf}.brand-logo--denair .brand-logo-name{font-size:18px;font-style:italic}.brand-logo--denair .brand-logo-mark{display:block;width:9px;height:28px;background:#f18721;transform:skew(-15deg)}
+  .brand-logo--eae{color:#de202b}.brand-logo--eae .brand-logo-name{font-size:23px;font-style:italic}
+  .brand-logo--wielander{color:#17275d}.brand-logo--wielander .brand-logo-name{font-size:12px;letter-spacing:-.02em}
+  .brand-logo--kovax{color:#ee2737}.brand-logo--kovax .brand-logo-name{font-size:20px;font-style:italic;letter-spacing:.02em}
+  .brand-logo--telwin{color:#e4262d}.brand-logo--telwin .brand-logo-name{font-size:19px;font-style:italic;letter-spacing:.03em}
+  .brand-logo--detroit{color:#161f5c}.brand-logo--detroit .brand-logo-name{font-size:18px;letter-spacing:.04em}.brand-logo--detroit .brand-logo-note{color:#ee7423}
   .brand-marquee:hover .brand-marquee-track,.brand-marquee:focus-within .brand-marquee-track{animation-play-state:paused}
-  .brand-marquee-group li:hover{background:#fff;border-color:var(--orange);color:var(--orange-dark);transform:translateY(-1px)}
+  .brand-marquee-group li:hover{border-color:var(--orange);transform:translateY(-1px)}
   @keyframes brand-scroll{to{transform:translate3d(-50%,0,0)}}
   @media(max-width:700px){
     .brand-marquee-inner{padding:18px 0;grid-template-columns:1fr;gap:14px}
@@ -72,7 +107,7 @@ const brands = [
     .brand-marquee-window{mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent)}
     .brand-marquee-track{animation-duration:38s}
     .brand-marquee-group{gap:10px;padding-right:10px}
-    .brand-marquee-group li{padding:10px 13px;font-size:11px}
+    .brand-marquee-group li{width:130px;height:58px;padding:8px 12px}
   }
   @media(prefers-reduced-motion:reduce){
     .brand-marquee-window{overflow-x:auto;mask-image:none;-webkit-mask-image:none;scrollbar-width:thin}
