@@ -131,7 +131,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Pintura y Aplicación",
     "category": "Cabinas de pintura",
     "sourceUrl": "https://www.millibar.it/wp-content/uploads/2020/11/MILLIBAR_Scheda_SDLINE_sc.pdf",
-    "image": "https://www.usiitalia.com/wp-content/uploads/2021/07/prod_2-optimized.png",
+    "image": "/images/cabinas-preparacion.webp",
     "specs": [],
     "downloads": [
       {
@@ -148,7 +148,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Pintura y Aplicación",
     "category": "Zonas de prepracion",
     "sourceUrl": "https://www.usiitalia.com/en/category_products/zones-en/",
-    "image": "/images/cabinas-preparacion.webp",
+    "image": "https://www.usiitalia.com/wp-content/uploads/2021/07/prod_2-optimized.png",
     "specs": [],
     "downloads": [
       {
