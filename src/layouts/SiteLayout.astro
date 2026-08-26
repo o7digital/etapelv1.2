@@ -55,29 +55,29 @@ const languageHref = english
       @media(max-width:1040px){.menu{display:none}.nav-actions{display:none}.mobile-menu{display:block}.page-hero-inner,.detail-grid{grid-template-columns:1fr}.page-hero-inner>*{min-width:0}.grid-families,.catalog-grid{grid-template-columns:repeat(2,1fr)}.filter-grid{grid-template-columns:repeat(2,1fr)}.family-tile{grid-template-columns:1fr}.family-media{min-height:220px}}@media(max-width:640px){.nav{height:70px;padding:0 18px}.brand img{width:140px}.mobile-panel{right:18px}.page-hero-inner{padding:58px 20px}.page-hero h1{font-size:clamp(36px,11vw,44px);overflow-wrap:anywhere}.hero-panel{padding:22px}.hero-panel-grid,.grid-families,.catalog-grid,.panel-grid{grid-template-columns:1fr}.filter-grid{grid-template-columns:1fr}.section-head{display:block}.section-head p{margin-top:18px}.option-grid{grid-template-columns:1fr}.info-row{display:block}.info-row dd{text-align:left!important;margin-top:8px!important}.footer-inner{flex-direction:column;align-items:flex-start}}
     </style>
   </head>
-  <body id="top">
+  <body id="top" class:list={{ 'lang-en': english }}>
     <div class="topline"></div>
     <header class="site-header">
       <nav class="nav">
         <a class="brand" href={english ? '/en' : '/'}><img src="/etapel-logo.svg" alt="Etapel" /></a>
         <div class="menu">
-          <a href={english ? '/en' : '/'}>{english ? 'Home' : 'INICIO'}</a>
-          <a href={english ? '/en/product-lines' : '/linea-de-producto'}>{english ? 'Product Lines' : 'LÍNEA DE PRODUCTO'}</a>
-          <a href={english ? '/en/training' : '/capacitacion'}>{english ? 'Training' : 'CDTECH'}</a>
-          <a href={english ? '/en/after-sales' : '/postventa'}>{english ? 'After-Sales' : 'SOPORTE TÉCNICO'}</a>
-          <a href={english ? '/en/about-us' : '/quienes-somos'}>{english ? 'About Us' : 'NOSOTROS'}</a>
-          <a href={english ? '/en/contact' : '/contacto'}>{english ? 'Contact' : 'CONTACTO'}</a>
+          <a href={english ? '/en' : '/'}>{english ? 'HOME' : 'INICIO'}</a>
+          <a href={english ? '/en/product-lines' : '/linea-de-producto'}>{english ? 'PRODUCT LINES' : 'LÍNEA DE PRODUCTO'}</a>
+          <a href={english ? '/en/training' : '/capacitacion'}>CDTECH</a>
+          <a href={english ? '/en/after-sales' : '/postventa'}>{english ? 'TECHNICAL SUPPORT' : 'SOPORTE TÉCNICO'}</a>
+          <a href={english ? '/en/about-us' : '/quienes-somos'}>{english ? 'ABOUT US' : 'NOSOTROS'}</a>
+          <a href={english ? '/en/contact' : '/contacto'}>{english ? 'CONTACT' : 'CONTACTO'}</a>
         </div>
-        <div class="nav-actions"><a class="lang" href={languageHref} aria-label={english ? 'Cambiar idioma a español' : 'Cambiar idioma a inglés'}>{english ? 'ES' : 'EN'}</a><a class="btn orange" href={english ? '/en/contact#contact-form' : '/contacto#formulario-contacto'}>{english ? 'Request information' : 'Solicitar información'}</a></div>
+        <div class="nav-actions"><a class="lang" href={languageHref} aria-label={english ? 'Switch language to Spanish' : 'Cambiar idioma a inglés'}>{english ? 'ES' : 'EN'}</a><a class="btn orange" href={english ? '/en/contact#contact-form' : '/contacto#formulario-contacto'}>{english ? 'Request information' : 'Solicitar información'}</a></div>
         <details class="mobile-menu">
-          <summary aria-label="Abrir menú"><span class="hamburger"></span></summary>
+          <summary aria-label={english ? 'Open menu' : 'Abrir menú'}><span class="hamburger"></span></summary>
           <div class="mobile-panel">
-            <a href={english ? '/en' : '/'}>{english ? 'Home' : 'INICIO'}</a>
-            <a href={english ? '/en/product-lines' : '/linea-de-producto'}>{english ? 'Product Lines' : 'LÍNEA DE PRODUCTO'}</a>
-            <a href={english ? '/en/training' : '/capacitacion'}>{english ? 'Training' : 'CDTECH'}</a>
-            <a href={english ? '/en/after-sales' : '/postventa'}>{english ? 'After-Sales' : 'SOPORTE TÉCNICO'}</a>
-            <a href={english ? '/en/about-us' : '/quienes-somos'}>{english ? 'About Us' : 'NOSOTROS'}</a>
-            <a href={english ? '/en/contact' : '/contacto'}>{english ? 'Contact' : 'CONTACTO'}</a>
+            <a href={english ? '/en' : '/'}>{english ? 'HOME' : 'INICIO'}</a>
+            <a href={english ? '/en/product-lines' : '/linea-de-producto'}>{english ? 'PRODUCT LINES' : 'LÍNEA DE PRODUCTO'}</a>
+            <a href={english ? '/en/training' : '/capacitacion'}>CDTECH</a>
+            <a href={english ? '/en/after-sales' : '/postventa'}>{english ? 'TECHNICAL SUPPORT' : 'SOPORTE TÉCNICO'}</a>
+            <a href={english ? '/en/about-us' : '/quienes-somos'}>{english ? 'ABOUT US' : 'NOSOTROS'}</a>
+            <a href={english ? '/en/contact' : '/contacto'}>{english ? 'CONTACT' : 'CONTACTO'}</a>
             <a href={languageHref}>{english ? 'ES' : 'EN'}</a>
             <a class="mobile-cta" href={english ? '/en/contact#contact-form' : '/contacto#formulario-contacto'}>{english ? 'Request information' : 'Solicitar información'}</a>
           </div>
@@ -89,18 +89,18 @@ const languageHref = english
       <footer class="footer footer-full">
         <div class="footer-grid">
           <div><img src="/etapel-logo.svg" alt="Etapel" /><p>At Etapel, we are more than suppliers: we are partners in the growth of your business.</p><p>Discover how we can help you reach new levels of success.</p></div>
-          <div><h3>Product lines</h3><ul><li><a href="/linea-de-producto/equipo-mayor">Major Equipment</a></li><li><a href="/linea-de-producto/equipo-menor">Tools & Small Equipment</a></li><li><a href="/linea-de-producto/pintura">Paint</a></li><li><a href="/linea-de-producto/consumibles">Consumables</a></li></ul></div>
+          <div><h3>Product lines</h3><ul><li><a href="/en/product-lines">Major Equipment</a></li><li><a href="/en/product-lines">Tools & Small Equipment</a></li><li><a href="/en/product-lines">Paint</a></li><li><a href="/en/product-lines">Consumables</a></li></ul></div>
           <div><h3>Services</h3><ul><li><a href="/en/training">Training</a></li><li><a href="/en/after-sales">After-Sales</a></li></ul></div>
           <div><h3>Contact</h3><ul><li><a href="mailto:ventas@etapel.com.mx">ventas@etapel.com.mx</a></li><li><a href="tel:+525556895055">55 5689 5055</a></li><li><a href="https://wa.link/oowyzu">WhatsApp</a></li></ul></div>
         </div>
-        <div class="footer-bottom"><span>Copyright © 2026 Etapel. All rights reserved.</span><div><a href="/en/contact">Need help? Contact us</a><a href="/en/privacy-policy">Privacy Policy</a><a href={languageHref}>Versión en español</a></div></div>
+        <div class="footer-bottom"><span>Copyright © 2026 Etapel. All rights reserved.</span><div><a href="/en/contact">Need help? Contact us</a><a href="/en/privacy-policy">Privacy Policy</a><a href={languageHref}>Spanish version</a></div></div>
       </footer>
     ) : (
       <footer class="footer"><div class="footer-inner"><img src="/etapel-logo.svg" alt="Etapel" /><div style="display:flex;gap:18px;flex-wrap:wrap"><a href="/linea-de-producto/equipo-mayor">Equipo Mayor</a><a href="/linea-de-producto/equipo-menor">Equipo Menor</a><a href="/linea-de-producto/pintura">Pintura</a><a href="/linea-de-producto/consumibles">Consumibles</a></div><span>Copyright © 2026 Etapel.</span></div></footer>
     )}
     <BackToTop lang={lang} />
     <style is:global>
-      .footer-full{padding:58px 28px 28px}.footer-full>.footer-grid,.footer-full>.footer-bottom{max-width:var(--max);margin-left:auto;margin-right:auto}.footer-full .footer-grid{display:grid;grid-template-columns:1.15fr .95fr .75fr .9fr;gap:36px}.footer-full img{width:150px}.footer-full p{color:#aeb8cf;line-height:1.7}.footer-full h3{font-size:12px;text-transform:uppercase;letter-spacing:.18em;color:#fff;margin:0 0 18px}.footer-full ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}.footer-full a{color:#c8d2e5}.footer-full .footer-bottom{margin-top:36px;padding-top:22px;border-top:1px solid rgba(255,255,255,.12);display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}.footer-full .footer-bottom div{display:flex;gap:18px;flex-wrap:wrap}@media(max-width:800px){.footer-full .footer-grid{grid-template-columns:1fr}}
+      .lang-en .menu{gap:18px;font-size:12px}.footer-full{padding:58px 28px 28px}.footer-full>.footer-grid,.footer-full>.footer-bottom{max-width:var(--max);margin-left:auto;margin-right:auto}.footer-full .footer-grid{display:grid;grid-template-columns:1.15fr .95fr .75fr .9fr;gap:36px}.footer-full img{width:150px}.footer-full p{color:#aeb8cf;line-height:1.7}.footer-full h3{font-size:12px;text-transform:uppercase;letter-spacing:.18em;color:#fff;margin:0 0 18px}.footer-full ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}.footer-full a{color:#c8d2e5}.footer-full .footer-bottom{margin-top:36px;padding-top:22px;border-top:1px solid rgba(255,255,255,.12);display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}.footer-full .footer-bottom div{display:flex;gap:18px;flex-wrap:wrap}@media(max-width:800px){.footer-full .footer-grid{grid-template-columns:1fr}}
     </style>
   </body>
 </html>
