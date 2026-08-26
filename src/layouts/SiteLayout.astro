@@ -96,7 +96,15 @@ const languageHref = english
         <div class="footer-bottom"><span>Copyright © 2026 Etapel. All rights reserved.</span><div><a href="/en/contact">Need help? Contact us</a><a href="/en/privacy-policy">Privacy Policy</a><a href={languageHref}>Spanish version</a></div></div>
       </footer>
     ) : (
-      <footer class="footer"><div class="footer-inner"><img src="/etapel-logo.svg" alt="Etapel" /><div style="display:flex;gap:18px;flex-wrap:wrap"><a href="/linea-de-producto/equipo-mayor">Equipo Mayor</a><a href="/linea-de-producto/equipo-menor">Equipo Menor</a><a href="/linea-de-producto/pintura">Pintura</a><a href="/linea-de-producto/consumibles">Consumibles</a></div><span>Copyright © 2026 Etapel.</span></div></footer>
+      <footer class="footer footer-full">
+        <div class="footer-grid">
+          <div><img src="/etapel-logo.svg" alt="Etapel" /><p>En Etapel, no somos solo proveedores, somos socios en el crecimiento de tu negocio.</p><p>Descubre cómo podemos ayudarte a alcanzar nuevos niveles de éxito.</p></div>
+          <div><h3>Línea de producto</h3><ul><li><a href="/linea-de-producto/equipo-mayor">Equipo Mayor</a></li><li><a href="/linea-de-producto/equipo-menor">Equipo Menor</a></li><li><a href="/linea-de-producto/pintura">Pintura</a></li><li><a href="/linea-de-producto/consumibles">Consumibles</a></li></ul></div>
+          <div><h3>Servicios</h3><ul><li><a href="/capacitacion">Capacitación</a></li><li><a href="/postventa">Posventa</a></li></ul></div>
+          <div><h3>Contacto</h3><ul><li><a href="mailto:ventas@etapel.com.mx">ventas@etapel.com.mx</a></li><li><a href="tel:+525556895055">55 5689 5055</a></li><li><a href="https://wa.link/oowyzu">WhatsApp</a></li></ul></div>
+        </div>
+        <div class="footer-bottom"><span>Copyright © 2026 Etapel. Todos los derechos reservados.</span><div><a href="/contacto">¿Necesitas ayuda? ¡Contáctanos!</a><a href="/aviso-de-privacidad">Aviso de Privacidad</a><a href={languageHref}>English version</a></div></div>
+      </footer>
     )}
     <BackToTop lang={lang} />
     <style is:global>
