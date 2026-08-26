@@ -4903,7 +4903,7 @@ export const clientCatalogProducts: CatalogProduct[] = uniqueClientCatalogSeeds.
     ? 'Mecánica y aire comprimido'
     : seed.division
       .replace('Enderezado de carroceria', 'Enderezado de carrocería')
-      .replace('Desabollo de carroceria', 'Desabollado de carrocería')
+      .replace('Desabollo de carroceria', 'Desabollo de carrocería')
       .replace('Consumibles pintura', 'Consumibles de pintura')
       .replace('Herramientas hojalateria', 'Herramientas de hojalatería');
   const image = seed.image === '/images/products/sata/catalog/rps-the-original.webp'

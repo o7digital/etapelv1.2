@@ -37,9 +37,9 @@ export const catalogHierarchy: CatalogLineDefinition[] = [
   { familySlug: 'equipo-menor', section: 'Pintura y Aplicación', sectionEn: 'Paint & application', name: 'Lámparas infrarrojas', nameEn: 'Infrared lamps', sublines: children(['Solary', 'Solary'], ['IRT', 'IRT']) },
   { familySlug: 'equipo-menor', section: 'Preparación y acabado', sectionEn: 'Preparation & finishing', name: 'Sistemas de lijado', nameEn: 'Sanding systems', sublines: children(['Lijadoras', 'Sanders'], ['Aspiradoras', 'Vacuum systems']) },
   { familySlug: 'equipo-menor', section: 'Preparación y acabado', sectionEn: 'Preparation & finishing', name: 'Sistema de pulido', nameEn: 'Polishing system', sublines: children(['Pulidoras', 'Polishers'], ['Borlas RUPES', 'RUPES polishing pads']) },
-  { familySlug: 'equipo-menor', section: 'Desabollado de carrocería', sectionEn: 'Body dent repair', name: 'Desabollado de carrocería auto y SUV', nameEn: 'Car and SUV dent repair', sublines: children(['Reparación de abolladuras', 'Dent repair'], ['Sistemas de tracción para enderezado', 'Straightening pull systems'], ['Soldadura por punto', 'Spot welding'], ['Remachadoras', 'Riveters'], ['Soldadoras MIG', 'MIG welders'], ['Cortadores plasma', 'Plasma cutters'], ['Inductor de calor', 'Heat inductor']) },
-  { familySlug: 'equipo-menor', section: 'Desabollado de carrocería', sectionEn: 'Body dent repair', name: 'Desabollado de carrocería de vehículos pesados', nameEn: 'Heavy-vehicle body repair', sublines: children(['JOSAM', 'JOSAM'], ['Wieländer+Schill', 'Wieländer+Schill'], ['GYS', 'GYS']) },
-  { familySlug: 'equipo-menor', section: 'Desabollado de carrocería', sectionEn: 'Body dent repair', name: 'Reparación de plásticos', nameEn: 'Plastic repair', sublines: children(['Polyvance', 'Polyvance']) },
+  { familySlug: 'equipo-menor', section: 'Desabollo de carrocería', sectionEn: 'Body dent repair', name: 'Desabollo de carrocería auto y SUV', nameEn: 'Car and SUV dent repair', sublines: children(['Reparación de abolladuras', 'Dent repair'], ['Sistemas de tracción para enderezado', 'Straightening pull systems'], ['Soldadura por punto', 'Spot welding'], ['Remachadoras', 'Riveters'], ['Soldadoras MIG', 'MIG welders'], ['Cortadores plasma', 'Plasma cutters'], ['Inductor de calor', 'Heat inductor']) },
+  { familySlug: 'equipo-menor', section: 'Desabollo de carrocería', sectionEn: 'Body dent repair', name: 'Desabollo de carrocería de vehículos pesados', nameEn: 'Heavy-vehicle body repair', sublines: children(['JOSAM', 'JOSAM'], ['Wieländer+Schill', 'Wieländer+Schill'], ['GYS', 'GYS']) },
+  { familySlug: 'equipo-menor', section: 'Desabollo de carrocería', sectionEn: 'Body dent repair', name: 'Reparación de plásticos', nameEn: 'Plastic repair', sublines: children(['Polyvance', 'Polyvance']) },
   { familySlug: 'equipo-menor', section: 'Baterías', sectionEn: 'Batteries', name: 'Cargadores', nameEn: 'Battery chargers', sublines: children(['GYSFLASH', 'GYSFLASH'], ['STARTIUM', 'STARTIUM']) },
   { familySlug: 'equipo-menor', section: 'Baterías', sectionEn: 'Batteries', name: 'Arrancadores', nameEn: 'Battery starters', sublines: [], contactOnly: true },
   { familySlug: 'equipo-menor', section: 'Baterías', sectionEn: 'Batteries', name: 'Probadores de baterías', nameEn: 'Battery testers', sublines: children(['GYS', 'GYS']) },
@@ -78,7 +78,7 @@ const familySlugForSection = (section: string) => ({
   [normalize('Pintura y Aplicación')]: 'pintura-y-aplicacion',
   [normalize('Preparación y acabado')]: 'preparacion-y-acabado',
   [normalize('Enderezado de carrocería')]: 'enderezado-de-carroceria',
-  [normalize('Desabollado de carrocería')]: 'desabollado-de-carroceria',
+  [normalize('Desabollo de carrocería')]: 'desabollado-de-carroceria',
   [normalize('Baterías')]: 'cargadores-y-arrancadores-de-baterias',
   [normalize('Aire comprimido')]: 'cargadores-y-arrancadores-de-baterias',
   [normalize('Pintura')]: 'pintura',
@@ -97,8 +97,8 @@ const aliases: Record<string, string> = {
   'sistemas de deposito': 'Accesorios pistolas', 'tecnologia de filtros': 'Tecnología de filtros y aire comprimido',
   'aire comprimido': 'Tecnología de filtros y aire comprimido', 'accesorios car o liner': 'Accesorios Car-O-Liner',
   'alineacion y enderezado vehiculos pesados': 'Alineación y enderezado de vehículos pesados',
-  'desabollo de carroceria auto y suv': 'Desabollado de carrocería auto y SUV',
-  'desabollo de carroceria vehiculos pesados': 'Desabollado de carrocería de vehículos pesados',
+  'desabollo de carroceria auto y suv': 'Desabollo de carrocería auto y SUV',
+  'desabollo de carroceria vehiculos pesados': 'Desabollo de carrocería de vehículos pesados',
   'reparacion de plasticos': 'Reparación de plásticos', 'rampas y elevadores eae': 'Rampas y elevadores EAE',
   desmontadora: 'Desmontadoras', 'pintura en polvo': 'Pintura en polvo', 'seguridad personal': 'Seguridad personal',
   scanner: 'Escáner',
@@ -135,7 +135,7 @@ const sublineFor = (product: CatalogProduct, line: string) => {
   if (line === 'Lámparas infrarrojas') return product.brand === 'Solary' ? 'Solary' : 'IRT';
   if (line === 'Sistemas de lijado') return /aspirador/i.test(product.name) ? 'Aspiradoras' : 'Lijadoras';
   if (line === 'Sistema de pulido') return /borlas|pad/i.test(product.name) ? 'Borlas RUPES' : 'Pulidoras';
-  if (line === 'Desabollado de carrocería auto y SUV') {
+  if (line === 'Desabollo de carrocería auto y SUV') {
     if (slug.includes('sistemas-de-traccion')) return 'Sistemas de tracción para enderezado';
     if (/pti-neo|pti-expert/.test(slug)) return 'Soldadura por punto';
     if (slug.includes('remachadora')) return 'Remachadoras';
@@ -144,7 +144,7 @@ const sublineFor = (product: CatalogProduct, line: string) => {
     if (slug.includes('gysduction')) return 'Inductor de calor';
     return 'Reparación de abolladuras';
   }
-  if (line === 'Desabollado de carrocería de vehículos pesados') return product.brand;
+  if (line === 'Desabollo de carrocería de vehículos pesados') return product.brand;
   if (line === 'Reparación de plásticos') return 'Polyvance';
   if (line === 'Cargadores') return /startium/i.test(product.name) ? 'STARTIUM' : 'GYSFLASH';
   if (line === 'Probadores de baterías') return 'GYS';
@@ -191,7 +191,7 @@ const workbookLineOrder: Record<string, string[]> = {
   'pintura-y-aplicacion': ['Pistolas para pintar', 'Buscador de refacciones SATA', 'Accesorios pistolas', 'Cabinas de pintura', 'Zonas de preparación', 'Protección respiratoria', 'Tecnología de filtros y aire comprimido', 'Lámparas infrarrojas'],
   'preparacion-y-acabado': ['Sistemas de lijado', 'Sistema de pulido'],
   'enderezado-de-carroceria': ['Bancos de enderezado autos y SUV', 'Equipos de medición', 'Accesorios Car-O-Liner', 'Alineación y enderezado de vehículos pesados'],
-  'desabollado-de-carroceria': ['Desabollado de carrocería auto y SUV', 'Desabollado de carrocería de vehículos pesados', 'Reparación de plásticos'],
+  'desabollado-de-carroceria': ['Desabollo de carrocería auto y SUV', 'Desabollo de carrocería de vehículos pesados', 'Reparación de plásticos'],
   'cargadores-y-arrancadores-de-baterias': ['Cargadores', 'Arrancadores', 'Probadores de baterías', 'Líneas de aire comprimido', 'Compresores Denair'],
   pintura: ['PPG automotriz', 'PPG industrial', 'Pintura en polvo'],
   mecanica: ['Rampas y elevadores EAE', 'Escáner', 'Alineadoras', 'Desmontadoras', 'Balanceadoras', 'Aire acondicionado', 'ADAS'],
