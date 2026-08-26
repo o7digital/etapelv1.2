@@ -114,7 +114,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Pintura y Aplicación",
     "category": "Cabinas de pintura",
     "sourceUrl": "https://www.usiitalia.com/en/category_products/booths/",
-    "image": "/images/cabinas-preparacion.webp",
+    "image": "https://www.usiitalia.com/wp-content/uploads/2021/07/prod_1-optimized.png",
     "specs": [],
     "downloads": [
       {
@@ -131,7 +131,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Pintura y Aplicación",
     "category": "Cabinas de pintura",
     "sourceUrl": "https://www.millibar.it/wp-content/uploads/2020/11/MILLIBAR_Scheda_SDLINE_sc.pdf",
-    "image": "/images/cabinas-preparacion.webp",
+    "image": "https://www.usiitalia.com/wp-content/uploads/2021/07/prod_2-optimized.png",
     "specs": [],
     "downloads": [
       {
