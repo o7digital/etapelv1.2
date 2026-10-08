@@ -19,3 +19,9 @@ test('forwards only supported fields and keeps credentials server-side', async()
  try { const res=response();await handler(req({message:' Hello ',language:'en',tenant:'other',routing:'POWERFUL'}),res);assert.equal(res.code,200);assert.equal(res.data.answer,'Hello from Etapel');assert.ok(!JSON.stringify(res.data).includes('test-secret')); }
  finally { globalThis.fetch=original;delete process.env.OLIVIA_GATEWAY_KEY; }
 });
+
+test('information requests open contact capture without treating greetings or refusals as leads', async () => {
+ const { requestsInformation } = await import('../src/lib/oliviaLead.js');
+ for (const message of ['Quiero información sobre equipos', '¿Me pueden cotizar una cabina?', 'Can I get more details?', 'Je veux des infos, un devis', 'Me interesa la capacitación', 'Quiero saber más']) assert.equal(requestsInformation(message), true, message);
+ for (const message of ['Hola', 'Thank you', 'No quiero que me contacten', "I don't want information"]) assert.equal(requestsInformation(message), false, message);
+});

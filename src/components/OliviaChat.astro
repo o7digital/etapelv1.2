@@ -1,38 +1,101 @@
 ---
 const { lang = 'es' } = Astro.props;
 const en = lang === 'en';
+const lead = en ? {
+  title: 'Receive more information', intro: 'Leave your details so the Etapel team can contact you.', firstName: 'First name', lastName: 'Last name', email: 'Email', phone: 'Phone', method: 'Preferred contact method', choose: 'Choose an option', emailOption: 'Email', phoneOption: 'Phone call', whatsapp: 'WhatsApp', consent: 'I accept the', submit: 'Send my request', sending: 'Sending…', success: 'Thank you! Your request was sent to Etapel. Our team will contact you using your preferred method.', error: 'Your request could not be sent. Your details are still here; please try again.', dismiss: 'Continue chatting',
+} : {
+  title: 'Recibe más información', intro: 'Déjanos tus datos para que el equipo Etapel pueda contactarte.', firstName: 'Nombre', lastName: 'Apellidos', email: 'Correo electrónico', phone: 'Teléfono', method: 'Medio de contacto preferido', choose: 'Selecciona una opción', emailOption: 'Correo electrónico', phoneOption: 'Llamada telefónica', whatsapp: 'WhatsApp', consent: 'Acepto el', submit: 'Enviar mi solicitud', sending: 'Enviando…', success: '¡Gracias! Tu solicitud fue enviada a Etapel. Nuestro equipo te contactará por el medio que elegiste.', error: 'No se pudo enviar tu solicitud. Tus datos siguen aquí; intenta de nuevo.', dismiss: 'Seguir conversando',
+};
 const copy = en ? {
   open: 'Chat with Olivia', close: 'Close chat', status: 'Etapel assistant', welcome: 'Hello! I’m Olivia, your Etapel assistant. How can I help you with equipment, training or technical support?', placeholder: 'Write your question…', send: 'Send', thinking: 'Olivia is typing…', error: 'I couldn’t answer right now. Please try again or contact our team.', consent: 'By sending a message, you accept our', privacy: 'Privacy Policy', contact: 'Contact an advisor', prompts: ['Explore equipment', 'CEDETEC training', 'Technical support'], retry: 'Try again',
 } : {
   open: 'Habla con Olivia', close: 'Cerrar chat', status: 'Asistente Etapel', welcome: '¡Hola! Soy Olivia, tu asistente Etapel. ¿Cómo puedo ayudarte con equipos, capacitación o soporte técnico?', placeholder: 'Escribe tu pregunta…', send: 'Enviar', thinking: 'Olivia está escribiendo…', error: 'No pude responder en este momento. Intenta de nuevo o contacta a nuestro equipo.', consent: 'Al enviar un mensaje, aceptas nuestro', privacy: 'Aviso de Privacidad', contact: 'Contactar a un asesor', prompts: ['Conocer equipos', 'Capacitación CEDETEC', 'Soporte técnico'], retry: 'Reintentar',
 };
 ---
-<div class="olivia-chat" data-lang={lang} data-error={copy.error} data-thinking={copy.thinking} data-retry={copy.retry}>
+<div class="olivia-chat" data-lang={lang} data-error={copy.error} data-thinking={copy.thinking} data-retry={copy.retry} data-lead-sending={lead.sending} data-lead-success={lead.success} data-lead-error={lead.error}>
   <div class="olivia-panel" id="olivia-panel" role="dialog" aria-labelledby="olivia-title" hidden>
     <div class="olivia-header">
       <div class="olivia-avatar" aria-hidden="true">O<span></span></div>
       <div><strong id="olivia-title">Olivia AI</strong><div class="olivia-status"><i aria-hidden="true"></i>{copy.status}</div></div>
       <button class="olivia-close" type="button" aria-label={copy.close}>×</button>
     </div>
-    <div class="olivia-messages" role="log" aria-live="polite" aria-relevant="additions" tabindex="0"><div class="olivia-message assistant">{copy.welcome}</div></div>
+    <div class="olivia-messages" role="log" aria-live="polite" aria-relevant="additions" tabindex="0"><div class="olivia-message assistant">{copy.welcome}</div>
+      <form class="olivia-lead" action="https://formspree.io/f/xeewlkng" method="POST" aria-labelledby="olivia-lead-title" hidden>
+        <strong id="olivia-lead-title">{lead.title}</strong><p>{lead.intro}</p>
+        <div class="olivia-lead-grid">
+          <label for="olivia-first-name">{lead.firstName}<input id="olivia-first-name" name="nombre" autocomplete="given-name" maxlength="80" required /></label>
+          <label for="olivia-last-name">{lead.lastName}<input id="olivia-last-name" name="apellidos" autocomplete="family-name" maxlength="100" required /></label>
+          <label for="olivia-email">{lead.email}<input id="olivia-email" name="email" type="email" autocomplete="email" maxlength="254" required /></label>
+          <label for="olivia-phone">{lead.phone}<input id="olivia-phone" name="telefono" type="tel" autocomplete="tel" minlength="7" maxlength="30" pattern={String.raw`[+0-9\(\) .\-]{7,30}`} required /></label>
+          <label class="olivia-lead-wide" for="olivia-contact-method">{lead.method}<select id="olivia-contact-method" name="medio_de_contacto" required><option value="">{lead.choose}</option><option value="Email">{lead.emailOption}</option><option value="Teléfono">{lead.phoneOption}</option><option value="WhatsApp">{lead.whatsapp}</option></select></label>
+        </div>
+        <label class="olivia-lead-consent"><input type="checkbox" name="consentimiento" value="Aceptado" required /><span>{lead.consent} <a href={en ? '/en/privacy-policy' : '/aviso-de-privacidad'} target="_blank" rel="noopener noreferrer">{copy.privacy}</a>.</span></label>
+        <input type="hidden" name="_subject" value="Solicitud de información — Olivia AI Etapel" />
+        <button class="olivia-lead-submit" type="submit">{lead.submit}</button>
+        <p class="olivia-lead-feedback" role="status" hidden></p>
+        <button class="olivia-lead-dismiss" type="button">{lead.dismiss}</button>
+      </form>
+    </div>
     <div class="olivia-prompts">{copy.prompts.map(prompt => <button type="button">{prompt}<span aria-hidden="true">↗</span></button>)}</div>
     <div class="olivia-feedback" role="status" hidden></div>
     <form class="olivia-form"><label class="olivia-sr" for="olivia-input">{copy.placeholder}</label><input id="olivia-input" name="message" placeholder={copy.placeholder} maxlength="2000" required autocomplete="off" /><button type="submit" aria-label={copy.send}><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m5 12 14-7-5 14-3-6-6-1Z"/><path d="m11 13 8-8"/></svg></button></form>
     <div class="olivia-consent">{copy.consent} <a href={en ? '/en/privacy-policy' : '/aviso-de-privacidad'} target="_blank" rel="noopener noreferrer">{copy.privacy}</a>.</div>
-    <a class="olivia-contact" href={en ? '/en/contact' : '/contacto'}>{copy.contact}<span aria-hidden="true">↗</span></a>
+    <button class="olivia-contact" type="button">{copy.contact}<span aria-hidden="true">↗</span></button>
   </div>
   <button class="olivia-toggle" type="button" aria-controls="olivia-panel" aria-expanded="false"><span class="olivia-avatar" aria-hidden="true">O<span></span></span><span>{copy.open}</span><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5H4l-1 1v-9.5A8.5 8.5 0 0 1 11.5 3h1a8.5 8.5 0 0 1 8.5 8.5Z"/></svg></button>
 </div>
 <script>
+  import { requestsInformation } from '../lib/oliviaLead.js';
   const root = document.querySelector<HTMLElement>('.olivia-chat')!;
   const toggle = root.querySelector<HTMLButtonElement>('.olivia-toggle')!;
   const panel = root.querySelector<HTMLElement>('.olivia-panel')!;
-  const input = root.querySelector<HTMLInputElement>('input')!;
-  const form = root.querySelector<HTMLFormElement>('form')!;
+  const input = root.querySelector<HTMLInputElement>('#olivia-input')!;
+  const form = root.querySelector<HTMLFormElement>('.olivia-form')!;
   const submit = form.querySelector<HTMLButtonElement>('button')!;
   const messages = root.querySelector<HTMLElement>('.olivia-messages')!;
   const prompts = root.querySelector<HTMLElement>('.olivia-prompts')!;
   const feedback = root.querySelector<HTMLElement>('.olivia-feedback')!;
+  const leadForm = root.querySelector<HTMLFormElement>('.olivia-lead')!;
+  const leadFeedback = root.querySelector<HTMLElement>('.olivia-lead-feedback')!;
+  const leadSubmit = root.querySelector<HTMLButtonElement>('.olivia-lead-submit')!;
+  const transcript: string[] = [];
+  let leadSent = false;
+  let leadBusy = false;
+  let requestMessage = '';
+  function showLead() {
+    prompts.hidden = true;
+    if (!leadSent) { leadForm.hidden = false; messages.append(leadForm); }
+    if (!leadSent) leadForm.scrollIntoView({ block: 'start' });
+    else messages.scrollTop = messages.scrollHeight;
+  }
+  root.querySelector('.olivia-contact')!.addEventListener('click', () => {
+    showLead();
+    if (!leadSent) leadForm.querySelector<HTMLInputElement>('input')!.focus();
+  });
+  root.querySelector('.olivia-lead-dismiss')!.addEventListener('click', () => { leadForm.hidden = true; input.focus(); });
+  leadForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (leadBusy || leadSent || !leadForm.reportValidity()) return;
+    // Reject whitespace-only names as well as empty fields.
+    for (const field of leadForm.querySelectorAll<HTMLInputElement>('input:not([type="checkbox"]):not([type="hidden"])')) {
+      field.value = field.value.trim();
+    }
+    if (!leadForm.reportValidity()) return;
+    leadBusy = true; leadSubmit.disabled = true;
+    const label = leadSubmit.textContent;
+    leadSubmit.textContent = root.dataset.leadSending!;
+    leadFeedback.hidden = true;
+    const payload = Object.fromEntries(new FormData(leadForm));
+    Object.assign(payload, { origen: 'Olivia AI Etapel', idioma: root.dataset.lang!, pagina: window.location.href, mensaje: requestMessage || 'Solicitud de contacto desde Olivia AI', conversacion: transcript.slice(-8).join('\n') });
+    try {
+      const response = await fetch(leadForm.action, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(payload), signal: AbortSignal.timeout(20000) });
+      if (!response.ok) throw new Error('Lead delivery failed');
+      leadSent = true; leadForm.hidden = true; leadForm.reset(); add('assistant', root.dataset.leadSuccess!);
+    } catch {
+      leadFeedback.textContent = root.dataset.leadError!; leadFeedback.hidden = false;
+      leadFeedback.scrollIntoView({ block: 'nearest' });
+    } finally { leadBusy = false; leadSubmit.disabled = false; leadSubmit.textContent = label; }
+  });
   let conversation: string | undefined;
   let busy = false;
   let pending = '';
@@ -42,11 +105,21 @@ const copy = en ? {
   root.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && !panel.hidden) open(false);
   });
-  function add(role: string, text: string) { const el = document.createElement('div'); el.className = `olivia-message ${role}`; el.textContent = text; messages.append(el); messages.scrollTop = messages.scrollHeight; }
+  function add(role: string, text: string) {
+    const el = document.createElement('div'); el.className = `olivia-message ${role}`; el.textContent = text;
+    const editingLead = leadForm.contains(document.activeElement);
+    if (!leadForm.hidden) messages.insertBefore(el, leadForm); else messages.append(el);
+    transcript.push(`${role}: ${text}`);
+    if (!editingLead) {
+      if (!leadForm.hidden) leadForm.scrollIntoView({ block: 'start' });
+      else messages.scrollTop = messages.scrollHeight;
+    }
+  }
   async function send(message: string, retry = false) {
     if (busy || !message.trim()) return;
     busy = true; pending = message; input.value = ''; submit.disabled = true; input.disabled = true; prompts.hidden = true;
     if (!retry) add('user', message);
+    if (requestsInformation(message)) { requestMessage = message; showLead(); }
     feedback.hidden = false; feedback.textContent = root.dataset.thinking!;
     try {
       const response = await fetch('/api/olivia', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, language: root.dataset.lang, conversation }), signal: AbortSignal.timeout(60000) });
@@ -58,13 +131,16 @@ const copy = en ? {
       feedback.textContent = root.dataset.error!;
       const retryButton = document.createElement('button'); retryButton.type = 'button'; retryButton.textContent = root.dataset.retry!;
       retryButton.addEventListener('click', () => send(pending, true)); feedback.append(retryButton);
-    } finally { busy = false; submit.disabled = false; input.disabled = false; if (!panel.hidden) input.focus(); }
+    } finally { busy = false; submit.disabled = false; input.disabled = false; if (!panel.hidden && leadForm.hidden) input.focus(); }
   }
   form.addEventListener('submit', (event) => { event.preventDefault(); void send(input.value.trim()); });
   prompts.querySelectorAll('button').forEach(button => button.addEventListener('click', () => { void send(button.firstChild!.textContent!.trim()); }));
 </script>
 <style is:global>
-.olivia-chat{position:fixed;right:24px;bottom:22px;z-index:1000;font-family:Arial,Helvetica,sans-serif;color:#fff;font-size:14px;line-height:1.5}.olivia-chat [hidden]{display:none!important}.olivia-chat button,.olivia-chat input{font:inherit}.olivia-chat button{cursor:pointer}.olivia-toggle{display:flex;align-items:center;gap:12px;padding:10px 18px 10px 10px;border:1px solid #ffffff24;border-radius:40px;background:#080d30;color:#fff;font-weight:700;box-shadow:0 14px 38px #070b2f40}.olivia-avatar{position:relative;display:grid;place-items:center;flex-shrink:0;width:42px;height:42px;border:1px solid #ffffff26;border-radius:50%;background:linear-gradient(145deg,#fba555,#ed7013);color:white;font-size:24px;font-weight:600}.olivia-avatar>span{position:absolute;right:0;bottom:0;width:10px;height:10px;border:2px solid #080d30;border-radius:50%;background:#43d798}.olivia-panel{display:flex;flex-direction:column;position:absolute;right:0;bottom:78px;width:min(390px,calc(100vw - 32px));height:min(620px,calc(100dvh - 120px));overflow:hidden;border:1px solid #ffffff25;border-radius:26px;background:linear-gradient(155deg,#151b3b,#090d24 70%);box-shadow:0 30px 80px #04082166,0 10px 25px #04082140;transform-origin:bottom right;animation:olivia-appear .42s cubic-bezier(.22,1,.36,1) both,olivia-float 7s ease-in-out .42s infinite}.olivia-header{display:flex;align-items:center;gap:12px;padding:20px;background:linear-gradient(120deg,#1e274c,#11172f);border-bottom:1px solid #ffffff10}.olivia-header strong{font-size:19px;letter-spacing:-.4px}.olivia-status{display:flex;align-items:center;gap:6px;color:#b9c3df;font-size:11px;margin-top:3px}.olivia-status i{width:6px;height:6px;background:#43d798;border-radius:50%}.olivia-close{margin-left:auto;background:#ffffff0a;border:1px solid #ffffff17;border-radius:50%;color:#fff;width:32px;height:32px;font-size:23px!important;line-height:1}.olivia-messages{flex:1;overflow:auto;min-height:100px;padding:20px;display:flex;flex-direction:column;gap:14px;scrollbar-width:thin;scrollbar-color:#3c456b transparent}.olivia-message{flex-shrink:0;max-width:92%;padding:13px 15px;border-radius:17px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;line-height:1.65}.olivia-message.assistant{align-self:flex-start;background:#ffffff0b;border:1px solid #ffffff12;border-bottom-left-radius:4px;color:#e1e6f2}.olivia-message.user{align-self:flex-end;background:#f58220;color:#10142d;border-bottom-right-radius:4px}.olivia-prompts{display:flex;flex-wrap:wrap;gap:7px;padding:0 20px 16px}.olivia-prompts button{display:flex;align-items:center;gap:10px;padding:7px 11px;border:1px solid #ffffff26;border-radius:20px;background:#ffffff06;color:#d5ddef;font-size:11px}.olivia-prompts button:hover{border-color:#f58220}.olivia-prompts span{color:#fba555}.olivia-form{display:flex;gap:8px;margin:0 16px;border:1px solid #ffffff20;border-radius:16px;background:#ffffff08;padding:6px}.olivia-form input{width:0;flex:1;padding:8px 9px;border:0;outline:0;background:transparent;color:white;font-size:13px}.olivia-form input::placeholder{color:#9ca6c3}.olivia-form:focus-within{border-color:#f58220}.olivia-form button{display:grid;place-items:center;width:40px;border:0;border-radius:11px;background:#f58220;color:white}.olivia-form button:disabled{opacity:.4;cursor:wait}.olivia-consent{padding:10px 20px;color:#9ba6c2;font-size:10px;line-height:1.5}.olivia-consent a{color:#d6ddee;text-decoration:underline}.olivia-contact{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:#ffffff04;border-top:1px solid #ffffff0b;color:#c6cee5;font-size:11px}.olivia-feedback{padding:0 20px 12px;color:#c3cde5;font-size:12px}.olivia-feedback button{margin-left:8px;color:#fba555;background:none;border:0;text-decoration:underline}.olivia-chat :focus-visible{outline:2px solid #fba555;outline-offset:3px}.olivia-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}.back-to-top{right:auto!important;left:22px}@keyframes olivia-appear{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+.olivia-lead{flex-shrink:0;padding:16px;border:1px solid #f5822055;border-radius:18px;background:#171e3b;color:#e1e6f2}.olivia-lead>strong{font-size:15px}.olivia-lead>p{margin:7px 0 14px;font-size:12px;color:#b9c3df}.olivia-lead-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.olivia-lead-grid label{display:grid;gap:5px;font-size:11px;color:#c9d2e8;min-width:0}.olivia-lead-grid input,.olivia-lead-grid select{box-sizing:border-box;width:100%;min-width:0;padding:10px;border:1px solid #ffffff26;border-radius:9px;background:#0c122b;color:white;font:inherit;font-size:14px}.olivia-lead-wide{grid-column:1/-1}.olivia-lead-consent{display:flex;align-items:flex-start;gap:8px;margin:14px 0;font-size:11px;color:#c9d2e8}.olivia-lead-consent input{flex:0 0 auto;margin:3px 0 0;accent-color:#f58220}.olivia-lead a{color:#e1e6f2;text-decoration:underline}.olivia-lead-submit{width:100%;padding:11px;border:0;border-radius:10px;background:#f58220;color:#10142d;font-weight:700!important}.olivia-lead-submit:disabled{opacity:.5;cursor:wait}.olivia-lead-dismiss{display:block;margin:10px auto 0;border:0;background:none;color:#bac5df;font-size:11px!important;text-decoration:underline}.olivia-lead .olivia-lead-feedback{color:#ffcbab;margin:10px 0 0}.olivia-panel:has(.olivia-lead:not([hidden])){animation:none}
+@media(max-width:640px){.olivia-lead-grid input,.olivia-lead-grid select{font-size:16px}.olivia-lead-grid{grid-template-columns:1fr}}
+
+.olivia-chat{position:fixed;right:24px;bottom:22px;z-index:1000;font-family:Arial,Helvetica,sans-serif;color:#fff;font-size:14px;line-height:1.5}.olivia-chat [hidden]{display:none!important}.olivia-chat button,.olivia-chat input{font:inherit}.olivia-chat button{cursor:pointer}.olivia-toggle{display:flex;align-items:center;gap:12px;padding:10px 18px 10px 10px;border:1px solid #ffffff24;border-radius:40px;background:#080d30;color:#fff;font-weight:700;box-shadow:0 14px 38px #070b2f40}.olivia-avatar{position:relative;display:grid;place-items:center;flex-shrink:0;width:42px;height:42px;border:1px solid #ffffff26;border-radius:50%;background:linear-gradient(145deg,#fba555,#ed7013);color:white;font-size:24px;font-weight:600}.olivia-avatar>span{position:absolute;right:0;bottom:0;width:10px;height:10px;border:2px solid #080d30;border-radius:50%;background:#43d798}.olivia-panel{display:flex;flex-direction:column;position:absolute;right:0;bottom:78px;width:min(390px,calc(100vw - 32px));height:min(620px,calc(100dvh - 120px));overflow:hidden;border:1px solid #ffffff25;border-radius:26px;background:linear-gradient(155deg,#151b3b,#090d24 70%);box-shadow:0 30px 80px #04082166,0 10px 25px #04082140;transform-origin:bottom right;animation:olivia-appear .42s cubic-bezier(.22,1,.36,1) both,olivia-float 7s ease-in-out .42s infinite}.olivia-header{display:flex;align-items:center;gap:12px;padding:20px;background:linear-gradient(120deg,#1e274c,#11172f);border-bottom:1px solid #ffffff10}.olivia-header strong{font-size:19px;letter-spacing:-.4px}.olivia-status{display:flex;align-items:center;gap:6px;color:#b9c3df;font-size:11px;margin-top:3px}.olivia-status i{width:6px;height:6px;background:#43d798;border-radius:50%}.olivia-close{margin-left:auto;background:#ffffff0a;border:1px solid #ffffff17;border-radius:50%;color:#fff;width:32px;height:32px;font-size:23px!important;line-height:1}.olivia-messages{flex:1;overflow:auto;min-height:100px;padding:20px;display:flex;flex-direction:column;gap:14px;scrollbar-width:thin;scrollbar-color:#3c456b transparent}.olivia-message{flex-shrink:0;max-width:92%;padding:13px 15px;border-radius:17px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;line-height:1.65}.olivia-message.assistant{align-self:flex-start;background:#ffffff0b;border:1px solid #ffffff12;border-bottom-left-radius:4px;color:#e1e6f2}.olivia-message.user{align-self:flex-end;background:#f58220;color:#10142d;border-bottom-right-radius:4px}.olivia-prompts{display:flex;flex-wrap:wrap;gap:7px;padding:0 20px 16px}.olivia-prompts button{display:flex;align-items:center;gap:10px;padding:7px 11px;border:1px solid #ffffff26;border-radius:20px;background:#ffffff06;color:#d5ddef;font-size:11px}.olivia-prompts button:hover{border-color:#f58220}.olivia-prompts span{color:#fba555}.olivia-form{display:flex;gap:8px;margin:0 16px;border:1px solid #ffffff20;border-radius:16px;background:#ffffff08;padding:6px}.olivia-form input{width:0;flex:1;padding:8px 9px;border:0;outline:0;background:transparent;color:white;font-size:13px}.olivia-form input::placeholder{color:#9ca6c3}.olivia-form:focus-within{border-color:#f58220}.olivia-form button{display:grid;place-items:center;width:40px;border:0;border-radius:11px;background:#f58220;color:white}.olivia-form button:disabled{opacity:.4;cursor:wait}.olivia-consent{padding:10px 20px;color:#9ba6c2;font-size:10px;line-height:1.5}.olivia-consent a{color:#d6ddee;text-decoration:underline}.olivia-contact{width:100%;text-align:left;cursor:pointer;border:0;display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:#ffffff04;border-top:1px solid #ffffff0b;color:#c6cee5;font-size:11px}.olivia-feedback{padding:0 20px 12px;color:#c3cde5;font-size:12px}.olivia-feedback button{margin-left:8px;color:#fba555;background:none;border:0;text-decoration:underline}.olivia-chat :focus-visible{outline:2px solid #fba555;outline-offset:3px}.olivia-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}.back-to-top{right:auto!important;left:22px}@keyframes olivia-appear{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
 @keyframes olivia-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 @keyframes olivia-invite{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
 .olivia-toggle{animation:olivia-invite 6s ease-in-out infinite;transition:box-shadow .25s ease,border-color .25s ease}
