@@ -49,7 +49,7 @@ import BrandMarquee from '../components/BrandMarquee.astro';
     .btn.outline-dark{background:#fff;color:var(--navy);border-color:var(--line)}
     .btn.outline-dark:hover{border-color:var(--navy);transform:translateY(-1px)}
     .hero{position:relative;overflow:hidden;background:radial-gradient(circle at 78% 24%,rgba(245,130,32,.18),transparent 31%),linear-gradient(135deg,#070b2f 0%,#0b1145 48%,#050720 100%);color:#fff}
-    .hero-slider{position:absolute;inset:0;z-index:0;background:#050720}.hero-slide{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:0;animation:heroFade 30s infinite;transform:scale(1.03)}.hero-slide:nth-child(2){animation-delay:6s}.hero-slide:nth-child(3){animation-delay:12s}.hero-slide:nth-child(4){animation-delay:18s}.hero-slide:nth-child(5){animation-delay:24s}.hero-slider:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,11,47,.72),rgba(7,11,47,.34))}@keyframes heroFade{0%{opacity:0}3%{opacity:1}20%{opacity:1}23%{opacity:0}100%{opacity:0}}
+    .hero-slider{position:absolute;inset:0;z-index:0;background:#050720}.hero-slide{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:0;animation:heroFade 18s infinite;transform:scale(1.03)}.hero-slide:nth-child(2){animation-delay:6s}.hero-slide:nth-child(3){animation-delay:12s}.hero-slider:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,11,47,.72),rgba(7,11,47,.34))}@keyframes heroFade{0%{opacity:0}3%{opacity:1}33.33%{opacity:1}36.33%{opacity:0}100%{opacity:0}}
     .hero:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.055) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px);background-size:72px 72px;mask-image:linear-gradient(to bottom,#000,transparent 88%);opacity:.7}
     .hero:after{content:"";position:absolute;width:540px;height:540px;border:1px solid rgba(245,130,32,.24);right:-130px;top:50px;transform:rotate(22deg);opacity:.72}
     .hero-inner{position:relative;z-index:1;max-width:var(--max);margin:0 auto;padding:86px 28px 42px}
@@ -117,7 +117,7 @@ import BrandMarquee from '../components/BrandMarquee.astro';
   <main>
     <section class="hero">
       <div class="hero-slider" aria-hidden="true">
-        <img class="hero-slide" src="/slider/david-glessner-photographer-director-c-ebQX7w9FI-unsplash.webp" alt=""><img class="hero-slide" src="/slider/lorenzo-hamers-0wTxCwWBVfs-unsplash.webp" alt=""><img class="hero-slide" src="/slider/lorenzo-hamers-4b2w2KAahwg-unsplash.webp" alt=""><img class="hero-slide" src="/slider/lorenzo-hamers-K2bNjPOUzSQ-unsplash.webp" alt=""><img class="hero-slide" src="/slider/mohammad-fathollahi-hXhbEFS48oM-unsplash.webp" alt="">
+        <img class="hero-slide" src="/slider/hero-pintura.webp" alt="" /><img class="hero-slide" src="/slider/hero-car-o-liner.webp" alt="" /><img class="hero-slide" src="/slider/hero-control-acabado.webp" alt="" />
       </div>
       <div class="hero-inner">
         <div>
