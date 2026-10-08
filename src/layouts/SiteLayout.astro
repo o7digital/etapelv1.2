@@ -1,5 +1,6 @@
 ---
 import BackToTop from '../components/BackToTop.astro';
+import OliviaChat from '../components/OliviaChat.astro';
 
 interface Props {
   title: string;
@@ -107,6 +108,7 @@ const languageHref = english
       </footer>
     )}
     <BackToTop lang={lang} />
+    <OliviaChat lang={lang} />
     <style is:global>
       .lang-en .menu{gap:18px;font-size:12px}.footer-full{padding:58px 28px 28px}.footer-full>.footer-grid,.footer-full>.footer-bottom{max-width:var(--max);margin-left:auto;margin-right:auto}.footer-full .footer-grid{display:grid;grid-template-columns:1.15fr .95fr .75fr .9fr;gap:36px}.footer-full img{width:150px}.footer-full p{color:#aeb8cf;line-height:1.7}.footer-full h3{font-size:12px;text-transform:uppercase;letter-spacing:.18em;color:#fff;margin:0 0 18px}.footer-full ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}.footer-full a{color:#c8d2e5}.footer-full .footer-bottom{margin-top:36px;padding-top:22px;border-top:1px solid rgba(255,255,255,.12);display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}.footer-full .footer-bottom div{display:flex;gap:18px;flex-wrap:wrap}@media(max-width:800px){.footer-full .footer-grid{grid-template-columns:1fr}}
     </style>
