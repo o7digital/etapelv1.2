@@ -1,5 +1,6 @@
 ---
 import SiteLayout from '../../layouts/SiteLayout.astro';
+import CedetecGallery from '../../components/CedetecGallery.astro';
 import ProductCatalog from '../../components/ProductCatalog.astro';
 import ProductFamilyMenu from '../../components/ProductFamilyMenu.astro';
 import BrandMarquee from '../../components/BrandMarquee.astro';
@@ -153,6 +154,7 @@ const familyEnglish: Record<string, { short: string; title: string; description:
             <article><img src="/images/capacitacion-3.webp" alt="Equipment demonstration" /><div><h2>Demonstrations</h2><p>Test equipment and understand how it works before making a decision.</p></div></article>
             <article><img src="/images/capacitacion-4.webp" alt="Process optimization" /><div><h2>Process optimization</h2><p>Assessment, opportunity identification and recommendations to improve efficiency and quality.</p></div></article>
           </div>
+          <CedetecGallery lang="en" />
           <div class="training-process"><div class="label">Our process</div><h2>We do not start by training. We start by understanding your operation.</h2><div>{[['01','Assessment'],['02','Opportunities'],['03','Training design'],['04','Team training'],['05','Standardized processes']].map(s=><article><b>{s[0]}</b><h3>{s[1]}</h3></article>)}</div></div>
           <div class="parity-heading"><div class="label">Why it matters</div><h2>Knowledge also improves your productivity.</h2></div>
           <div class="training-benefits">{[['Process standardization','Consistent procedures and results.'],['Better equipment use','Your team operates equipment as designed.'],['Greater safety','Equipment and processes are used correctly.'],['Greater efficiency and quality','Less rework and more consistent finishes.']].map(v=><article><h3>{v[0]}</h3><p>{v[1]}</p></article>)}</div>

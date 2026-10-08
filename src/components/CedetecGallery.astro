@@ -1,0 +1,71 @@
+---
+const { lang = 'es' } = Astro.props;
+const en = lang === 'en';
+const copy = en ? { title: 'CEDETEC in action', open: 'Enlarge photo', close: 'Close', plus: 'Zoom in', minus: 'Zoom out', reset: 'Reset zoom', prev: 'Previous photo', next: 'Next photo', descriptions: ['Technical training in the classroom', 'SATA equipment and spray guns', 'Group training in the paint booth', 'Demonstration in the USI Italia booth', 'Practical paint application training'] } : { title: 'CEDETEC en acción', open: 'Ampliar foto', close: 'Cerrar', plus: 'Acercar', minus: 'Alejar', reset: 'Restablecer zoom', prev: 'Foto anterior', next: 'Foto siguiente', descriptions: ['Capacitación técnica en el aula', 'Equipos y pistolas de aplicación SATA', 'Capacitación grupal en la cabina de pintura', 'Demostración en la cabina USI Italia', 'Práctica de aplicación de pintura'] };
+---
+<div class="cedetec-gallery">
+  <div class="cedetec-gallery-head"><h2>{copy.title}</h2><div><button type="button" data-scroll="-1" aria-label={copy.prev}>‹</button><button type="button" data-scroll="1" aria-label={copy.next}>›</button></div></div>
+  <div class="cedetec-gallery-track">
+    {copy.descriptions.map((alt, i) => <button class="cedetec-thumbnail" type="button" aria-label={`${copy.open}: ${alt}`} data-index={i}><img src={`/images/cedetec-action-${i+1}.webp`} alt={alt} width="1280" height="960" loading="lazy" /><span aria-hidden="true">＋</span></button>)}
+  </div>
+  <dialog class="cedetec-lightbox" aria-label={copy.title}>
+    <div class="cedetec-lightbox-toolbar"><span class="cedetec-counter" aria-live="polite"></span><div><button type="button" data-zoom="out" aria-label={copy.minus}>−</button><button type="button" data-zoom="reset" aria-label={copy.reset}>100%</button><button type="button" data-zoom="in" aria-label={copy.plus}>＋</button><button type="button" data-close aria-label={copy.close}>×</button></div></div>
+    <div class="cedetec-lightbox-stage"><img alt="" /></div>
+    <div class="cedetec-lightbox-bottom"><button type="button" data-prev aria-label={copy.prev}>‹</button><p class="cedetec-caption"></p><button type="button" data-next aria-label={copy.next}>›</button></div>
+  </dialog>
+</div>
+<script>
+  document.querySelectorAll<HTMLElement>('.cedetec-gallery').forEach(root => {
+    const track = root.querySelector<HTMLElement>('.cedetec-gallery-track')!;
+    const thumbnails = [...root.querySelectorAll<HTMLButtonElement>('.cedetec-thumbnail')];
+    const dialog = root.querySelector<HTMLDialogElement>('dialog')!;
+    const stage = root.querySelector<HTMLElement>('.cedetec-lightbox-stage')!;
+    const image = stage.querySelector<HTMLImageElement>('img')!;
+    const zoomIn = root.querySelector<HTMLButtonElement>('[data-zoom="in"]')!;
+    const zoomOut = root.querySelector<HTMLButtonElement>('[data-zoom="out"]')!;
+    const reset = root.querySelector<HTMLButtonElement>('[data-zoom="reset"]')!;
+    let index = 0, zoom = 1, previousOverflow = '';
+    let opener: HTMLButtonElement | undefined;
+    function resize() {
+      const fit = Math.min((stage.clientWidth-24)/(image.naturalWidth||1280), (stage.clientHeight-24)/(image.naturalHeight||960), 1);
+      image.style.width = `${(image.naturalWidth||1280)*fit*zoom}px`;
+      image.style.height = `${(image.naturalHeight||960)*fit*zoom}px`;
+      reset.textContent = `${Math.round(zoom*100)}%`;
+      zoomOut.disabled = zoom <= 1; zoomIn.disabled = zoom >= 3;
+    }
+    function select(next: number) {
+      index = (next + thumbnails.length) % thumbnails.length; zoom = 1;
+      const photo = thumbnails[index].querySelector('img')!;
+      image.src = photo.src; image.alt = photo.alt;
+      root.querySelector('.cedetec-caption')!.textContent = photo.alt;
+      root.querySelector('.cedetec-counter')!.textContent = `${index+1} / ${thumbnails.length}`;
+      stage.scrollTop = 0; stage.scrollLeft = 0; resize();
+    }
+    image.addEventListener('load', resize);
+    thumbnails.forEach((button, i) => button.addEventListener('click', () => {
+      opener = button; previousOverflow = document.body.style.overflow;
+      dialog.showModal(); document.body.style.overflow = 'hidden'; select(i);
+      root.querySelector<HTMLButtonElement>('[data-close]')!.focus();
+    }));
+    root.querySelector('[data-close]')!.addEventListener('click', () => dialog.close());
+    dialog.addEventListener('close', () => { document.body.style.overflow = previousOverflow; opener?.focus({preventScroll:true}); });
+    stage.addEventListener('click', event => { if (event.target === stage) dialog.close(); });
+    root.querySelector('[data-prev]')!.addEventListener('click', () => select(index-1));
+    root.querySelector('[data-next]')!.addEventListener('click', () => select(index+1));
+    function changeZoom(value: number) { zoom = Math.min(3,Math.max(1,value)); resize(); }
+    zoomIn.addEventListener('click', () => changeZoom(zoom+.25));
+    zoomOut.addEventListener('click', () => changeZoom(zoom-.25));
+    reset.addEventListener('click', () => { changeZoom(1); stage.scrollTo(0,0); });
+    dialog.addEventListener('keydown', event => {
+      if (event.key === 'ArrowLeft') { event.preventDefault(); select(index-1); }
+      if (event.key === 'ArrowRight') { event.preventDefault(); select(index+1); }
+      if (event.key === '+' || event.key === '=') { event.preventDefault(); changeZoom(zoom+.25); }
+      if (event.key === '-') { event.preventDefault(); changeZoom(zoom-.25); }
+    });
+    window.addEventListener('resize', () => { if (dialog.open) resize(); });
+    root.querySelectorAll<HTMLButtonElement>('[data-scroll]').forEach(button => button.addEventListener('click', () => track.scrollBy({ left: Number(button.dataset.scroll)*(thumbnails[0].offsetWidth+8), behavior: matchMedia('(prefers-reduced-motion:reduce)').matches ? 'instant' : 'smooth' })));
+  });
+</script>
+<style is:global>
+.training-page>.container>.cedetec-gallery{order:5}.cedetec-gallery{margin-top:26px;padding-bottom:12px}.cedetec-gallery-head{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:12px}.cedetec-gallery-head h2{margin:0;color:#df6a13;font-size:13px;letter-spacing:.14em;text-transform:uppercase}.cedetec-gallery-head>div{display:flex;gap:7px}.cedetec-gallery-head button{width:38px;height:38px;border:1px solid #cad5e8;background:white;color:#1764df;font-size:22px;cursor:pointer}.cedetec-gallery-track{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:thin;scrollbar-color:#cbd5e1 transparent;padding-bottom:8px}.cedetec-thumbnail{position:relative;flex:0 0 calc((100% - 24px)/4);min-width:0;overflow:hidden;padding:0;border:0;background:#061426;cursor:zoom-in;scroll-snap-align:start}.cedetec-thumbnail img{display:block;width:100%;height:205px;object-fit:cover;transition:transform .3s ease}.cedetec-thumbnail:hover img{transform:scale(1.04)}.cedetec-thumbnail>span{position:absolute;right:10px;bottom:10px;display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:#07101ecc;color:white;font-size:23px}.cedetec-gallery button:focus-visible{outline:3px solid #f58220;outline-offset:3px}.cedetec-lightbox{box-sizing:border-box;position:fixed;inset:0;width:100vw;max-width:none;height:100dvh;max-height:none;margin:0;padding:0;border:0;background:#050b16f5;color:#fff;overflow:hidden}.cedetec-lightbox::backdrop{background:#050b16e6}.cedetec-lightbox[open]{display:flex;flex-direction:column;animation:cedetec-reveal .2s ease-out}.cedetec-lightbox-toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 20px;flex-shrink:0;border-bottom:1px solid #ffffff20}.cedetec-lightbox-toolbar>div{display:flex;gap:8px}.cedetec-lightbox button{min-width:44px;height:44px;border:1px solid #ffffff40;border-radius:8px;background:#ffffff0c;color:#fff;font:inherit;font-size:22px;cursor:pointer}.cedetec-lightbox button[data-zoom="reset"]{padding:0 10px;font-size:14px}.cedetec-lightbox button[data-close]{margin-left:12px;font-size:30px}.cedetec-lightbox button:disabled{opacity:.3;cursor:default}.cedetec-lightbox-stage{flex:1;min-height:0;overflow:auto;padding:12px;box-sizing:border-box;overscroll-behavior:contain}.cedetec-lightbox-stage img{display:block;max-width:none!important;max-height:none!important;object-fit:contain;margin:auto}.cedetec-lightbox-bottom{display:flex;align-items:center;gap:16px;justify-content:space-between;padding:12px 20px;flex-shrink:0}.cedetec-caption{margin:0;text-align:center;font-size:14px;color:#d3deed}.cedetec-counter{white-space:nowrap;font-size:14px}@keyframes cedetec-reveal{from{opacity:0}to{opacity:1}}@media(max-width:640px){.cedetec-gallery{margin-left:20px;margin-right:20px}.cedetec-thumbnail{flex-basis:82%}.cedetec-thumbnail img{height:210px}.cedetec-lightbox-toolbar{padding:10px;gap:6px}.cedetec-lightbox-toolbar>div{gap:5px}.cedetec-lightbox button[data-close]{margin-left:4px}.cedetec-lightbox-bottom{padding:10px;gap:10px}.cedetec-caption{font-size:12px}}@media(prefers-reduced-motion:reduce){.cedetec-thumbnail img{transition:none}.cedetec-lightbox[open]{animation:none}}
+</style>

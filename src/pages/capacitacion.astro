@@ -1,6 +1,7 @@
 ---
 import BackToTop from '../components/BackToTop.astro';
 import OliviaChat from '../components/OliviaChat.astro';
+import CedetecGallery from '../components/CedetecGallery.astro';
 ---
 <!doctype html>
 <html lang="es">
@@ -74,7 +75,7 @@ import OliviaChat from '../components/OliviaChat.astro';
           <article class="training-card"><img src="/images/capacitacion-4.webp" alt="Optimización de procesos" loading="lazy"><div><h2>Optimización de procesos</h2><p>Levantamientos y recomendaciones para incrementar eficiencia, calidad y productividad.</p></div></article>
         </div>
 
-        <div class="action-gallery"><div class="carousel-head"><div class="label">CEDETEC en acción</div><div class="carousel-controls"><button class="carousel-button carousel-prev" type="button" aria-label="Images précédentes">‹</button><button class="carousel-button carousel-next" type="button" aria-label="Images suivantes">›</button></div></div><h2 class="section-title">Conocimiento aplicado en el taller.</h2><div class="gallery"><img src="/images/capacitacion-1.webp" alt="CEDETEC en acción" loading="lazy"><img src="/images/capacitacion-2.webp" alt="Formación Etapel" loading="lazy"><img src="/images/capacitacion-3.webp" alt="Demostración Etapel" loading="lazy"><img src="/images/capacitacion-4.webp" alt="Procesos Etapel" loading="lazy"><img src="/images/capacitacion-5.webp" alt="Seguridad en capacitación" loading="lazy"><img src="/images/capacitacion-6.webp" alt="Equipo en capacitación" loading="lazy"><img src="/images/capacitacion-1.webp" alt="Capacitación especializada" loading="lazy"><img src="/images/capacitacion-6.webp" alt="Trabajo técnico en equipo" loading="lazy"></div></div>
+        <CedetecGallery />
 
         <div class="benefit-band"><div class="benefit-heading"><div class="label">¿Por qué importa?</div><h2 class="section-title">El conocimiento también impacta tu productividad.</h2></div><div class="benefits"><article class="benefit"><span>✓</span><h3>Estandarización de procesos</h3><p>Trabajamos igual, obtenemos los mismos resultados.</p></article><article class="benefit"><span>⚙</span><h3>Mejor uso de equipos</h3><p>Tu equipo opera como fue diseñado, por más tiempo.</p></article><article class="benefit"><span>♙</span><h3>Mayor seguridad</h3><p>Equipos y procesos utilizados de forma correcta y segura.</p></article><article class="benefit"><span>▥</span><h3>Más eficiencia y calidad</h3><p>Menos retrabajo, mejor acabado y entregas más consistentes.</p></article></div></div>
 
@@ -136,17 +137,6 @@ import OliviaChat from '../components/OliviaChat.astro';
       </div>
     </div>
   </footer>
-  <script>
-    const carousel = document.querySelector('.action-gallery .gallery');
-    const moveCarousel = (direction) => {
-      if (!carousel) return;
-      const slide = carousel.querySelector('img');
-      const distance = slide ? slide.getBoundingClientRect().width + 8 : carousel.clientWidth;
-      carousel.scrollBy({ left: direction * distance, behavior: 'smooth' });
-    };
-    document.querySelector('.carousel-prev')?.addEventListener('click', () => moveCarousel(-1));
-    document.querySelector('.carousel-next')?.addEventListener('click', () => moveCarousel(1));
-  </script>
   <BackToTop />
   <OliviaChat />
 </body>
