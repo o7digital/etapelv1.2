@@ -1,5 +1,6 @@
 ---
 import SiteLayout from '../../layouts/SiteLayout.astro';
+import AfterSalesPhoto from '../../components/AfterSalesPhoto.astro';
 import CedetecGallery from '../../components/CedetecGallery.astro';
 import ProductCatalog from '../../components/ProductCatalog.astro';
 import ProductFamilyMenu from '../../components/ProductFamilyMenu.astro';
@@ -166,7 +167,7 @@ const familyEnglish: Record<string, { short: string; title: string; description:
         <div class="container">
           <div class="support-en-hero"><div><div class="label">Technical support</div><h1>Technical service that protects your investment.</h1><p>We support your equipment after purchase to keep it operating safely, efficiently and productively.</p><div class="training-actions"><a class="btn orange" href="/en/contact#contact-form">Request technical service</a><a class="btn outline" href="#maintenance">Request a maintenance plan</a></div></div></div>
           <div class="support-en-features">{['Specialized installation','Preventive maintenance','Technical support','Nationwide coverage','After-sales service'].map(v=><b>{v}</b>)}</div>
-          <div class="support-en-intro"><div><div class="label">Etapel after-sales</div><h2>More than repairs, we are your strategic partner.</h2><p>Our technical service goes beyond troubleshooting. We protect equipment performance, operational safety and availability.</p></div><div class="client-photo">MAIN PHOTO</div></div>
+          <div class="support-en-intro"><div><div class="label">Etapel after-sales</div><h2>More than repairs, we are your strategic partner.</h2><p>Our technical service goes beyond troubleshooting. We protect equipment performance, operational safety and availability.</p></div><AfterSalesPhoto lang="en" /></div>
           <div class="parity-heading"><div class="label">Our services</div><h2>Comprehensive technical solutions for your operation.</h2></div>
           <div class="support-en-services">{[['Installation and commissioning','Equipment configuration, installation and commissioning.'],['Major equipment maintenance','Preventive and corrective service to extend equipment life.'],['Specialized booth service','Component and operating-condition inspections.'],['Filter replacement','Supply and replacement to maintain proper airflow.'],['Booth assembly and disassembly','Removal, relocation, reinstallation and testing.'],['Diagnostics and repair','Technical evaluation, repair and corrective actions.']].map((v,i)=><article><div>PHOTO {i+1}</div><h3>{v[0]}</h3><p>{v[1]}</p></article>)}</div>
           <div class="training-process" id="maintenance"><div class="label">Our approach</div><h2>Preventive maintenance that keeps your operation moving.</h2><div>{[['01','Diagnostics'],['02','Maintenance plan'],['03','Service'],['04','Follow-up']].map(s=><article><b>{s[0]}</b><h3>{s[1]}</h3></article>)}</div></div>

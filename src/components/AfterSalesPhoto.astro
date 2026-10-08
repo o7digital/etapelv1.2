@@ -1,0 +1,7 @@
+---
+const { lang = 'es' } = Astro.props;
+---
+<div class="after-sales-photo"><img src="/images/postventa-equipo-etapel.webp" width="1448" height="1086" alt={lang === 'en' ? 'Etapel technical team advising a customer beside a paint booth' : 'Equipo técnico Etapel asesorando a un cliente junto a una cabina de pintura'} loading="lazy" /></div>
+<style>
+.after-sales-photo{position:relative;min-height:300px;overflow:hidden;background:#e8edf5}.after-sales-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}@media(max-width:980px){.after-sales-photo img{position:static;height:auto;display:block}}
+</style>
