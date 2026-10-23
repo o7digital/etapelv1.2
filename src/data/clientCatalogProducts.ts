@@ -108,18 +108,18 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
   },
   {
     "slug": "cabinas-de-pintura-usi-italia",
-    "name": "Cabinas de pintura — USI Italia",
+    "name": "USI Italia CHRONOTECH",
     "brand": "USI Italia",
     "familySlug": "cabinas-y-preparacion",
     "division": "Pintura y Aplicación",
     "category": "Cabinas de pintura",
-    "sourceUrl": "https://www.usiitalia.com/en/category_products/booths/",
-    "image": "https://www.usiitalia.com/wp-content/uploads/2021/07/prod_1-optimized.png",
+    "sourceUrl": "https://www.usiitalia.com/en/products/chronotech/",
+    "image": "/images/products/usi-chronotech.png",
     "specs": [],
     "downloads": [
       {
         "label": "Información del fabricante",
-        "url": "https://www.usiitalia.com/en/category_products/booths/"
+        "url": "https://www.usiitalia.com/en/products/chronotech/"
       }
     ]
   },
