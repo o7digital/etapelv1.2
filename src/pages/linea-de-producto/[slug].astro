@@ -1,4 +1,5 @@
 ---
+import { familyEnglish } from '../../data/familyEnglish';
 import SiteLayout from '../../layouts/SiteLayout.astro';
 import ProductCatalog from '../../components/ProductCatalog.astro';
 import ProductFamilyMenu from '../../components/ProductFamilyMenu.astro';
@@ -13,28 +14,31 @@ export function getStaticPaths() {
   return [...currentPaths, ...legacyPaths];
 }
 
-const { family } = Astro.props as { family: ProductFamily };
+const { family, lang = 'es' } = Astro.props as { family: ProductFamily; lang?: 'es' | 'en' };
+const en = lang === 'en';
+const title = en ? familyEnglish[family.slug]?.title || family.title : family.title;
+const description = en ? familyEnglish[family.slug]?.description || family.pageDescription : family.pageDescription;
 ---
 
-<SiteLayout title={`${family.title} para taller automotriz CDMX | Etapel`} description={family.pageDescription}>
+<SiteLayout title={`${title} | Etapel`} description={description} lang={lang}>
   <main>
     <section class="page-hero">
       <div class="page-hero-inner">
         <div>
-          <span class="eyebrow"><span class="dot"></span> {family.title}</span>
-          <h1>{family.title}</h1>
-          <p>{family.pageDescription}</p>
+          <span class="eyebrow"><span class="dot"></span> {title}</span>
+          <h1>{title}</h1>
+          <p>{description}</p>
           <div class="hero-actions">
-            <a class="btn orange" href="#lineas-de-producto">Ver líneas de producto</a>
-            <a class="btn outline" href="/linea-de-producto">Todas las líneas</a>
+            <a class="btn orange" href={en ? "#families" : "#lineas-de-producto"}>{en ? "View product lines" : "Ver líneas de producto"}</a>
+            <a class="btn outline" href={en ? "/en/product-lines" : "/linea-de-producto"}>{en ? "All product lines" : "Todas las líneas"}</a>
           </div>
         </div>
-        <div class="hero-panel"><img src={family.image} alt={family.title} /></div>
+        <div class="hero-panel"><img src={family.image} alt={title} /></div>
       </div>
     </section>
 
-    <ProductFamilyMenu family={family} />
+    <ProductFamilyMenu family={family} lang={lang} />
 
-    <ProductCatalog familySlug={family.slug} />
+    <ProductCatalog familySlug={family.slug} lang={lang} />
   </main>
 </SiteLayout>

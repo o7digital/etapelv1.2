@@ -1,4 +1,5 @@
 ---
+import LanguageNavigation from '../components/LanguageNavigation.astro';
 import BackToTop from '../components/BackToTop.astro';
 import OliviaChat from '../components/OliviaChat.astro';
 import BrandMarquee from '../components/BrandMarquee.astro';
@@ -96,7 +97,7 @@ import BrandMarquee from '../components/BrandMarquee.astro';
       <div class="menu">
         <a href="/">INICIO</a><a href="/linea-de-producto">LÍNEA DE PRODUCTO</a><a href="/capacitacion">CEDETEC</a><a href="/postventa">SOPORTE TÉCNICO</a><a href="/quienes-somos">NOSOTROS</a><a href="/contacto">CONTACTO</a>
       </div>
-      <div class="nav-actions"><a class="lang" href="/en" aria-label="Cambiar idioma a inglés">EN</a><a class="btn orange" href="/contacto#formulario-contacto">Solicitar información</a></div>
+      <div class="nav-actions"><a class="lang" href="/en" data-language-switch aria-label="Cambiar idioma a inglés">EN</a><a class="btn orange" href="/contacto#formulario-contacto">Solicitar información</a></div>
       <details class="mobile-menu">
         <summary aria-label="Abrir menú"><span class="hamburger"></span></summary>
         <div class="mobile-panel">
@@ -106,7 +107,7 @@ import BrandMarquee from '../components/BrandMarquee.astro';
           <a href="/postventa">SOPORTE TÉCNICO</a>
           <a href="/quienes-somos">NOSOTROS</a>
           <a href="/contacto">CONTACTO</a>
-          <a href="/en" aria-label="Cambiar idioma a inglés">EN</a>
+          <a href="/en" data-language-switch aria-label="Cambiar idioma a inglés">EN</a>
           <a class="mobile-cta" href="/contacto#formulario-contacto">Solicitar información</a>
         </div>
       </details>
@@ -136,7 +137,7 @@ import BrandMarquee from '../components/BrandMarquee.astro';
       </div>
     </section>
 
-    <section class="families" id="sectores">
+    <section data-language-section="sectors" class="families" id="sectores">
       <div class="container">
         <div class="section-head"><div><div class="label">¿En qué industria podemos ayudarte?</div><h2>Soluciones para cada sector.</h2></div><p>Selecciona tu sector para encontrar equipos, consumibles y servicios adaptados a tu operación.</p></div>
         <div class="cards">
@@ -154,7 +155,7 @@ import BrandMarquee from '../components/BrandMarquee.astro';
       </div>
     </section>
 
-    <section class="catalog-section">
+    <section class="catalog-section" data-language-section="featured-products">
       <div class="container"><div class="section-head"><div><div class="label">Tecnología que tienes que conocer</div><h2>Equipos destacados.</h2></div><a class="btn outline-dark" href="/linea-de-producto">Ver todos los equipos</a></div>
         <div class="catalog-grid home-featured-grid">
           <article class="product-card"><a href="/linea-de-producto/productos/sata-jet-x"><div class="product-image"><img src="/images/products/sata/jet-x/1200394-main.webp" alt="SATA jet X" loading="lazy"></div><div class="product-body"><small>Pintura y aplicación</small><h3>SATA jet X</h3><p>Pistola premium para repintado automotriz con tecnología de boquilla X.</p><span class="arrow">→</span></div></a></article>
@@ -226,7 +227,7 @@ import BrandMarquee from '../components/BrandMarquee.astro';
         <div class="footer-bottom-links">
           <a href="mailto:ventas@etapel.com.mx">¿Necesitas ayuda? ¡Contáctanos!</a>
           <a href="/aviso-de-privacidad">Aviso de Privacidad</a>
-          <a href="/en">English version</a>
+          <a href="/en" data-language-switch>English version</a>
         </div>
       </div>
       <div class="footer-keywords">
@@ -234,6 +235,7 @@ import BrandMarquee from '../components/BrandMarquee.astro';
       </div>
     </div>
   </footer>
+  <LanguageNavigation />
   <BackToTop />
   <OliviaChat />
 </body>

@@ -1,0 +1,53 @@
+<script>
+  import { languageHash } from '../lib/languageRoutes.mjs';
+
+  const storageKey = 'etapel-language-navigation';
+  const filterSelectors = ['[data-interest-filter]', '[data-subline-filter]', '[data-pattern-filter]', '[data-nozzle-filter]', '[data-catalog-search]'];
+  document.querySelectorAll<HTMLAnchorElement>('[data-language-switch]').forEach((link) => {
+    link.addEventListener('click', () => {
+      const destination = new URL(link.href);
+      const english = destination.pathname.startsWith('/en');
+      destination.search = window.location.search;
+      destination.hash = languageHash(window.location.hash, english);
+      link.href = destination.href;
+      const section = [...document.querySelectorAll<HTMLElement>('[data-language-section]')]
+        .find((element) => element.getBoundingClientRect().top <= 150 && element.getBoundingClientRect().bottom > 150);
+      const filters = filterSelectors.map((selector) => ({ selector, value: document.querySelector<HTMLInputElement | HTMLSelectElement>(selector)?.value }));
+      try {
+        sessionStorage.setItem(storageKey, JSON.stringify({
+          path: destination.pathname.replace(/\/+$/, '') || '/',
+          y: window.scrollY,
+          section: section?.dataset.languageSection,
+          offset: section?.getBoundingClientRect().top,
+          filters,
+          time: Date.now(),
+        }));
+      } catch { /* Navigation still works when browser storage is unavailable. */ }
+    });
+  });
+
+  const restore = () => {
+    try {
+      const saved = sessionStorage.getItem(storageKey);
+      if (!saved) return;
+      const state = JSON.parse(saved);
+      if (state.path !== (location.pathname.replace(/\/+$/, '') || '/') || Date.now() - state.time > 60000) return;
+      sessionStorage.removeItem(storageKey);
+      for (const filter of state.filters) {
+        const input = document.querySelector<HTMLInputElement | HTMLSelectElement>(filter.selector);
+        if (input && typeof filter.value === 'string') {
+          input.value = filter.value;
+          input.dispatchEvent(new Event('input', { bubbles: true }));
+          input.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+      }
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        const section = [...document.querySelectorAll<HTMLElement>('[data-language-section]')].find((element) => element.dataset.languageSection === state.section);
+        const top = section ? section.getBoundingClientRect().top + window.scrollY - state.offset : state.y;
+        window.scrollTo({ top, behavior: 'instant' });
+      }));
+    } catch { /* A stale or unavailable stored state must not block the page. */ }
+  };
+  if (document.readyState === 'complete') restore();
+  else window.addEventListener('load', restore, { once: true });
+</script>

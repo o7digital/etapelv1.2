@@ -1,4 +1,6 @@
 ---
+import { familyEnglish } from '../../data/familyEnglish';
+import { languagePath } from '../../lib/languageRoutes.mjs';
 import SiteLayout from '../../layouts/SiteLayout.astro';
 import AfterSalesPhoto from '../../components/AfterSalesPhoto.astro';
 import CedetecGallery from '../../components/CedetecGallery.astro';
@@ -86,19 +88,7 @@ const content = pages[page as keyof typeof pages];
 const isContact = page === 'contact';
 const isHome = page === '';
 const isProductLines = page === 'product-lines';
-const familyEnglish: Record<string, { short: string; title: string; description: string }> = {
-  'pintura-y-aplicacion': { short: 'Paint & application', title: 'Paint & application', description: 'Professional paint application equipment and systems.' },
-  'preparacion-y-acabado': { short: 'Preparation & finishing', title: 'Preparation & finishing', description: 'Sanding, extraction, polishing and finishing systems.' },
-  'enderezado-de-carroceria': { short: 'Body straightening', title: 'Body straightening', description: 'Straightening, measuring and alignment equipment.' },
-  'desabollado-de-carroceria': { short: 'Dent repair', title: 'Body dent repair', description: 'Dent repair, welding, pulling and plastic repair.' },
-  'cargadores-y-arrancadores-de-baterias': { short: 'Battery service', title: 'Battery chargers & starters', description: 'Battery charging, starting and testing equipment.' },
-  pintura: { short: 'Paint', title: 'Paint', description: 'Automotive, industrial and powder coatings.' },
-  mecanica: { short: 'Mechanical service', title: 'Mechanical service', description: 'Lifting, diagnostics, wheel service, A/C and ADAS.' },
-  'consumibles-de-pintura': { short: 'Paint consumables', title: 'Paint consumables', description: 'Abrasives, masking, polishing and protection.' },
-  'consumibles-de-hojalateria': { short: 'Bodywork consumables', title: 'Bodywork consumables', description: 'Fillers, sealants and tool consumables.' },
-  'herramientas-de-hojalateria': { short: 'Bodywork tools', title: 'Bodywork tools', description: 'Pneumatic, hydraulic and manual tools.' },
-  detallado: { short: 'Detailing', title: 'Detailing', description: 'Professional polishers and pads.' },
-};
+
 ---
 
 <SiteLayout title={content.title} description={content.description} lang="en">
@@ -124,7 +114,7 @@ const familyEnglish: Record<string, { short: string; title: string; description:
       <section class="page-hero">
         <div class="page-hero-inner">
           <div><span class="eyebrow"><span class="dot"></span> Product Lines</span><h1>Solutions organized by family for professional body shops.</h1><p>Browse the catalog by category, subfamily and product page through a clear, professional structure.</p><div class="hero-actions"><a class="btn orange" href="#product-catalog">View products</a><a class="btn outline" href="#families">View families</a></div></div>
-          <div class="hero-panel"><div class="hero-panel-grid">{productFamilies.map((family) => <a class="hero-chip" href={family.href}>{familyEnglish[family.slug]?.short ?? family.shortTitle}</a>)}</div></div>
+          <div class="hero-panel"><div class="hero-panel-grid">{productFamilies.map((family) => <a class="hero-chip" href={languagePath(family.href)}>{familyEnglish[family.slug]?.short ?? family.shortTitle}</a>)}</div></div>
         </div>
       </section>
     ) : page === 'about-us' ? (
@@ -199,13 +189,13 @@ const familyEnglish: Record<string, { short: string; title: string; description:
     )}
 
     {isHome && <div class="home-parity">
-      <section class="home-sectors" id="sectors"><div class="container"><div class="section-head"><div><div class="label">Which industry can we help you with?</div><h2>Solutions for every sector.</h2></div><p>Select your sector to find equipment, consumables and services tailored to your operation.</p></div><div class="sector-grid">
+      <section data-language-section="sectors" class="home-sectors" id="sectors"><div class="container"><div class="section-head"><div><div class="label">Which industry can we help you with?</div><h2>Solutions for every sector.</h2></div><p>Select your sector to find equipment, consumables and services tailored to your operation.</p></div><div class="sector-grid">
         <article class="sector-card automotive"><b>01</b><h3>Automotive, collision & refinishing</h3><p>Equipment, tools and solutions for automotive maintenance and service.</p><a href="/en/product-lines">Explore solutions →</a></article>
         <article class="sector-card industry"><b>02</b><h3>Industry</h3><p>Equipment, consumables and solutions for high-performance industrial applications.</p><a href="/en/product-lines">Explore solutions →</a></article>
         <article class="sector-card transport"><b>03</b><h3>Heavy transport</h3><p>Solutions for trucks, tractor-trailers and high-volume operations.</p><a href="/en/product-lines">Explore solutions →</a></article>
       </div></div></section>
       <section><div class="container home-process"><div class="process-copy"><div class="label">Comprehensive solutions</div><h2>From a need to a complete solution.</h2><p>We support you throughout the process so your investment delivers greater productivity, quality and profitability.</p>{[['01','Assessment','We understand your space, operation and objectives.'],['02','Solution design','We integrate equipment and tailored processes.'],['03','Implementation','We install and commission the solution.'],['04','Training','We prepare your team to operate with confidence.'],['05','After-sales','We maintain the performance of your investment.']].map(v=><div class="process-step"><b>{v[0]}</b><span><strong>{v[1]}</strong>{v[2]}</span></div>)}</div><img src="/slider/lorenzo-hamers-K2bNjPOUzSQ-unsplash.webp" alt="Vehicle in a professional workshop" /></div></section>
-      <section class="featured-products"><div class="container"><div class="section-head"><div><div class="label">Technology you need to know</div><h2>Featured equipment.</h2></div><a class="btn outline-dark" href="/en/product-lines">View all equipment</a></div><div class="featured-grid">
+      <section class="featured-products" data-language-section="featured-products"><div class="container"><div class="section-head"><div><div class="label">Technology you need to know</div><h2>Featured equipment.</h2></div><a class="btn outline-dark" href="/en/product-lines">View all equipment</a></div><div class="featured-grid">
         <a href="/en/product-lines/products/sata-jet-x"><div><img src="/images/products/sata/jet-x/1200394-main.webp" alt="SATA jet X" /></div><small>Paint & application</small><h3>SATA jet X</h3><p>Premium automotive refinishing spray gun with X-nozzle technology.</p><b>→</b></a>
         <a href="/en/product-lines/products/catalogo-benchracktm-versa"><div><img src="/images/products/car-o-liner-benchrack-hero.jpg" alt="Car-O-Liner BENCHRACK" /></div><small>Body straightening</small><h3>Car-O-Liner BENCHRACK™</h3><p>Versatile straightening bench for precise and productive structural repairs.</p><b>→</b></a>
         <a href="/en/product-lines/products/catalogo-cabinas-de-pintura-usi-italia"><div><img src="/images/products/usi-chronotech.png" alt="USI Italia CHRONOTECH spray booth" /></div><small>Spray booths</small><h3>USI Italia CHRONOTECH</h3><p>Automotive refinishing spray booth with process control and energy efficiency.</p><b>→</b></a>
@@ -221,7 +211,7 @@ const familyEnglish: Record<string, { short: string; title: string; description:
       </div></div></section>
       <section><div class="container certification"><div><div class="label">Certified quality</div><h2>Our commitment is certified.</h2><p>We work with an integrated management system focused on quality, the environment and the safety of our team.</p><a class="btn orange" href="/en/about-us">Learn more about us</a></div><div class="certification-grid">{[['ISO 9001','Quality management'],['ISO 14001','Environmental management'],['ISO 45001','Occupational health and safety']].map(v=><article><i>✓</i><strong>{v[0]}</strong><span>{v[1]}</span></article>)}</div></div></section>
     </div>}
-    {isProductLines && <><ProductFamilyMenu lang="en" /><div id="product-catalog"><ProductCatalog lang="en" /></div></>}
+    {isProductLines && <><ProductFamilyMenu lang="en" /><ProductCatalog lang="en" /></>}
     {isContact && <section class="contact-details"><div class="container">
       <div class="contact-main">
         <div>

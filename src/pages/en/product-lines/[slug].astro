@@ -1,0 +1,12 @@
+---
+import ProductFamilyPage from '../../linea-de-producto/[slug].astro';
+import { productFamilies, legacyFamilyRoutes, type ProductFamily } from '../../../data/productLines';
+export function getStaticPaths() {
+  return [
+    ...productFamilies.map((family) => ({ params: { slug: family.slug }, props: { family } })),
+    ...Object.entries(legacyFamilyRoutes).map(([slug, target]) => ({ params: { slug }, props: { family: productFamilies.find((item) => item.slug === target)! } })),
+  ];
+}
+const { family } = Astro.props as { family: ProductFamily };
+---
+<ProductFamilyPage family={family} lang="en" />

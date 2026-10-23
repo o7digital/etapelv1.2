@@ -84,7 +84,7 @@ const englishSummary = (product: (typeof initialProducts)[number]) =>
   }
 </style>
 
-<section id="catalogo-productos" class="catalog-section">
+<section id={en ? "product-catalog" : "catalogo-productos"} class="catalog-section" data-language-section="catalog">
   <div class="container">
     <div class="section-head">
       <div>

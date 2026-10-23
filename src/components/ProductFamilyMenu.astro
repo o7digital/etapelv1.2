@@ -1,4 +1,5 @@
 ---
+import { languagePath } from '../lib/languageRoutes.mjs';
 import { catalogProducts } from '../data/products';
 import { productFamilies, type ProductFamily } from '../data/productLines';
 import { catalogLinesForFamily } from '../data/catalogHierarchy';
@@ -41,7 +42,7 @@ const groupsFor = (item: ProductFamily) => {
 const lineHref = (group: ReturnType<typeof groupsFor>[number], item?: ProductFamily) => {
   if (group.externalHref) return group.externalHref;
   if (group.contactOnly) return en ? '/en/contact#contact-form' : '/contacto#formulario-contacto';
-  if (en) return `/en/product-lines?tipo=${encodeURIComponent(group.name)}#product-catalog`;
+  if (en) return `${item ? languagePath(item.href) : "/en/product-lines"}?tipo=${encodeURIComponent(group.name)}#product-catalog`;
   return `${item?.href || ''}?tipo=${encodeURIComponent(group.name)}#catalogo-productos`;
 };
 
@@ -55,7 +56,7 @@ const sectionsFor = (item: ProductFamily) => {
 ---
 
 {family ? (
-  <section class="product-lines-menu" id="lineas-de-producto">
+  <section class="product-lines-menu" id={en ? "families" : "lineas-de-producto"} data-language-section="product-lines">
     <div class="container">
       <div class="section-head">
         <div>
@@ -103,7 +104,7 @@ const sectionsFor = (item: ProductFamily) => {
     </div>
   </section>
 ) : (
-  <section class="product-family-menu" id={en ? 'families' : 'familias'}>
+  <section class="product-family-menu" id={en ? 'families' : 'familias'} data-language-section="families">
     <div class="container">
       <div class="section-head">
         <div>
@@ -118,12 +119,12 @@ const sectionsFor = (item: ProductFamily) => {
           const translation = familyEnglish[item.slug];
           return (
             <article class="family-directory-card">
-              <a class="family-directory-image" href={item.href}>
+              <a class="family-directory-image" href={en ? languagePath(item.href) : item.href}>
                 <img src={item.image} alt={translation?.title || item.title} loading="lazy" />
               </a>
               <div class="family-directory-copy">
                 <div class="family-number">{String(productFamilies.indexOf(item) + 1).padStart(2, '0')}</div>
-                <h3><a href={item.href}>{en ? translation?.title || item.title : item.title}</a></h3>
+                <h3><a href={en ? languagePath(item.href) : item.href}>{en ? translation?.title || item.title : item.title}</a></h3>
                 <p>{en ? translation?.description || item.menuDescription : item.menuDescription}</p>
                 <div class="family-lines">
                   {groups.map((group) => (
@@ -132,7 +133,7 @@ const sectionsFor = (item: ProductFamily) => {
                     </a>
                   ))}
                 </div>
-                <a class="family-cta" href={en ? '/en/product-lines#product-catalog' : item.href}>{en ? 'View all product lines' : 'Ver todas las líneas'} <span>→</span></a>
+                <a class="family-cta" href={en ? languagePath(item.href) : item.href}>{en ? 'View all product lines' : 'Ver todas las líneas'} <span>→</span></a>
               </div>
             </article>
           );
