@@ -54,9 +54,9 @@ const familyNameEn: Record<string, string> = {
   consumibles: 'workshop consumables',
 };
 const productArea = familyNameEn[product.familySlug] || 'automotive workshop';
-const displaySummary = en ? `${product.name}: professional ${productArea} solution.` : product.summary;
+const displaySummary = en ? product.summaryEn || `${product.name}: professional ${productArea} solution.` : product.summary;
 const displayDescription = en
-  ? `${product.name} is part of Etapel’s professional product range. Our team provides product selection guidance, technical advice and quotation support according to your workshop process and application requirements.`
+  ? product.descriptionEn || `${product.name} is part of Etapel’s professional product range. Our team provides product selection guidance, technical advice and quotation support according to your workshop process and application requirements.`
   : product.description;
 const slides = product.highlightSlides || product.highlights;
 const displaySlides = en

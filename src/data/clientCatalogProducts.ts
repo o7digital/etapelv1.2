@@ -9,6 +9,10 @@ interface ClientCatalogSeed {
   category: string;
   sourceUrl?: string;
   image: string;
+  summary?: string;
+  summaryEn?: string;
+  description?: string;
+  descriptionEn?: string;
   specs: CatalogProduct['specs'];
   downloads: NonNullable<CatalogProduct['downloads']>;
 }
@@ -554,13 +558,13 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
   },
   {
     "slug": "pointx-ii",
-    "name": "POINTX® II",
+    "name": "Car-O-Liner POINTX® II",
     "brand": "Car-O-Liner",
     "familySlug": "soldadura-y-enderezado",
     "division": "Enderezado de carroceria",
     "category": "Equipos de medición",
     "sourceUrl": "https://car-o-liner.com/es/producto/pointx-ii/",
-    "image": "/images/products/client-catalog/pointx-ii.webp",
+    "image": "/images/products/pointx-ii-official.jpg",
     "specs": [],
     "downloads": [
       {
@@ -571,7 +575,11 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
         "label": "Información del fabricante",
         "url": "https://car-o-liner.com/es/producto/pointx-ii/"
       }
-    ]
+    ],
+    "summary": "Herramienta de medición diagnóstica para verificar la geometría de la carrocería con rapidez y precisión.",
+    "summaryEn": "Diagnostic measuring tool for fast, accurate checks of vehicle body geometry.",
+    "description": "POINTX II combina un brazo ligero de fibra de carbono con medición punto a punto, pantalla en color y comunicación Bluetooth. Se integra con Vision2 PointX y Car-O-Data para apoyar el diagnóstico de carrocería.",
+    "descriptionEn": "POINTX II combines a lightweight carbon-fibre arm with point-to-point measurement, a colour display and Bluetooth connectivity. It works with Vision2 PointX and Car-O-Data to support body repair diagnostics."
   },
   {
     "slug": "car-o-tronic",
@@ -1578,13 +1586,13 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
   },
   {
     "slug": "nitro-fuzer-classic-nitrogen-plastic-welder-with-cart",
-    "name": "Nitro-Fuzer Classic Nitrogen Plastic Welder - With Cart",
+    "name": "Polyvance Nitro-Fuzer® Classic",
     "brand": "Polyvance",
     "familySlug": "soldadura-y-enderezado",
     "division": "Desabollo de carroceria",
-    "category": "Reparacion de plasticos",
+    "category": "Reparación de plásticos",
     "sourceUrl": "https://www.polyvance.com/products/nitro-fuzer-classic-nitrogen-plastic-welder?variant=46200491606255",
-    "image": "/images/products/client-catalog/nitro-fuzer-classic-nitrogen-plastic-welder-with-cart.webp",
+    "image": "/images/products/polyvance-nitro-fuzer-classic.jpg",
     "specs": [],
     "downloads": [
       {
@@ -1599,7 +1607,11 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
         "label": "Información del fabricante",
         "url": "https://www.polyvance.com/products/nitro-fuzer-classic-nitrogen-plastic-welder?variant=46200491606255"
       }
-    ]
+    ],
+    "summary": "Soldadora de plásticos con nitrógeno y carro para reparar parachoques y componentes automotrices.",
+    "summaryEn": "Nitrogen plastic welder with cart for repairing bumpers and automotive plastic components.",
+    "description": "Nitro-Fuzer Classic permite ajustar la temperatura y el flujo de gas para soldar componentes plásticos. La configuración con carro incluye varillas, puntas de soldadura y regulador para botella de nitrógeno.",
+    "descriptionEn": "Nitro-Fuzer Classic offers adjustable temperature and gas flow for plastic welding. The cart configuration includes welding rods, welding tips and a nitrogen bottle regulator."
   },
   {
     "slug": "nitro-fuzer-touch-nitrogen-plastic-welder-with-cart",
@@ -4828,6 +4840,32 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
         "url": "https://www.rupes.com/es/product/high-performance-fine-finishing-foam-pad-d-a-fine/"
       }
     ]
+  },
+  {
+    "slug": "gys-dentstation-arc-pull-200-pro-230",
+    "brand": "GYS",
+    "familySlug": "soldadura-y-enderezado",
+    "division": "Desabollo de carroceria",
+    "specs": [
+      {
+        "label": "Referencia",
+        "value": "078222"
+      }
+    ],
+    "downloads": [
+      {
+        "label": "Información del fabricante",
+        "url": "https://gys.fr/prod-078222-/-/-/fr?lang=fr"
+      }
+    ],
+    "sourceUrl": "https://gys.fr/prod-078222-/-/-/fr?lang=fr",
+    "name": "GYS DENTSTATION ARC PULL 200 + PRO 230",
+    "category": "Desabollo de carrocería auto y SUV",
+    "summary": "Estación de reparación de abolladuras con ARC PULL 200 y PRO 230, referencia 078222.",
+    "summaryEn": "Dent repair workstation with ARC PULL 200 and PRO 230, reference 078222.",
+    "description": "La DENTSTATION reúne los equipos ARC PULL 200 y PRO 230 en un carro con herramientas y accesorios para organizar los trabajos de reparación de abolladuras en el taller.",
+    "descriptionEn": "DENTSTATION brings together ARC PULL 200 and PRO 230 units on a cart with tools and accessories to organise workshop dent repair tasks.",
+    "image": "/images/products/gys-dentstation-078222.jpg"
   }
 ];
 
@@ -4930,8 +4968,10 @@ export const clientCatalogProducts: CatalogProduct[] = uniqueClientCatalogSeeds.
     interest: category,
     application: division,
     name: seed.name,
-    summary: workbookCopy?.summary || `${seed.name}, solución ${seed.brand} para ${category.toLowerCase()}.`,
-    description: workbookCopy?.description || `Equipo o producto profesional para ${copy.process}. Etapel acompaña la selección de ${seed.name} de acuerdo con la aplicación, capacidad y condiciones reales del taller.`,
+    summaryEn: seed.summaryEn,
+    descriptionEn: seed.descriptionEn,
+    summary: seed.summary || workbookCopy?.summary || `${seed.name}, solución ${seed.brand} para ${category.toLowerCase()}.`,
+    description: seed.description || workbookCopy?.description || `Equipo o producto profesional para ${copy.process}. Etapel acompaña la selección de ${seed.name} de acuerdo con la aplicación, capacidad y condiciones reales del taller.`,
     image,
     gallery,
     badges: [seed.brand, category, division],

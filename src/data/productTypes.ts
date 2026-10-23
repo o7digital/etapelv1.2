@@ -40,6 +40,8 @@ export interface CatalogProduct {
   application: string;
   name: string;
   summary: string;
+  summaryEn?: string;
+  descriptionEn?: string;
   description: string;
   image: string;
   gallery: string[];

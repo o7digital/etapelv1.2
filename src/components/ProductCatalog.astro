@@ -38,7 +38,7 @@ const englishFilterValue = (value: string) => ({
   'Tecnología profesional': 'Professional technology',
 }[value] || value);
 const englishSummary = (product: (typeof initialProducts)[number]) =>
-  `${product.name} — professional ${product.brand} product for ${catalogLineTranslation(product.catalogLine || product.interest || product.category).toLowerCase()}.`;
+  product.summaryEn || `${product.name} — professional ${product.brand} product for ${catalogLineTranslation(product.catalogLine || product.interest || product.category).toLowerCase()}.`;
 ---
 
 <style is:global>
