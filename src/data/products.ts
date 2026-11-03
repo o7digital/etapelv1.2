@@ -591,8 +591,8 @@ const curatedCatalogProducts: CatalogProduct[] = [
     summary: 'Soluciones para ordenar áreas de pintura, mezcla y preparación.',
     description:
       'Proyecto, suministro y acompañamiento para espacios de trabajo que requieren flujo, iluminación, extracción y control del proceso.',
-    image: '/images/cabinas-preparacion.webp',
-    gallery: ['/images/cabinas-preparacion.webp', '/images/featured-lineas.webp'],
+    image: '/images/products/usi-chronotech.png',
+    gallery: ['/images/products/usi-chronotech.png'],
     badges: ['Proyecto', 'Cabina', 'Preparación'],
     specs: [
       { label: 'Área', value: 'Pintura y preparación' },

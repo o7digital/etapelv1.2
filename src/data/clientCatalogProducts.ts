@@ -9,6 +9,7 @@ interface ClientCatalogSeed {
   category: string;
   sourceUrl?: string;
   image: string;
+  gallery?: string[];
   summary?: string;
   summaryEn?: string;
   description?: string;
@@ -135,7 +136,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Pintura y Aplicación",
     "category": "Cabinas de pintura",
     "sourceUrl": "https://www.millibar.it/wp-content/uploads/2020/11/MILLIBAR_Scheda_SDLINE_sc.pdf",
-    "image": "/images/cabinas-preparacion.webp",
+    "image": "/images/products/verified/catalogo-cabinas-de-pintura-millibar.webp",
     "specs": [],
     "downloads": [
       {
@@ -152,7 +153,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Pintura y Aplicación",
     "category": "Zonas de prepracion",
     "sourceUrl": "https://www.usiitalia.com/en/category_products/zones-en/",
-    "image": "https://www.usiitalia.com/wp-content/uploads/2021/07/prod_2-optimized.png",
+    "image": "/images/products/verified/catalogo-zonas-de-prepracion-usi-italia.webp",
     "specs": [],
     "downloads": [
       {
@@ -169,7 +170,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Pintura y Aplicación",
     "category": "Zonas de prepracion",
     "sourceUrl": "https://www.millibar.it/products/preparation-areas/",
-    "image": "/images/cabinas-preparacion.webp",
+    "image": "/images/products/verified/catalogo-zonas-de-prepracion-millibar.webp",
     "specs": [],
     "downloads": [
       {
@@ -186,7 +187,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Pintura y Aplicación",
     "category": "Tecnologia de filtros y aire comprimido",
     "sourceUrl": "https://www.speritex.com/en/",
-    "image": "/images/mecanica-aire.webp",
+    "image": "/images/products/verified/catalogo-plenum.webp",
     "specs": [],
     "downloads": [
       {
@@ -203,7 +204,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Pintura y Aplicación",
     "category": "Tecnologia de filtros y aire comprimido",
     "sourceUrl": "",
-    "image": "/images/mecanica-aire.webp",
+    "image": "/images/products/verified/catalogo-bolsa.webp",
     "specs": [],
     "downloads": []
   },
@@ -215,7 +216,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Pintura y Aplicación",
     "category": "Tecnologia de filtros y aire comprimido",
     "sourceUrl": "",
-    "image": "/images/mecanica-aire.webp",
+    "image": "/images/products/verified/catalogo-piso.webp",
     "specs": [],
     "downloads": []
   },
@@ -227,7 +228,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Pintura y Aplicación",
     "category": "Tecnologia de filtros y aire comprimido",
     "sourceUrl": "",
-    "image": "/images/mecanica-aire.webp",
+    "image": "/images/products/verified/catalogo-tecnologia-de-filtros-y-aire-comprimido-prevost.webp",
     "specs": [],
     "downloads": []
   },
@@ -273,7 +274,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Pintura y Aplicación",
     "category": "Lamparas Infrarojo",
     "sourceUrl": "https://www.hedson.com/products/irt-prep-3/",
-    "image": "/images/products/client-catalog/prepcure.webp",
+    "image": "/images/products/verified/catalogo-irt-prep-3.webp",
     "specs": [],
     "downloads": [
       {
@@ -302,7 +303,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Pintura y Aplicación",
     "category": "Lamparas Infrarojo",
     "sourceUrl": "https://www.hedson.com/products/irt-prep-x-ldp/",
-    "image": "/images/products/client-catalog/prepcure-42.webp",
+    "image": "/images/products/verified/catalogo-irt-prep-x-ldp.webp",
     "specs": [],
     "downloads": [
       {
@@ -331,7 +332,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Pintura y Aplicación",
     "category": "Lamparas Infrarojo",
     "sourceUrl": "https://www.hedson.com/products/irt-prep-4/",
-    "image": "/images/products/client-catalog/prepcure-43.webp",
+    "image": "/images/products/verified/catalogo-irt-prep-4.webp",
     "specs": [],
     "downloads": [
       {
@@ -389,7 +390,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Preparación y acabado",
     "category": "Sistemas de lijado",
     "sourceUrl": "https://www.rupes.com/es/product/45-liter-professional-vacuum-cleaner/",
-    "image": "/images/products/client-catalog/aspirador-profesional-de-45-litros.webp",
+    "image": "/images/products/verified/catalogo-aspirador-profesional-de-45-litros.webp",
     "specs": [],
     "downloads": [
       {
@@ -418,7 +419,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Preparación y acabado",
     "category": "Sistema de pulido",
     "sourceUrl": "https://www.shinemate.com/",
-    "image": "/images/products/client-catalog/sistema-de-pulido-shinemate.webp",
+    "image": "/images/products/verified/catalogo-orbital-polisher-eb351-5-15-shinemate-global.webp",
     "specs": [],
     "downloads": [
       {
@@ -435,7 +436,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Preparación y acabado",
     "category": "Sistema de pulido",
     "sourceUrl": "https://www.rupes.com/es/product/random-orbital-polisher-bigfoot-lhr21-mark-v/",
-    "image": "/images/products/client-catalog/pulidora-orbital-aleatoria-bigfoot-lhr21-mark-v.webp",
+    "image": "/images/products/verified/catalogo-pulidora-orbital-aleatoria-bigfoot-lhr21-mark-v.webp",
     "specs": [
       {
         "label": "Ø backing pad (mm/in)",
@@ -489,7 +490,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Preparación y acabado",
     "category": "Sistema de pulido",
     "sourceUrl": "",
-    "image": "/images/products/sata/jet-x/1200394-main.webp",
+    "image": "/images/products/verified/catalogo-borlas-rupes.webp",
     "specs": [],
     "downloads": []
   },
@@ -631,7 +632,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Enderezado de carroceria",
     "category": "Accesorios car o liner",
     "sourceUrl": "",
-    "image": "/images/category-soldadoras.webp",
+    "image": "/images/products/verified/catalogo-evo-1-2-y-3.webp",
     "specs": [],
     "downloads": []
   },
@@ -643,7 +644,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Enderezado de carroceria",
     "category": "Alineacion y Enderezado Vehiculos pesados",
     "sourceUrl": "https://josam.se/es/product/cam-aligner/",
-    "image": "/images/category-soldadoras.webp",
+    "image": "/images/products/verified/catalogo-cam-alinger.webp",
     "specs": [],
     "downloads": [
       {
@@ -689,7 +690,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Enderezado de carroceria",
     "category": "Alineacion y Enderezado Vehiculos pesados",
     "sourceUrl": "https://josam.se/es/products/calentamiento-por-induccion/",
-    "image": "/images/category-soldadoras.webp",
+    "image": "/images/products/client-catalog/jh1500.webp",
     "specs": [],
     "downloads": [
       {
@@ -948,7 +949,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Desabollo de carroceria",
     "category": "Desabollo de carroceria auto y SUV",
     "sourceUrl": "https://www.telwin.com/intl/es/productos/sistemas-smart-repair/804930",
-    "image": "/images/category-soldadoras.webp",
+    "image": "/images/products/verified/catalogo-sistemas-de-traccion-para-enderezado.webp",
     "specs": [],
     "downloads": [
       {
@@ -1646,7 +1647,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Desabollo de carroceria",
     "category": "Reparacion de plasticos",
     "sourceUrl": "https://www.polyvance.com/products/nitro-fuzer-classic-nitrogen-plastic-welder?variant=46200491573487",
-    "image": "/images/products/client-catalog/nitro-fuzer-classic-nitrogen-plastic-welder-with-cart-114.webp",
+    "image": "/images/products/verified/catalogo-nitro-fuzer-classic-nitrogen-plastic-welder-with-cart-2.webp",
     "specs": [],
     "downloads": [
       {
@@ -1849,7 +1850,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Pintura",
     "category": "PPG automotriz",
     "sourceUrl": "https://www.ppg.com/en-US/refinish/products/deltron-nxt",
-    "image": "/images/products/client-catalog/deltron-nxt.webp",
+    "image": "/images/products/verified/catalogo-deltron-nxt.webp",
     "specs": [],
     "downloads": [
       {
@@ -1878,7 +1879,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Pintura",
     "category": "PPG automotriz",
     "sourceUrl": "https://www.ppg.com/es-ES/automotive-refinish/autolux",
-    "image": "/images/products/sata/jet-x/1200394-main.webp",
+    "image": "/images/products/verified/catalogo-autolux.webp",
     "specs": [],
     "downloads": [
       {
@@ -1965,7 +1966,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Pintura",
     "category": "Pintura en Polvo",
     "sourceUrl": "https://www.ppg.com/en-US/industrialcoatings/powder-coatings/envirocron-extreme-protection-edge-plus",
-    "image": "/images/products/sata/jet-x/1200394-main.webp",
+    "image": "/images/products/verified/catalogo-envirocron-extreme-protection-edge-plus.webp",
     "specs": [],
     "downloads": [
       {
@@ -2069,9 +2070,15 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Mecanica",
     "category": "Rampas y elevadores  EAE",
     "sourceUrl": "",
-    "image": "/images/mecanica-aire.webp",
+    "image": "/images/products/verified/catalogo-rampas-y-elevadores-eae.webp",
     "specs": [],
-    "downloads": []
+    "downloads": [],
+    "gallery": [
+      "/images/products/verified/catalogo-rampas-y-elevadores-eae.webp",
+      "/images/products/verified/catalogo-rampas-y-elevadores-eae-2.webp",
+      "/images/products/verified/catalogo-rampas-y-elevadores-eae-3.webp",
+      "/images/products/verified/catalogo-rampas-y-elevadores-eae-4.webp"
+    ]
   },
   {
     "slug": "scanner",
@@ -2081,9 +2088,13 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Mecanica",
     "category": "Scanner",
     "sourceUrl": "",
-    "image": "/images/mecanica-aire.webp",
+    "image": "/images/products/verified/catalogo-scanner.webp",
     "specs": [],
-    "downloads": []
+    "downloads": [],
+    "gallery": [
+      "/images/products/verified/catalogo-scanner.webp",
+      "/images/products/verified/catalogo-scanner-2.webp"
+    ]
   },
   {
     "slug": "geoliner-609",
@@ -2138,62 +2149,69 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
   },
   {
     "slug": "monty-3300-20-smart-gp-plus",
-    "name": "monty® 3300-20 SMART GP PLUS",
-    "brand": "Hofmann",
+    "name": "Desmontadora de neumáticos — Bright",
+    "brand": "Bright",
     "familySlug": "mecanica-y-aire",
     "division": "Mecanica",
     "category": "Desmontadora",
-    "sourceUrl": "https://hofmann-equipment.com/la-es/monty-3300-20",
-    "image": "/images/products/client-catalog/monty-3300-20-smart-gp-plus.webp",
+    "sourceUrl": "",
+    "image": "/images/products/verified/catalogo-monty-3300-20-smart-gp-plus.webp",
     "specs": [
       {
-        "label": "EEWH765AEP",
-        "value": "monty® 3300-20 SMART PLUS no tsbs"
+        "label": "Sujeción exterior",
+        "value": "10–22 pulgadas"
       },
       {
-        "label": "EEWH765AE9",
-        "value": "monty® 3300-20 SMART EM no tsbs, plus kit"
+        "label": "Sujeción interior",
+        "value": "12–25 pulgadas"
       },
       {
-        "label": "EEWH765AE1",
-        "value": "monty® 3300-20 SMART no tsbs, plus kit, em"
+        "label": "Diámetro máximo de rueda",
+        "value": "1010 mm"
       },
       {
-        "label": "EEWH765AEG",
-        "value": "monty® 3300-20 SMART GP no plus kit"
+        "label": "Presión de trabajo",
+        "value": "8–10 bar"
+      },
+      {
+        "label": "Peso neto",
+        "value": "225 kg"
       }
     ],
-    "downloads": [
-      {
-        "label": "descargar",
-        "url": "https://hofmann-equipment.com/uploads/media-pdf-files/sswh23019 - monty 3550_LA-ES.pdf"
-      },
-      {
-        "label": "Información del fabricante",
-        "url": "https://hofmann-equipment.com/la-es/monty-3300-20"
-      }
-    ]
+    "downloads": []
   },
   {
     "slug": "geodyna-7100",
-    "name": "geodyna® 7100",
-    "brand": "Hofmann",
+    "name": "Balanceadora de ruedas — Bright",
+    "brand": "Bright",
     "familySlug": "mecanica-y-aire",
     "division": "Mecanica",
     "category": "Balanceadoras",
-    "sourceUrl": "https://hofmann-equipment.com/la-es/geodyna-7100",
-    "image": "/images/products/client-catalog/geodyna-7100.webp",
-    "specs": [],
-    "downloads": [
+    "sourceUrl": "",
+    "image": "/images/products/verified/catalogo-geodyna-7100.webp",
+    "specs": [
       {
-        "label": "descargar",
-        "url": "https://hofmann-equipment.com/uploads/media-pdf-files/sswb23028 - geodyna 7100_LA-ES.pdf"
+        "label": "Diámetro de la llanta",
+        "value": "10–24 pulgadas"
       },
       {
-        "label": "Información del fabricante",
-        "url": "https://hofmann-equipment.com/la-es/geodyna-7100"
+        "label": "Peso máximo de rueda",
+        "value": "65 kg"
+      },
+      {
+        "label": "Diámetro máximo de rueda",
+        "value": "1000 mm"
+      },
+      {
+        "label": "Precisión",
+        "value": "1 g"
+      },
+      {
+        "label": "Peso neto",
+        "value": "107 kg"
       }
-    ]
+    ],
+    "downloads": []
   },
   {
     "slug": "breeze-iv",
@@ -2203,7 +2221,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Mecanica",
     "category": "Aire acondicionado",
     "sourceUrl": "https://eu.sun-workshopsolutions.com/es/products/airconditioning/breeze-iv",
-    "image": "/images/products/client-catalog/breeze-iv.webp",
+    "image": "/images/products/verified/catalogo-breeze-iv.webp",
     "specs": [],
     "downloads": [
       {
@@ -2224,7 +2242,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Mecanica",
     "category": "Aire acondicionado",
     "sourceUrl": "https://eu.sun-workshopsolutions.com/es/products/airconditioning/blizzard-qtech-iv",
-    "image": "/images/products/client-catalog/blizzard-qtech-iv.webp",
+    "image": "/images/products/verified/catalogo-blizzard-qtech-iv.webp",
     "specs": [],
     "downloads": [
       {
@@ -2291,7 +2309,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles pintura",
     "category": "Lijas",
     "sourceUrl": "",
-    "image": "/images/products/sata/catalog/rps-the-original.webp",
+    "image": "/images/products/verified/catalogo-tecnologia-ceramica.webp",
     "specs": [],
     "downloads": []
   },
@@ -2303,7 +2321,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles pintura",
     "category": "Lijas",
     "sourceUrl": "https://en.kovax.com/products/premium/",
-    "image": "/images/products/client-catalog/premium.webp",
+    "image": "/images/products/verified/catalogo-premium.webp",
     "specs": [],
     "downloads": [
       {
@@ -2504,7 +2522,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles pintura",
     "category": "Enmascarado",
     "sourceUrl": "",
-    "image": "/images/products/sata/catalog/rps-the-original.webp",
+    "image": "/images/products/verified/catalogo-protectores.webp",
     "specs": [],
     "downloads": []
   },
@@ -2516,7 +2534,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles pintura",
     "category": "Pulimento",
     "sourceUrl": "https://www.rupes.com/es/category-product/consumables/consumables-polishing-compounds/",
-    "image": "/images/products/client-catalog/compuestos-para-pulido.webp",
+    "image": "/images/products/verified/catalogo-compuestos-para-pulido.webp",
     "specs": [],
     "downloads": [
       {
@@ -2545,7 +2563,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles pintura",
     "category": "Pulimento",
     "sourceUrl": "https://www.farecla.com/es/products/pulimento-de-corte-g3-premium",
-    "image": "/images/products/sata/catalog/rps-the-original.webp",
+    "image": "/images/products/verified/catalogo-pulimento-de-corte-g3-premium.webp",
     "specs": [],
     "downloads": [
       {
@@ -2562,7 +2580,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles pintura",
     "category": "Pulimento",
     "sourceUrl": "https://detroitsurfacecare.com/collections/compounds-1",
-    "image": "/images/products/client-catalog/compounds.webp",
+    "image": "/images/products/verified/catalogo-compounds.webp",
     "specs": [],
     "downloads": [
       {
@@ -2579,7 +2597,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles pintura",
     "category": "Pulimento",
     "sourceUrl": "https://www.farecla.com/es/products/almohadilla-de-corte-super-alto-g-mop-rojo",
-    "image": "/images/products/sata/catalog/rps-the-original.webp",
+    "image": "/images/products/verified/catalogo-borlas-frecla.webp",
     "specs": [],
     "downloads": [
       {
@@ -2596,7 +2614,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles pintura",
     "category": "Pulimento",
     "sourceUrl": "https://www.rupes.com/es/category-product/consumables/consumables-polishing-pads/",
-    "image": "/images/products/client-catalog/almohadillas-de-pulido.webp",
+    "image": "/images/products/verified/catalogo-almohadillas-de-pulido.webp",
     "specs": [],
     "downloads": [
       {
@@ -2991,7 +3009,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles pintura",
     "category": "Otros",
     "sourceUrl": "",
-    "image": "/images/products/sata/catalog/rps-the-original.webp",
+    "image": "/images/products/verified/catalogo-coladores.webp",
     "specs": [],
     "downloads": []
   },
@@ -3159,7 +3177,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles pintura",
     "category": "Otros",
     "sourceUrl": "",
-    "image": "/images/products/sata/catalog/rps-the-original.webp",
+    "image": "/images/products/verified/catalogo-coagulante-para-lavadoras-base-agua.webp",
     "specs": [],
     "downloads": []
   },
@@ -3258,7 +3276,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles de hojalateria",
     "category": "Masillas y rellenadores",
     "sourceUrl": "https://www.evercoat.com/es/product/100382-z-grip-optex-gallon/",
-    "image": "/images/products/sata/catalog/rps-the-original.webp",
+    "image": "/images/products/verified/catalogo-z-grip-optex-gallon.webp",
     "specs": [],
     "downloads": [
       {
@@ -3298,15 +3316,33 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
   },
   {
     "slug": "masilla-acrilica-fina-beige-200gr",
-    "name": "MASILLA ACRÍLICA FINA BEIGE 200gr",
-    "brand": "Etapel",
+    "name": "Evercoat Everglaze — tubo rojo de 1 lb",
+    "brand": "Evercoat",
     "familySlug": "consumibles",
     "division": "Consumibles de hojalateria",
     "category": "Masillas y rellenadores",
-    "sourceUrl": "",
-    "image": "/images/products/sata/catalog/rps-the-original.webp",
-    "specs": [],
-    "downloads": []
+    "sourceUrl": "https://www.evercoat.com/product/everglaze-1-lb-tube-red/",
+    "image": "/images/products/verified/catalogo-masilla-acrilica-fina-beige-200gr.webp",
+    "specs": [
+      {
+        "label": "Referencia",
+        "value": "100403"
+      },
+      {
+        "label": "Presentación",
+        "value": "Tubo de 1 lb (16 oz)"
+      },
+      {
+        "label": "Color",
+        "value": "Rojo"
+      }
+    ],
+    "downloads": [
+      {
+        "label": "Información del fabricante",
+        "url": "https://www.evercoat.com/product/everglaze-1-lb-tube-red/"
+      }
+    ]
   },
   {
     "slug": "undercoating-m80-repaintable",
@@ -3354,7 +3390,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles de hojalateria",
     "category": "Antipiedras y selladores",
     "sourceUrl": "",
-    "image": "/images/products/sata/catalog/rps-the-original.webp",
+    "image": "/images/products/verified/catalogo-sellador-auto-adherible-antirruido-de-25-x-50-cm-cja-c-8-pzs.webp",
     "specs": [],
     "downloads": []
   },
@@ -3366,7 +3402,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles de hojalateria",
     "category": "Antipiedras y selladores",
     "sourceUrl": "",
-    "image": "/images/products/sata/catalog/rps-the-original.webp",
+    "image": "/images/products/verified/catalogo-masilla-p-carroceria-sellador-gris.webp",
     "specs": [],
     "downloads": []
   },
@@ -3378,7 +3414,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles de hojalateria",
     "category": "Consumibles herramientas",
     "sourceUrl": "https://planet.gys.fr/prod-049444-/_/_/es?lang=es",
-    "image": "/images/products/client-catalog/100-arandelas-8x16mm.webp",
+    "image": "/images/products/verified/catalogo-100-arandelas-8x16mm.webp",
     "specs": [
       {
         "label": "Referencia",
@@ -3408,7 +3444,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles de hojalateria",
     "category": "Consumibles herramientas",
     "sourceUrl": "",
-    "image": "/images/products/sata/catalog/rps-the-original.webp",
+    "image": "/images/products/verified/catalogo-lapiz-de-carbon.webp",
     "specs": [],
     "downloads": []
   },
@@ -3570,7 +3606,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Consumibles de hojalateria",
     "category": "Consumibles herramientas",
     "sourceUrl": "",
-    "image": "/images/products/sata/catalog/rps-the-original.webp",
+    "image": "/images/products/verified/catalogo-broca-diam-8mm.webp",
     "specs": [],
     "downloads": []
   },
@@ -3581,10 +3617,15 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "familySlug": "consumibles",
     "division": "Consumibles de hojalateria",
     "category": "Consumibles herramientas",
-    "sourceUrl": "",
-    "image": "/images/products/sata/catalog/rps-the-original.webp",
+    "sourceUrl": "https://www.wielanderschill.com/saegeblatt-bi-metall-24-tpi-10-st-197002",
+    "image": "/images/products/verified/catalogo-segueta-24-dientes.webp",
     "specs": [],
-    "downloads": []
+    "downloads": [
+      {
+        "label": "Información del fabricante",
+        "url": "https://www.wielanderschill.com/saegeblatt-bi-metall-24-tpi-10-st-197002"
+      }
+    ]
   },
   {
     "slug": "82202-air-caulking-gun",
@@ -4187,9 +4228,14 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Herramientas hojalateria",
     "category": "Carritos de herramientas",
     "sourceUrl": "",
-    "image": "/images/category-soldadoras.webp",
+    "image": "/images/products/verified/catalogo-carrito-sun-para-electricos.webp",
     "specs": [],
-    "downloads": []
+    "downloads": [],
+    "gallery": [
+      "/images/products/verified/catalogo-carrito-sun-para-electricos.webp",
+      "/images/products/verified/catalogo-carrito-sun-para-electricos-2.webp",
+      "/images/products/verified/catalogo-carrito-sun-para-electricos-3.webp"
+    ]
   },
   {
     "slug": "garlopas-shinemate",
@@ -4199,7 +4245,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Herramientas hojalateria",
     "category": "Manuales??",
     "sourceUrl": "",
-    "image": "/images/category-soldadoras.webp",
+    "image": "/images/products/verified/catalogo-garlopas-shinemate.webp",
     "specs": [],
     "downloads": []
   },
@@ -4367,7 +4413,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Detallado",
     "category": "Pulidoras",
     "sourceUrl": "https://shinemate.com/products/info/2.html",
-    "image": "/images/products/client-catalog/orbital-polisher-eb351-5-15-shinemate-global.webp",
+    "image": "/images/products/verified/catalogo-orbital-polisher-eb351-5-15-shinemate-global.webp",
     "specs": [],
     "downloads": [
       {
@@ -4384,7 +4430,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Detallado",
     "category": "Pulidoras",
     "sourceUrl": "https://shinemate.com/products/info/17.html",
-    "image": "/images/products/client-catalog/rotary-polisher-ep802-shinemate-global.webp",
+    "image": "/images/products/verified/catalogo-rotary-polisher-ep802-shinemate-global.webp",
     "specs": [],
     "downloads": [
       {
@@ -4401,7 +4447,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Detallado",
     "category": "Pulidoras",
     "sourceUrl": "https://shinemate.com/products/info/34.html",
-    "image": "/images/products/client-catalog/orbital-polisher-ex603-shinemate-global.webp",
+    "image": "/images/products/verified/catalogo-orbital-polisher-ex603-shinemate-global.webp",
     "specs": [],
     "downloads": [
       {
@@ -4418,7 +4464,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Detallado",
     "category": "Pulidoras",
     "sourceUrl": "https://shinemate.com/products/info/22.html",
-    "image": "/images/products/client-catalog/orbital-polisher-eb350-5-9-shinemate-global.webp",
+    "image": "/images/products/verified/catalogo-orbital-polisher-eb350-5-9-shinemate-global.webp",
     "specs": [],
     "downloads": [
       {
@@ -4489,7 +4535,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Detallado",
     "category": "Pulidoras",
     "sourceUrl": "https://www.rupes.com/es/product/lhr21iii/",
-    "image": "/images/products/client-catalog/pulidora-orbital-aletoria-bigfoot-lhr21-mark-iii.webp",
+    "image": "/images/products/verified/catalogo-pulidora-orbital-aletoria-bigfoot-lhr21-mark-iii.webp",
     "specs": [
       {
         "label": "Ø platillo (mm/in)",
@@ -4543,7 +4589,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Detallado",
     "category": "Pulidoras",
     "sourceUrl": "https://www.rupes.com/es/product/random-orbital-polisher-bigfoot-lhr15-mark-v/",
-    "image": "/images/products/client-catalog/pulidora-orbital-aleatoria-bigfoot-lhr15-mark-v.webp",
+    "image": "/images/products/verified/catalogo-pulidora-orbital-aleatoria-bigfoot-lhr15-mark-v.webp",
     "specs": [
       {
         "label": "Ø backing pad (mm/in)",
@@ -4597,7 +4643,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Detallado",
     "category": "Pulidoras",
     "sourceUrl": "https://shinemate.com/products/info/56.html",
-    "image": "/images/products/client-catalog/diamond-foam-pad-t120-shinemate-global.webp",
+    "image": "/images/products/verified/catalogo-diamond-foam-pad-t120-shinemate-global.webp",
     "specs": [],
     "downloads": [
       {
@@ -4614,7 +4660,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Detallado",
     "category": "Pulidoras",
     "sourceUrl": "https://shinemate.com/products/info/52.html",
-    "image": "/images/products/sata/jet-x/1200394-main.webp",
+    "image": "/images/products/verified/catalogo-diamond-foam-pad-t10.webp",
     "specs": [],
     "downloads": [
       {
@@ -4631,7 +4677,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Detallado",
     "category": "Pulidoras",
     "sourceUrl": "https://shinemate.com/products/info/69.html",
-    "image": "/images/products/client-catalog/flat-face-foam-pad-t120-shinemate-global.webp",
+    "image": "/images/products/verified/catalogo-flat-face-foam-pad-t120-shinemate-global.webp",
     "specs": [],
     "downloads": [
       {
@@ -4648,7 +4694,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Detallado",
     "category": "Pulidoras",
     "sourceUrl": "https://shinemate.com/products/info/68.html",
-    "image": "/images/products/client-catalog/flat-face-foam-pad-t80-shinemate-global.webp",
+    "image": "/images/products/verified/catalogo-flat-face-foam-pad-t80-shinemate-global.webp",
     "specs": [],
     "downloads": [
       {
@@ -4665,7 +4711,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Detallado",
     "category": "Pulidoras",
     "sourceUrl": "https://shinemate.com/products/info/64.html",
-    "image": "/images/products/client-catalog/flat-face-foam-pad-t10-shinemate-global.webp",
+    "image": "/images/products/verified/catalogo-flat-face-foam-pad-t10-shinemate-global.webp",
     "specs": [],
     "downloads": [
       {
@@ -4682,7 +4728,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Detallado",
     "category": "Pulidoras",
     "sourceUrl": "https://shinemate.com/products/info/59.html",
-    "image": "/images/products/client-catalog/heavy-cut-wool-pad-t160-shinemate-global.webp",
+    "image": "/images/products/verified/catalogo-heavy-cut-wool-pad-t160-shinemate-global.webp",
     "specs": [],
     "downloads": [
       {
@@ -4699,7 +4745,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Detallado",
     "category": "Pulidoras",
     "sourceUrl": "https://shinemate.com/products/info/58.html",
-    "image": "/images/products/client-catalog/heavy-cut-wool-pad-t140-shinemate-global.webp",
+    "image": "/images/products/verified/catalogo-heavy-cut-wool-pad-t140-shinemate-global.webp",
     "specs": [],
     "downloads": [
       {
@@ -4733,7 +4779,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Detallado",
     "category": "Pulidoras",
     "sourceUrl": "https://www.rupes.com/es/product/d-a-coarse-wool-polishing-pad-new/",
-    "image": "/images/products/client-catalog/d-a-coarse-wool-polishing-pad.webp",
+    "image": "/images/products/verified/catalogo-d-a-coarse-wool-polishing-pad.webp",
     "specs": [],
     "downloads": [
       {
@@ -4762,7 +4808,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Detallado",
     "category": "Pulidoras",
     "sourceUrl": "https://www.rupes.com/es/product/smartfix-double-sided-fine-foam-pad/",
-    "image": "/images/products/client-catalog/smartfix-double-sided-fine-foam-pad.webp",
+    "image": "/images/products/verified/catalogo-smartfix-double-sided-fine-foam-pad.webp",
     "specs": [],
     "downloads": [
       {
@@ -4791,7 +4837,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Detallado",
     "category": "Pulidoras",
     "sourceUrl": "https://www.rupes.com/es/product/smartfix-double-sided-coarse-foam-pad/",
-    "image": "/images/products/client-catalog/smartfix-double-sided-coarse-foam-pad.webp",
+    "image": "/images/products/verified/catalogo-smartfix-double-sided-coarse-foam-pad.webp",
     "specs": [],
     "downloads": [
       {
@@ -4820,7 +4866,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "division": "Detallado",
     "category": "Pulidoras",
     "sourceUrl": "https://www.rupes.com/es/product/high-performance-fine-finishing-foam-pad-d-a-fine/",
-    "image": "/images/products/client-catalog/d-a-fine-finishing-foam-pad.webp",
+    "image": "/images/products/verified/catalogo-d-a-fine-finishing-foam-pad.webp",
     "specs": [],
     "downloads": [
       {
@@ -4947,9 +4993,9 @@ export const clientCatalogProducts: CatalogProduct[] = uniqueClientCatalogSeeds.
   const image = seed.image === '/images/products/sata/catalog/rps-the-original.webp'
     ? '/images/products/sata/imported/rps-the-original.webp'
     : seed.image;
-  const gallery = seed.brand === 'Denair'
+  const gallery = seed.gallery || (seed.brand === 'Denair'
     ? [image, '/images/products/client-catalog/denair-compresor-integrado-vista.webp']
-    : [image];
+    : [image]);
   const technicalSpecs = [
     { label: 'Marca', value: seed.brand },
     { label: 'División', value: division },
