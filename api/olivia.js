@@ -12,7 +12,7 @@ export default async function handler(req, res) {
   try {
     const response = await fetch('https://olivia.o7digitalgroup.com/etapel/chat', {
       method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${process.env.OLIVIA_GATEWAY_KEY}`, 'X-Visitor-IP': req.headers['x-vercel-forwarded-for'] || req.headers['x-forwarded-for']?.split(',')[0] || 'unknown' },
-      body: JSON.stringify({ message: body.message.trim(), language: body.language, conversation: body.conversation }), signal: AbortSignal.timeout(57000),
+      body: JSON.stringify({ message: body.message.trim(), language: body.language, conversation: body.conversation, routing: 'POWERFUL' }), signal: AbortSignal.timeout(57000),
     });
     const data = await response.json();
     if (!response.ok) return res.status(response.status === 429 ? 429 : 503).json({ error: 'Olivia unavailable' });
