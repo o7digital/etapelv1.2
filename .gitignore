@@ -3,3 +3,7 @@
 node_modules/
 dist/
 .vercel
+.cms/
+.env
+.env.*
+!.env.example

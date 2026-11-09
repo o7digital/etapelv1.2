@@ -1,3 +1,4 @@
+import { cmsCollection } from '../lib/cms.mjs';
 export interface ProductFamily {
   slug: string;
   title: string;
@@ -23,7 +24,7 @@ const family = (slug: string, title: string, description: string, image: string,
 });
 
 /** Familias dans l'ordre exact de la colonne B du fichier client. */
-export const productFamilies: ProductFamily[] = [
+export const localProductFamilies: ProductFamily[] = [
   family('pintura-y-aplicacion', 'Pintura y Aplicación', 'Equipos, sistemas y accesorios para la aplicación profesional de pintura.', '/images/products/sata/jet-x/1200394-main.webp', ['Pistolas para pintar', 'Cabinas de pintura', 'Zonas de preparación', 'Protección respiratoria', 'Filtros y aire comprimido']),
   family('preparacion-y-acabado', 'Preparación y acabado', 'Sistemas profesionales de lijado, aspiración, pulido y acabado.', '/images/products/client-catalog/lijadora-neumatica-de-palma-orbital-aleatoria-con-plato-de-12-mm-y-orbita-de-3mm-skorpioiii.webp', ['Sistemas de lijado', 'Sistema de pulido']),
   family('enderezado-de-carroceria', 'Enderezado de carrocería', 'Equipos de enderezado, medición y alineación para automóviles y vehículos pesados.', '/images/products/client-catalog/benchracktm-versa.webp', ['Bancos de enderezado', 'Equipos de medición', 'Accesorios Car-O-Liner', 'Vehículos pesados']),
@@ -36,6 +37,8 @@ export const productFamilies: ProductFamily[] = [
   family('herramientas-de-hojalateria', 'Herramientas de hojalatería', 'Herramientas neumáticas, hidráulicas y manuales para trabajos de carrocería.', '/images/products/client-catalog/33500-1-air-spot-drill-with-hook.webp', ['Neumáticas', 'Herramientas manuales']),
   family('detallado', 'Detallado', 'Pulidoras y borlas profesionales para corrección y acabado de superficies.', '/images/products/verified/catalogo-orbital-polisher-eb350-5-9-shinemate-global.webp', ['Pulidoras', 'Borlas'])
 ];
+
+export const productFamilies: ProductFamily[] = cmsCollection('etapel_families', localProductFamilies);
 
 export const legacyFamilyRoutes: Record<string, string> = {
   'equipo-mayor': 'enderezado-de-carroceria',

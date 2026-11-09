@@ -1,0 +1,5 @@
+---
+const studio = import.meta.env.PUBLIC_STUDIO_URL;
+const destination = studio ? new URL(studio).origin : null;
+---
+<!doctype html><html lang="es"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><meta name="robots" content="noindex,nofollow"/>{destination && <meta http-equiv="refresh" content={`0;url=${destination}/`} />}<title>Etapel Studio</title><style>body{margin:0;background:#070b2f;color:white;font:18px system-ui;display:grid;min-height:100vh;place-content:center;padding:24px}a{color:#f58220}img{width:180px;background:white;padding:20px}p{max-width:40ch;line-height:1.6}</style></head><body><img src="/etapel-logo.svg" alt="Etapel"/><h1>Etapel Studio</h1>{destination ? <p><a href={`${destination}/`}>Entrar a mi Studio ↗</a></p> : <p>El Studio todavía no está conectado. Contacta con el administrador del sitio.</p>}</body></html>

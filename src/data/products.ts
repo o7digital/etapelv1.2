@@ -1,3 +1,4 @@
+import { cmsCollection } from '../lib/cms.mjs';
 import { sataImportedProducts } from './sataImportedProducts.ts';
 import { clientCatalogProducts } from './clientCatalogProducts.ts';
 import { catalogPlacementFor } from './catalogHierarchy.ts';
@@ -647,9 +648,11 @@ const sourceCatalogProducts: CatalogProduct[] = [
   ...clientCatalogProducts
 ];
 
-export const catalogProducts: CatalogProduct[] = sourceCatalogProducts
+export const localCatalogProducts: CatalogProduct[] = sourceCatalogProducts
   .map((product) => ({
     ...product,
     ...catalogPlacementFor(product)
   }))
   .sort((a, b) => (a.catalogOrder ?? 999) - (b.catalogOrder ?? 999));
+
+export const catalogProducts: CatalogProduct[] = cmsCollection('etapel_products', localCatalogProducts);

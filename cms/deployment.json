@@ -1,0 +1,15 @@
+{
+  "project": "etapel-cms",
+  "projectId": "cac3681d-9533-430f-a264-c884935417e5",
+  "environment": "production",
+  "environmentId": "0a1a858f-8f84-4815-a0bf-407c8e604f2c",
+  "directusServiceId": "2d569015-19bd-4e32-ac32-02d6954ef24c",
+  "databaseServiceId": "826e227b-78e8-4ad1-b3ad-8e099f121057",
+  "studioServiceId": "6b12dc9e-ab04-4d96-a3c0-649cee80c37b",
+  "directusImage": "directus/directus:12.6.1",
+  "directusUrl": "https://directus-production-dd39.up.railway.app",
+  "studioUrl": "https://studio-production-f1a3.up.railway.app",
+  "siteUrl": "https://etapelv1-2.vercel.app",
+  "siteProjectId": "prj_fYV6VZoyYyhsqg9wkRYPeqi76qV7",
+  "sourceBranch": "dev"
+}

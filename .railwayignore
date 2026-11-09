@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.cms/
+.git/
+.vercel/
+.astro/
+.env*
+src/
+api/
+tests/
+docs/
+public/**
+!public/images/
+!public/images/quienes-etapel-equipo.webp
+!public/etapel-logo.svg

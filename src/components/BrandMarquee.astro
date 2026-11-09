@@ -1,11 +1,12 @@
 ---
+import { cmsCollection } from '../lib/cms.mjs';
 interface Props {
   lang?: 'es' | 'en';
 }
 
 const { lang = 'es' } = Astro.props;
 const english = lang === 'en';
-const brands = [
+const localBrands = [
   { name: 'SATA', slug: 'sata' },
   { name: 'GYS', slug: 'gys' },
   { name: 'PPG', slug: 'ppg' },
@@ -32,6 +33,8 @@ const brands = [
   { name: 'TELWIN', slug: 'telwin' },
   { name: 'DETROIT', slug: 'detroit', note: 'SURFACE CARE' },
 ];
+
+const brands = cmsCollection('etapel_brands', localBrands);
 
 ---
 
