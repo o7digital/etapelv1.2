@@ -43,3 +43,5 @@ Vérifications : `npm test`, `npm run build`, puis les parcours Studio et la pub
 Références API : [authentification Directus](https://directus.com/docs/api/authentication), [contenus Directus](https://directus.com/docs/api/items), [fichiers Directus](https://directus.com/docs/api/files), [Deploy Hooks Vercel](https://vercel.com/docs/deploy-hooks).
 
 Le choix d’une photographie reste dans le formulaire : vérifier son aperçu puis enregistrer la fiche pour conserver le remplacement.
+
+Au premier montage du volume de médias Railway, son répertoire doit appartenir à l’utilisateur Directus `node` (UID/GID 1000). L’instance Etapel a été configurée ainsi ; conserver cette propriété lors d’une restauration. Le service Directus continue de fonctionner sans droits root.

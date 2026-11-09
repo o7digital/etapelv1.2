@@ -9,3 +9,7 @@
 - API : refus des visiteurs non connectés, écritures cross-origin, champs non autorisés et révisions périmées ; sessions chiffrées, jetons absents des réponses.
 
 La publication du contenu est confirmée uniquement par l’empreinte servie sur `/.well-known/etapel-content.json`, pas par la seule réponse du Deploy Hook.
+
+- Upload réel de la photographie approuvée de l’équipe, remplacement de son emplacement et rechargement du Studio : état conservé.
+- Premier Deploy Hook déclenché depuis l’API Studio : build de production READY et empreinte demandée retrouvée sur le site public.
+- Contrôle Vercel en production : accueil, anglais, catalogue, fiches, CEDETEC, support, contact et accès `/admin/`.
