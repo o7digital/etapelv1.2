@@ -24,7 +24,7 @@ const sitePath = page => state.config.site.replace(/\/$/, '') + (page.startsWith
 const imageUrl = row => row.file ? '/api/files/' + row.file : sitePath(row.source);
 function imageFor(path) { const row = collection('media').find(r => r.source === path); return row ? imageUrl(row) : sitePath(path); }
 function currentView() { return location.hash.slice(1) || 'overview'; }
-function button(label, action, cls = 'button quiet') { return `<button class="${cls}" data-action="${action}">${label}</button>`; }
+function button(label, action, cls = 'button quiet') { return `<button type="button" class="${cls}" data-action="${action}">${label}</button>`; }
 function heading(title, subtitle, action = '') { return `<div class="page-heading"><div><p class="eyebrow">ETAPEL / TU ESPACIO DE CONTENIDO</p><h1>${escapeHtml(title)}</h1><p>${escapeHtml(subtitle)}</p></div>${action}</div>`; }
 function languageBar() { return `<div class="language-bar"><span>IDIOMA DE EDICIÓN</span><div>${['es','en'].map(locale => `<button data-locale="${locale}" class="${state.locale === locale ? 'active' : ''}" aria-pressed="${state.locale === locale}">${locale === 'es' ? 'Español' : 'English'}</button>`).join('')}</div><small>Las dos versiones se editan por separado.</small></div>`; }
 function pageRows(view) {
