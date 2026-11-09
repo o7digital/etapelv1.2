@@ -41,3 +41,5 @@ Railway contient deux volumes persistants : PostgreSQL et `/directus/uploads`. C
 Vérifications : `npm test`, `npm run build`, puis les parcours Studio et la publication en navigateur. Déploiement Studio : `railway up --service studio --detach`, depuis le projet lié indiqué dans `deployment.json`. La variable `RAILWAY_DOCKERFILE_PATH` fixe le Dockerfile ; `.railwayignore` limite l'archive aux sources utiles au Studio. Vérifier `/health` après chaque déploiement. Site : `vercel --prod --yes` dans ce checkout lié au projet Vercel existant.
 
 Références API : [authentification Directus](https://directus.com/docs/api/authentication), [contenus Directus](https://directus.com/docs/api/items), [fichiers Directus](https://directus.com/docs/api/files), [Deploy Hooks Vercel](https://vercel.com/docs/deploy-hooks).
+
+Le choix d’une photographie reste dans le formulaire : vérifier son aperçu puis enregistrer la fiche pour conserver le remplacement.
