@@ -37,11 +37,33 @@ const emptyImage = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALA
   @keyframes heroFade{0%{opacity:0}4%{opacity:1}25%{opacity:1}29%{opacity:0}100%{opacity:0}}
 
   @media (max-width:767px), (max-width:1024px) and (hover:none) and (pointer:coarse){
+    .hero-slider{position:relative;inset:auto;width:100%;aspect-ratio:4/3;max-height:420px;overflow:hidden}
+    .hero-slider:after{background:linear-gradient(180deg,transparent 75%,rgba(7,11,47,.15))}
     .hero-slide{animation-name:heroFadeMobile;animation-duration:18s;transform:none}
     .hero-slide.desktop-only{display:none;animation:none}
-    .hero-slide:nth-child(1) img{object-position:50% 70%}
-    .hero-slide:nth-child(2) img{object-position:45% 45%}
-    .hero-slide:nth-child(3) img{object-position:63% 45%}
+    .hero-slide:nth-child(1) img{object-position:50% 90%}
+    .hero-slide:nth-child(2) img{object-position:50% 12%}
+    .hero-slide:nth-child(3) img{object-position:50% 12%}
+  }
+  @media (min-width:600px) and (max-width:1024px) and (hover:none) and (pointer:coarse){
+    .hero-slide:nth-child(1) img{object-position:50% 65%}
   }
   @keyframes heroFadeMobile{0%{opacity:0}5.3333%{opacity:1}33.3333%{opacity:1}38.6667%{opacity:0}100%{opacity:0}}
+</style>
+
+<style is:global>
+  @media (max-width:767px), (max-width:1024px) and (hover:none) and (pointer:coarse){
+    .home-hero.hero{padding:0!important;margin:0;background:#070b2f}
+    .home-hero.hero:before,.home-hero.hero:after{display:none!important}
+    .home-hero.hero .hero-inner{display:block!important;padding:26px 20px 32px!important}
+    .home-hero.hero .hero-inner .eyebrow{padding:0;border:0;background:none;font-size:9px;line-height:1.5;letter-spacing:.08em}
+    .home-hero.hero .hero-inner .dot{width:6px;height:6px;box-shadow:none}
+    .home-hero.hero .hero-inner .hero-title{margin:16px 0;font-size:clamp(30px,8.4vw,42px);line-height:1.08;letter-spacing:-.045em}
+    .home-hero.hero .hero-inner .hero-title span{white-space:normal}
+    .home-hero.hero .hero-inner>div:first-child>p{max-width:calc(100% - 64px);padding:0!important;border:0!important;background:none!important;box-shadow:none!important;backdrop-filter:none!important;font-size:15px;line-height:1.6;color:#dbe4f2}
+    .home-hero.hero .hero-inner .hero-actions{display:grid;grid-template-columns:1fr;gap:12px;margin-top:24px;margin-right:64px}
+    .home-hero.hero .hero-inner .hero-actions .btn{min-height:50px;width:100%;padding:12px 14px;font-size:11px;letter-spacing:.03em;text-align:center}
+    .home-hero.hero>.hero-features,.home-hero.hero>.home-feature-strip{margin:0;grid-template-columns:1fr 1fr;background:#0b1145;backdrop-filter:none}
+    .home-hero.hero .hero-feature,.home-hero.hero .home-feature-strip a{min-height:56px;padding:12px 16px;font-size:10px;line-height:1.45}
+  }
 </style>
