@@ -1,11 +1,10 @@
 ---
 const mobileMedia = '(max-width: 767px), (max-width: 1024px) and (hover: none) and (pointer: coarse)';
 const desktopImages = [
-  '/slider/hero-controle-teinte.jpeg',
-  '/slider/hero-car-o-liner-benchrack.webp',
-  '/slider/hero-preparation-peinture.jpeg',
-  '/slider/hero-inspection-carrosserie.jpeg',
-  '/slider/hero-cabine-peinture.jpeg',
+  '/slider/desktop/car-o-liner-medicion.webp',
+  '/slider/desktop/sata-equipo-pintura.webp',
+  '/slider/desktop/sata-jet-x.webp',
+  '/slider/desktop/car-o-liner-benchrack.webp',
 ];
 const mobileImages = [
   '/slider/mobile/sata-equipo-taller.webp',
@@ -27,14 +26,15 @@ const emptyImage = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALA
 
 <style>
   .hero-slider{position:absolute;inset:0;z-index:0;background:#050720}
-  .hero-slide{position:absolute;inset:0;opacity:0;animation:heroFade 30s infinite;transform:scale(1.03)}
+  .hero-slide{position:absolute;inset:0;opacity:0;animation:heroFade 24s infinite;transform:scale(1.03)}
   .hero-slide img{display:block;width:100%;height:100%;max-width:none;object-fit:cover;object-position:center}
+  .hero-slide:nth-child(1) img{object-position:center top}
+  .hero-slide:nth-child(4) img{object-fit:contain;background:#f6f6f6}
   .hero-slide:nth-child(2){animation-delay:6s}
   .hero-slide:nth-child(3){animation-delay:12s}
   .hero-slide:nth-child(4){animation-delay:18s}
-  .hero-slide:nth-child(5){animation-delay:24s}
   .hero-slider:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,11,47,.72),rgba(7,11,47,.34))}
-  @keyframes heroFade{0%{opacity:0}3.2%{opacity:1}20%{opacity:1}23.2%{opacity:0}100%{opacity:0}}
+  @keyframes heroFade{0%{opacity:0}4%{opacity:1}25%{opacity:1}29%{opacity:0}100%{opacity:0}}
 
   @media (max-width:767px), (max-width:1024px) and (hover:none) and (pointer:coarse){
     .hero-slide{animation-name:heroFadeMobile;animation-duration:18s;transform:none}
