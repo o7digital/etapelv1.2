@@ -1,15 +1,15 @@
 ---
 const mobileMedia = '(max-width: 767px), (max-width: 1024px) and (hover: none) and (pointer: coarse)';
 const desktopImages = [
-  '/slider/hero-controle-teinte.jpeg',
-  '/slider/hero-car-o-liner-benchrack.webp',
-  '/slider/hero-preparation-peinture.jpeg',
-  '/slider/hero-inspection-carrosserie.jpeg',
-  '/slider/hero-cabine-peinture.jpeg',
-  '/slider/desktop/car-o-liner-medicion.webp',
-  '/slider/desktop/sata-equipo-pintura.webp',
-  '/slider/desktop/sata-jet-x.webp',
-  '/slider/desktop/car-o-liner-benchrack.webp',
+  ['/slider/hero-controle-teinte.jpeg', '50% 55%'],
+  ['/slider/hero-car-o-liner-benchrack.webp', '50% 20%'],
+  ['/slider/hero-preparation-peinture.jpeg', '50% 20%'],
+  ['/slider/hero-inspection-carrosserie.jpeg', '50% 65%'],
+  ['/slider/hero-cabine-peinture.jpeg', '50% 40%'],
+  ['/slider/desktop/car-o-liner-medicion.webp', '50% 0%'],
+  ['/slider/desktop/sata-equipo-pintura.webp', '50% 55%'],
+  ['/slider/desktop/sata-jet-x.webp', '50% 40%'],
+  ['/slider/desktop/car-o-liner-benchrack.webp', '50% 45%'],
 ];
 const mobileImages = [
   '/slider/mobile/sata-equipo-taller.webp',
@@ -21,8 +21,8 @@ const emptyImage = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALA
 ---
 
 <div class="hero-slider" aria-hidden="true">
-  {desktopImages.map((desktop, index) => (
-    <picture style={`--slide-image:url("${desktop}")`} class:list={['hero-slide', {
+  {desktopImages.map(([desktop, position], index) => (
+    <picture style={`--desktop-position:${position}`} class:list={['hero-slide', {
       'desktop-only': index >= mobileImages.length,
     }]}>
       <source media={mobileMedia} srcset={mobileImages[index] || emptyImage} />
@@ -46,19 +46,14 @@ const emptyImage = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALA
   .hero-slider:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,11,47,.72),rgba(7,11,47,.34))}
   @keyframes heroFade{0%{opacity:0}1.7778%{opacity:1}11.1111%{opacity:1}12.8889%{opacity:0}100%{opacity:0}}
 
-  /* Preserve the complete photograph behind the copy. A blurred extension of
-     the same photo fills wide screens without enlarging or cutting the subject. */
+  /* Fill the entire hero; each photo keeps its own focal point without extra zoom. */
   @media (min-width:768px) and (hover:hover), (min-width:768px) and (pointer:fine), (min-width:1025px){
     .hero-slide{transform:none}
-    .hero-slide:before{
-      content:"";
-      position:absolute;
-      inset:-24px;
-      background:var(--slide-image) center/cover no-repeat;
-      filter:blur(24px);
-      opacity:.65;
-    }
-    .hero-slide img{position:relative;object-fit:contain;object-position:center}
+    .hero-slide img{object-fit:cover;object-position:var(--desktop-position,center)}
+  }
+  @media (min-width:1800px){
+    .hero-slide:nth-child(4) img{object-position:50% 40%}
+    .hero-slide:nth-child(7) img{object-position:50% 35%}
   }
 
   @media (max-width:767px), (max-width:1024px) and (hover:none) and (pointer:coarse){
