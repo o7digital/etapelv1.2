@@ -2,6 +2,7 @@ import { cmsCollection } from '../lib/cms.mjs';
 import { sataImportedProducts } from './sataImportedProducts.ts';
 import { clientCatalogProducts } from './clientCatalogProducts.ts';
 import { catalogPlacementFor } from './catalogHierarchy.ts';
+import { workbookAdditionalProducts, applyWorkbookProductPatch } from './workbookProducts.ts';
 import type { CatalogProduct, ProductOptionGroup } from './productTypes';
 export type { CatalogProduct, ProductOptionGroup, ProductSpec, ProductVariant } from './productTypes';
 
@@ -645,10 +646,12 @@ const sourceCatalogProducts: CatalogProduct[] = [
     };
   }),
   ...nonSataProducts,
-  ...clientCatalogProducts
+  ...clientCatalogProducts,
+  ...workbookAdditionalProducts
 ];
 
 export const localCatalogProducts: CatalogProduct[] = sourceCatalogProducts
+  .map(applyWorkbookProductPatch)
   .map((product) => ({
     ...product,
     ...catalogPlacementFor(product)
