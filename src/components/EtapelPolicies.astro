@@ -1,0 +1,42 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+
+interface Props { lang?: 'es' | 'en'; }
+const { lang = 'es' } = Astro.props;
+const en = lang === 'en';
+const title = en ? 'Etapel Policies' : 'Políticas de Etapel';
+const paragraphs = en ? [
+  'At Etapel S.A. de C.V., we sell paint, consumables, tools and large equipment, and provide maintenance and installation services.',
+  'We are committed to meeting international standards, with a focus on customer satisfaction, compliance with the requirements of interested parties and the applicable legal framework. We therefore strive to control, prevent and mitigate the significant environmental impacts of our activities, as well as safety hazards, through consultation and participation mechanisms, ensuring a safe environment that supports professional development.',
+  'We promote continual improvement in our processes through training, analysis and the commitment of our team, strengthening our competitiveness and social responsibility.'
+] : [
+  'En Etapel S.A. de C.V., nos dedicamos a la comercialización de pintura, consumibles, herramientas, equipos mayores, así como servicios de mantenimiento e instalación.',
+  'Estamos comprometidos con el cumplimiento de los estándares internacionales con un enfoque orientado a la satisfacción de nuestros clientes, la conformidad con los requisitos de las partes interesadas y el marco legal aplicable. Por ello nos esforzamos por controlar, prevenir y mitigar los impactos ambientales significativos de nuestras actividades, así como los peligros de seguridad, a través de mecanismos de consulta y participación, asegurando un entorno seguro y propicio para el desarrollo profesional.',
+  'Impulsamos la mejora continua en nuestros procesos mediante la capacitación, el análisis y el compromiso de nuestro equipo, fortaleciendo nuestra competitividad y responsabilidad social.'
+];
+---
+
+<SiteLayout
+  title={`${title} | Etapel`}
+  description={en ? 'Etapel’s integrated policy on quality, customer satisfaction, environmental responsibility, safety and continual improvement.' : 'Política integral de Etapel sobre calidad, satisfacción del cliente, responsabilidad ambiental, seguridad y mejora continua.'}
+  lang={lang}
+>
+  <main class="policies-page">
+    <article aria-labelledby="policies-title">
+      <div class="label">{en ? 'Our commitment' : 'Nuestro compromiso'}</div>
+      <h1 id="policies-title">{title}</h1>
+      <h2>{en ? 'Integrated Policy' : 'Política integral'}</h2>
+      {paragraphs.map(paragraph => <p>{paragraph}</p>)}
+    </article>
+  </main>
+</SiteLayout>
+
+<style>
+  .policies-page{padding:92px 28px;background:var(--soft)}
+  article{max-width:900px;margin:auto;padding:52px;background:#fff;border-left:8px solid var(--orange);box-shadow:var(--shadow)}
+  h1{color:var(--navy);font-size:clamp(36px,5vw,64px);line-height:1.05;letter-spacing:-.05em;margin:10px 0 32px}
+  h2{font-size:24px;color:var(--navy);margin:0 0 20px}
+  p{color:#566174;font-size:17px;line-height:1.8;margin:0 0 20px}
+  p:last-child{margin-bottom:0}
+  @media(max-width:640px){.policies-page{padding:60px 20px}article{padding:28px 22px}p{font-size:16px}}
+</style>
