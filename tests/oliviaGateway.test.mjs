@@ -14,13 +14,18 @@ test('authenticated gateway selects POWERFUL while preserving legacy FAST reques
   http.createServer = callback => { handler = callback; return { listen() {} }; };
   const calls = [];
   let upstreamRoutingOverride;
-  globalThis.fetch = async (url, options) => {
+  let upstreamVersion = '3.6.0';
+  let upstreamEngine = 'openai';
+  const models = { FAST: 'fast-test', POWERFUL: 'powerful-test' };
+  globalThis.fetch = async (url, options = {}) => {
+    assert.ok(url.startsWith('http://etapel-olivia36:8093/'));
+    if (url.endsWith('/health')) return { ok: true, json: async () => ({ status: 'ok', version: upstreamVersion, chat_models: models }) };
     const body = JSON.parse(options.body);
     if (url.endsWith('/v1/auth/login')) return { ok: true, json: async () => ({ access_token: 'internal-test-token' }) };
     assert.equal(options.headers['X-Tenant-ID'], 'etapel');
     assert.equal(options.headers.Authorization, 'Bearer internal-test-token');
     calls.push(body);
-    return { ok: true, json: async () => ({ answer: 'Respuesta Etapel', conversation_id: 'a'.repeat(24), routing: upstreamRoutingOverride || body.routing }) };
+    return { ok: true, json: async () => ({ answer: 'Respuesta Etapel', conversation_id: 'a'.repeat(24), routing: upstreamRoutingOverride || body.routing, engine: upstreamEngine, model: models[body.routing] }) };
   };
   async function request(body, authorization = 'Bearer gateway-test-key') {
     const req = Object.assign(Readable.from([JSON.stringify(body)]), { url: '/chat', method: 'POST', headers: { authorization, 'x-visitor-ip': 'gateway-test' } });
@@ -31,6 +36,12 @@ test('authenticated gateway selects POWERFUL while preserving legacy FAST reques
   try {
     await import('../infrastructure/olivia/gateway.mjs');
     http.createServer = originalCreateServer;
+    await t.test('verifies the actual engine version before sending a visitor message', async () => {
+      upstreamVersion = '3.5.0';
+      const res = await request({ message: 'Hola', language: 'es', routing: 'POWERFUL' });
+      assert.equal(res.status, 503); assert.equal(calls.length, 0);
+      upstreamVersion = '3.6.0';
+    });
     await t.test('keeps older production proxies on FAST until their update', async () => {
       const res = await request({ message: 'Hola', language: 'es' });
       assert.equal(res.status, 200);
@@ -42,6 +53,7 @@ test('authenticated gateway selects POWERFUL while preserving legacy FAST reques
       assert.equal(first.status, 200);
       assert.equal(calls.at(-1).routing, 'POWERFUL');
       assert.equal(first.data.routing, 'POWERFUL');
+      assert.equal(first.data.version, '3.6.0');
       const followup = await request({ message: '¿Y la capacitación?', language: 'es', routing: 'POWERFUL', conversation: first.data.conversation });
       assert.equal(followup.status, 200);
       assert.equal(calls.at(-1).routing, 'POWERFUL');
@@ -55,6 +67,11 @@ test('authenticated gateway selects POWERFUL while preserving legacy FAST reques
         assert.equal(res.status, 503);
         assert.equal(res.data.error, 'Olivia unavailable');
       } finally { upstreamRoutingOverride = undefined; }
+    });
+    await t.test('rejects a local fallback instead of silently replacing the requested provider', async () => {
+      upstreamEngine = 'local';
+      try { assert.equal((await request({ message: 'Hola', language: 'es', routing: 'POWERFUL' })).status, 503); }
+      finally { upstreamEngine = 'openai'; }
     });
     await t.test('rejects unauthenticated access, unsupported routing and forged conversations', async () => {
       const count = calls.length;

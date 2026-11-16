@@ -7,8 +7,10 @@ services:
     working_dir: /app
     command: [node, gateway.mjs]
     env_file: .env
+    environment:
+      OLIVIA_UPSTREAM_URL: http://etapel-olivia36:8093
     volumes: [./gateway.mjs:/app/gateway.mjs:ro, ./knowledge.txt:/app/knowledge.txt:ro]
-    networks: [o7-apps, v3]
+    networks: [o7-apps, v36]
     read_only: true
     user: node
     cap_drop: [ALL]
@@ -24,6 +26,6 @@ networks:
   o7-apps:
     external: true
     name: o7-apps
-  v3:
+  v36:
     external: true
-    name: olivia-v3_olivia-v3-internal
+    name: etapel-olivia36_private

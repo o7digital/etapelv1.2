@@ -1,0 +1,42 @@
+name: etapel-olivia36
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: etapel-olivia36-db
+    restart: unless-stopped
+    env_file: .env.db
+    volumes: ["database:/var/lib/postgresql/data", "./init.sql:/docker-entrypoint-initdb.d/01-vector.sql:ro"]
+    networks: [private]
+    mem_limit: 256m
+    cpus: 0.5
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+  api:
+    build: .
+    image: etapel-olivia36:local
+    container_name: etapel-olivia36
+    restart: unless-stopped
+    env_file: .env
+    depends_on:
+      postgres: {condition: service_healthy}
+    networks: [private, egress]
+    read_only: true
+    tmpfs: ["/tmp:size=64m,mode=1777"]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 512m
+    cpus: 1
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,json; d=json.load(urllib.request.urlopen('http://127.0.0.1:8093/health', timeout=5)); assert d['version']=='3.6.0'"]
+      interval: 15s
+      timeout: 6s
+      retries: 8
+      start_period: 30s
+networks:
+  private: {internal: true}
+  egress: {}
+volumes:
+  database: {}
