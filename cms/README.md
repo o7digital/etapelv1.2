@@ -22,7 +22,7 @@ Le rôle `Etapel content editor` est préparé pour les comptes éditoriaux. L'i
 
 **Guardar** enregistre dans Directus. **Publicar sitio** déclenche le Deploy Hook Vercel de `dev2`, désormais branche de production de ce projet. Le Studio vérifie l'empreinte du contenu servi pour confirmer sa publication ; l'acceptation du hook ne signifie pas que le build est terminé. Si le CMS, un média ou le build échoue, le site précédent reste disponible. La durée habituelle dépend de la file Vercel et du volume de médias. `main` n'est pas modifié. L'ancienne variable Olivia Preview spécifique à `dev` a été conservée avec une portée Preview générale pour permettre cette configuration ; la variable Production n'a pas changé.
 
-L'espagnol et l'anglais sont éditables séparément ; aucune traduction automatique n'est facturée ni déclenchée. Les champs de collection en anglais existants sont conservés. L'archivage/brouillon d'un texte ou d'une photo rétablit sa valeur intégrée ; un produit ou une famille non publié est exclu du prochain build. Les textes ne peuvent pas injecter de HTML. Les médias sont copiés sur Vercel à la publication, sans exposer de jeton au navigateur.
+L’espagnol est la source éditoriale des pages. **Guardar y traducir** enregistre l’espagnol puis prépare un brouillon anglais ; **Traducir al inglés** prépare aussi une première traduction sans modifier l’original. Le Studio affiche les passages espagnols correspondants à côté des propositions anglaises. **Validar y guardar inglés** enregistre la version relue ; **Publicar sitio** la met ensuite en ligne. Les brouillons ne remplacent jamais les valeurs anglaises publiées. La structure des pages anglaises reste conservée : le rapprochement des blocs est sémantique, pas fondé sur leur ordre. Un texte anglais sans équivalent espagnol est conservé. Si la source espagnole change, il faut régénérer une proposition avant de la valider. Les fiches produit gardent leurs champs anglais existants et leur édition manuelle. L'archivage/brouillon d'un texte ou d'une photo rétablit sa valeur intégrée ; un produit ou une famille non publié est exclu du prochain build. Les textes ne peuvent pas injecter de HTML. Les médias sont copiés sur Vercel à la publication, sans exposer de jeton au navigateur.
 
 ## Fonctionnement technique
 
@@ -30,7 +30,7 @@ L'espagnol et l'anglais sont éditables séparément ; aucune traduction automat
 
 La carte initiale est exportée depuis le HTML réellement produit et le catalogue du dépôt. Pour ajouter des textes après un changement de code : build sans `DIRECTUS_URL`, `node cms/export.mjs`, puis lancer le bootstrap avec les variables du **seul projet Etapel**. Le bootstrap ajoute les éléments manquants sans écraser les contenus existants. Ne pas le relancer après une suppression volontaire : préférer l'archivage. `.cms/` est ignoré par Git.
 
-Variables Vercel Production : `DIRECTUS_URL`, `DIRECTUS_READ_TOKEN`, `PUBLIC_STUDIO_URL`. Variables Studio : `DIRECTUS_URL`, `STUDIO_SESSION_SECRET`, `STUDIO_ORIGIN`, `STUDIO_SITE_URL`, `VERCEL_DEPLOY_HOOK`, `PORT`. Les sessions sont chiffrées dans un cookie HttpOnly, Secure, SameSite Strict ; les mutations exigent l'origine configurée et les permissions Directus de l'utilisateur. Les révisions empêchent d'écraser une fiche modifiée depuis son chargement. Aucun jeton administrateur de service n'est utilisé par le Studio.
+Variables Vercel Production : `DIRECTUS_URL`, `DIRECTUS_READ_TOKEN`, `PUBLIC_STUDIO_URL`. Variables Studio : `DIRECTUS_URL`, `STUDIO_SESSION_SECRET`, `STUDIO_ORIGIN`, `STUDIO_SITE_URL`, `VERCEL_DEPLOY_HOOK`, `PORT`, `OPENAI_API_KEY`, `TRANSLATION_MODEL`. Les sessions sont chiffrées dans un cookie HttpOnly, Secure, SameSite Strict ; les mutations exigent l'origine configurée et les permissions Directus de l'utilisateur. Les révisions empêchent d'écraser une fiche modifiée depuis son chargement. Aucun jeton administrateur de service n'est utilisé par le Studio.
 
 Le tableau de bord compare le contenu courant à l’empreinte du site pour signaler les changements à publier. Produits : recherche, filtres par famille et état, pagination de 25 fiches ; médias : recherche et pagination de 24 images. L’éditeur demande confirmation avant de fermer une fiche modifiée sans l’enregistrer.
 
@@ -57,3 +57,19 @@ Références API : [authentification Directus](https://directus.com/docs/api/aut
 Le choix d’une photographie reste dans le formulaire : vérifier son aperçu puis enregistrer la fiche pour conserver le remplacement.
 
 Au premier montage du volume de médias Railway, son répertoire doit appartenir à l’utilisateur Directus `node` (UID/GID 1000). L’instance Etapel a été configurée ainsi ; conserver cette propriété lors d’une restauration. Le service Directus continue de fonctionner sans droits root.
+
+## Traduction des pages et validation
+
+`cms/translations.mjs` utilise l’API Responses OpenAI avec le modèle `gpt-5.4-mini`, une sortie JSON stricte et `store: false`. Seuls les textes éditoriaux nécessaires sont transmis. Les noms de marques, chiffres, adresses et liens sont protégés et vérifiés avant tout enregistrement. La clé reste sur le service Railway Studio, jamais dans le navigateur, Git ou Vercel. Les appels ont lieu lors de l’enregistrement espagnol ou à la demande, pas pendant les visites du site.
+
+Le champ JSON `etapel_texts.translation` contient la proposition, les références des originaux, l’empreinte espagnole et l’état de validation. `value` reste la valeur publiée jusqu’à une validation explicite. Une régénération conserve donc aussi l’anglais précédemment validé. Les écritures et validations utilisent les permissions du compte connecté et vérifient les révisions pour éviter les écrasements.
+
+Initialisation idempotente du seul champ de revue, sans toucher aux textes existants :
+
+```sh
+railway variables --service directus --json | node cms/provision-translations.mjs
+```
+
+Une panne du fournisseur conserve l’espagnol enregistré et les versions anglaises antérieures ; le Studio permet de réessayer. Les brouillons anglais sont persistants et restent accessibles après rechargement. Le tableau de bord signale les propositions en attente.
+
+Référence : [sorties structurées OpenAI](https://developers.openai.com/api/docs/guides/structured-outputs?api-mode=responses).

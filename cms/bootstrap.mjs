@@ -18,7 +18,7 @@ const id = field('id','string',{schema:{is_primary_key:true,is_nullable:false,ma
 const status = field('status','string',{schema:{default_value:'draft',max_length:30},meta:{interface:'select-dropdown',options:{choices:[{text:'Borrador',value:'draft'},{text:'Publicado',value:'published'},{text:'Archivado',value:'archived'}]}}});
 const shared = [id,status,field('sort','integer',{schema:{default_value:0}}),field('revision','integer',{schema:{default_value:0}})];
 const definitions = {
-  etapel_texts:{label:'Textos y páginas',icon:'article',fields:[field('page'),field('locale'),field('section'),field('label'),field('source','text'),field('value','text'),field('kind')]},
+  etapel_texts:{label:'Textos y páginas',icon:'article',fields:[field('page'),field('locale'),field('section'),field('label'),field('source','text'),field('value','text'),field('kind'),field('translation','json')]},
   etapel_media:{label:'Biblioteca de imágenes',icon:'photo_library',fields:[field('title'),field('source'),field('page'),field('file','uuid',{meta:{interface:'file-image',special:['file']}})]},
   etapel_products:{label:'Productos Etapel',icon:'inventory_2',fields:[field('payload','json')]},
   etapel_families:{label:'Familias de producto',icon:'category',fields:[field('payload','json')]},

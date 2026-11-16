@@ -3,9 +3,10 @@ import { createCipheriv, createDecipheriv, createHash, randomBytes } from 'node:
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { collections, contentHash, validateRecord, StudioError } from '../model.mjs';
+import { pageContext, translationHash, translatePage, approvalWrites } from '../translations.mjs';
 
 export function createStudioServer(options = {}) {
-  const config = { cms: process.env.DIRECTUS_URL, secret: process.env.STUDIO_SESSION_SECRET, origin: process.env.STUDIO_ORIGIN, site: process.env.STUDIO_SITE_URL || 'https://etapelv1-2.vercel.app', hook: process.env.VERCEL_DEPLOY_HOOK, secure: process.env.NODE_ENV === 'production', ...options };
+  const config = { cms: process.env.DIRECTUS_URL, secret: process.env.STUDIO_SESSION_SECRET, origin: process.env.STUDIO_ORIGIN, site: process.env.STUDIO_SITE_URL || 'https://etapelv1-2.vercel.app', hook: process.env.VERCEL_DEPLOY_HOOK, translationKey:process.env.OPENAI_API_KEY, translationModel:process.env.TRANSLATION_MODEL || 'gpt-5.4-mini', translationEndpoint:'https://api.openai.com/v1/responses', secure: process.env.NODE_ENV === 'production', ...options };
   if (!config.cms || !config.secret || config.secret.length < 32) throw new Error('Configure Directus and a strong session secret.');
   const encryptionKey = createHash('sha256').update(config.secret).digest();
   const attempts = new Map();
@@ -76,7 +77,7 @@ export function createStudioServer(options = {}) {
     res.setHeader('X-Content-Type-Options', 'nosniff'); res.setHeader('X-Frame-Options', 'DENY'); res.setHeader('Referrer-Policy', 'same-origin');
     res.setHeader('Content-Security-Policy', `default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' blob: data: ${new URL(config.site).origin}; connect-src 'self'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'`);
     if (path === '/health' && req.method === 'GET') return send(res, { ok: true });
-    if (path === '/api/config' && req.method === 'GET') return send(res, { site: config.site, publishReady: Boolean(config.hook) });
+    if (path === '/api/config' && req.method === 'GET') return send(res, { site: config.site, publishReady: Boolean(config.hook), translationReady:Boolean(config.translationKey) });
     if (path.startsWith('/api/')) {
       if (!['GET', 'POST', 'PATCH'].includes(req.method)) throw new StudioError(405, 'Método no permitido.');
       if (req.method !== 'GET' && req.headers.origin !== (config.origin || `http://${req.headers.host}`)) throw new StudioError(403, 'Origen de solicitud no permitido.');
@@ -98,8 +99,35 @@ export function createStudioServer(options = {}) {
       if (path === '/api/session' && req.method === 'GET') return send(res, { email: s.user.email, name: [s.user.first_name, s.user.last_name].filter(Boolean).join(' ') });
       if (path === '/api/content' && req.method === 'GET') {
         const content = await loadContent(s.access);
-        return send(res, { content, hash: contentHash(content) });
+        const scopes=[...new Set(content.etapel_texts.filter(row=>row.locale==='es').map(row=>row.page))];
+        return send(res, { content, hash: contentHash(content), translationHashes:Object.fromEntries(scopes.map(page=>[page,translationHash(content.etapel_texts.filter(row=>row.locale==='es' && row.page===page))])) });
       }
+      if (path === '/api/translations/propose' && req.method === 'POST') return writes(async()=>{
+        const input=await body(req);
+        if (!input || Object.keys(input).some(key=>!['page','force'].includes(key)) || (input.force!==undefined && typeof input.force!=='boolean')) throw new StudioError(400,'Selecciona la página que quieres traducir.');
+        const permissions=await api('/permissions/me',s.access);
+        if (!['full','partial'].includes(permissions?.etapel_texts?.update?.access)) throw new StudioError(403,'Tu cuenta no tiene permiso para generar traducciones.');
+        const context=pageContext(await all('etapel_texts',s.access),input.page);
+        if (!input.force && context.targets.some(row=>row.translation?.source_hash===context.hash && row.translation?.state==='pending')) return send(res,{records:context.targets,pending:context.targets.filter(row=>row.translation?.state==='pending').length,cached:true});
+        const proposals=await translatePage(context.sources,context.targets,{key:config.translationKey,model:config.translationModel,endpoint:config.translationEndpoint});
+        const current=pageContext(await all('etapel_texts',s.access),input.page);
+        if (current.hash!==context.hash || context.targets.some(row=>current.targets.find(next=>next.id===row.id)?.revision!==row.revision)) throw new StudioError(409,'El contenido cambió durante la traducción. Vuelve a generar el inglés.');
+        const generated_at=new Date().toISOString();
+        const updates=context.targets.flatMap(row=>{
+          const proposal=proposals.find(proposal=>proposal.id===row.id);
+          if(proposal)return [{id:row.id,revision:(row.revision||0)+1,translation:{state:'pending',source_scope:input.page,source_hash:context.hash,source_ids:proposal.source_ids,value:proposal.value,generated_at}}];
+          return row.translation?.state==='pending' ? [{id:row.id,revision:(row.revision||0)+1,translation:null}] : [];
+        });
+        const records=await api('/items/etapel_texts',s.access,'PATCH',updates);
+        return send(res,{records,pending:proposals.length,cached:false});
+      });
+      if (path === '/api/translations/approve' && req.method === 'POST') return writes(async()=>{
+        const input=await body(req);
+        if (!input || Object.keys(input).some(key=>!['page','values'].includes(key))) throw new StudioError(400,'Revisa los textos que quieres validar.');
+        const updates=approvalWrites(await all('etapel_texts',s.access),input);
+        const records=updates.length ? await api('/items/etapel_texts',s.access,'PATCH',updates) : [];
+        return send(res,{records,approved:updates.length});
+      });
       const record = path.match(/^\/api\/records\/(etapel_\w+)(?:\/([a-zA-Z0-9_-]{1,180}))?$/);
       if (record && collections.includes(record[1]) && ['POST','PATCH'].includes(req.method)) return writes(async () => {
         const [, collection, id] = record, input = await body(req);
@@ -108,6 +136,7 @@ export function createStudioServer(options = {}) {
         const previous = id ? await api(`/items/${collection}/${id}`, s.access) : null;
         if (previous && input.revision !== previous.revision) throw new StudioError(409, 'Otra persona modificó esta ficha. Recarga el contenido antes de guardar.');
         const valid = validateRecord(collection, input, previous);
+        if (collection==='etapel_texts' && previous?.locale==='en' && previous.translation?.state==='pending' && valid.value!==previous.value) throw new StudioError(400,'Valida el borrador inglés desde el panel de traducción.');
         if (collection === 'etapel_products') {
           const families = await all('etapel_families', s.access);
           if (!families.some(r => r.payload.slug === valid.payload.familySlug && r.status === 'published')) throw new StudioError(400, 'Selecciona una familia publicada.');

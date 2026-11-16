@@ -35,3 +35,11 @@ La publication du contenu est confirmée uniquement par l’empreinte servie sur
 - Firefox : parcours complet du catalogue et des médias, création/édition/rechargement d’un brouillon puis suppression des données QA, politiques bilingues, confirmation des modifications non enregistrées et déconnexion.
 - Connexion avec le compte Olivier, images réelles, contrôles à 360, 390, 768, 1024 et 1440 px, absence de débordement, éditeur mobile et préférence de mouvement réduit vérifiés.
 - Les boutons de publication de l’en-tête et du tableau de bord restent synchronisés. Les réponses de succès et d’échec de publication ont été simulées dans le navigateur pour ce contrôle de l’interface ; aucun déploiement n’a été déclenché par ces fixtures.
+
+# Traduction espagnol → anglais avec validation — 16 novembre 2026
+
+- `npm test` : 31 tests réussis, dont permissions de génération, conservation de l’anglais publié, validation explicite, révisions et source périmée, rapprochement des pages, protection des marques/chiffres/liens et traitement de pages longues par lots.
+- Fournisseur réel OpenAI vérifié avec `gpt-5.4-mini`, sortie JSON stricte et clé uniquement côté Studio. Génération réelle des propositions de la page Nosotros ; aucune de ces propositions de contenu n’a été approuvée automatiquement.
+- Firefox avec le compte Olivier : génération réelle, comparaison espagnol/anglais, rechargement des brouillons conservés et affichage à 390 px sans débordement.
+- Parcours réel dans des enregistrements QA isolés Directus : enregistrement espagnol déclenchant automatiquement la traduction, valeur anglaise publiée conservée, modification de l’original entraînant HTTP 409, validation manuelle anglaise persistante après rechargement. Seuls les enregistrements temporaires QA ont été supprimés ensuite.
+- Build connecté au CMS : 547 pages. Le build continue d’utiliser uniquement les valeurs anglaises validées (`value`) ; les propositions sont conservées dans `translation`.

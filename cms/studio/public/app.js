@@ -1,6 +1,6 @@
 const $ = selector => document.querySelector(selector);
 const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[char]));
-const state = { content: {}, config: {}, locale: 'es', query: '', status: '', family: '', page: 1, editing: null, editorDirty: false, dirty: false, publishing: false, liveHash: null, version: 0 };
+const state = { content: {}, config: {}, locale: 'es', query: '', status: '', family: '', page: 1, editing: null, editorDirty: false, dirty: false, publishing: false, liveHash: null, version: 0, translating: false, translationHashes: {} };
 const pages = [
   ['home','Inicio','/','/en','01'], ['about','Nosotros','/quienes-somos','/en/about-us','02'],
   ['training','CEDETEC','/capacitacion','/en/training','03'], ['support','Soporte técnico','/postventa','/en/after-sales','04'],
@@ -30,7 +30,7 @@ const paths = {
 };
 const icon = name => `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${paths[name] || paths.page}"/></svg>`;
 const number = value => new Intl.NumberFormat('es-MX').format(value);
-const hasUnsaved = () => state.dirty || state.editorDirty;
+const hasUnsaved = () => state.dirty || state.editorDirty || state.translating;
 async function request(path, options = {}) {
   const response = await fetch(path, { ...options, headers: { ...(options.body && !(options.body instanceof File) ? { 'Content-Type':'application/json' } : {}), ...options.headers } });
   const data = await response.json();
@@ -48,26 +48,61 @@ function imageFor(path) { const row = collection('media').find(r => r.source ===
 function currentView() { return location.hash.slice(1) || 'overview'; }
 function button(label, action, cls = 'button quiet') { return `<button type="button" class="${cls}" data-action="${action}">${label}</button>`; }
 function heading(title, subtitle, action = '') { return `<div class="page-heading"><div><p class="eyebrow">ETAPEL / TU ESPACIO DE CONTENIDO</p><h1>${escapeHtml(title)}</h1><p>${escapeHtml(subtitle)}</p></div>${action}</div>`; }
-function languageBar() { return `<div class="language-bar"><span>IDIOMA DE EDICIÓN</span><div>${['es','en'].map(locale => `<button data-locale="${locale}" class="${state.locale === locale ? 'active' : ''}" aria-pressed="${state.locale === locale}">${locale === 'es' ? 'Español' : 'English'}</button>`).join('')}</div><small>Las dos versiones se editan por separado.</small></div>`; }
+function languageBar() { return `<div class="language-bar"><span>IDIOMA DE EDICIÓN</span><div>${['es','en'].map(locale => `<button data-locale="${locale}" class="${state.locale === locale ? 'active' : ''}" aria-pressed="${state.locale === locale}">${locale === 'es' ? 'Español' : 'English'}</button>`).join('')}</div><small>Español es el original. Revisa y valida el inglés.</small></div>`; }
 function pageRows(view) {
   const page = pages.find(p => p[0] === view);
   const route = page ? page[state.locale === 'es' ? 2 : 3] : view === 'shared' ? `${state.locale}:` : state.catalogPage;
   return collection('texts').filter(row => row.locale === state.locale && (view === 'shared' ? row.page.startsWith(route) : row.page === route));
 }
-function renderTexts(view) {
-  const rows = pageRows(view), groups = new Map();
-  for (const row of rows) { if (!groups.has(row.section)) groups.set(row.section, []); groups.get(row.section).push(row); }
-  return `<form id="texts-form"><div class="content-toolbar"><p><b>${rows.length}</b> textos · Cambia lo que necesites y guarda la página.</p><button type="submit" class="button orange">Guardar la página <span>↗</span></button></div><p id="texts-error" class="error" role="alert"></p>${[...groups].map(([section, fields], i) => `<details class="text-section" ${i === 0 ? 'open' : ''}><summary><span>${escapeHtml(section)}</span><small>${fields.length} textos <span>＋</span></small></summary><div class="text-grid">${fields.sort((a,b) => a.sort - b.sort).map(row => `<label class="editable-field"><span class="field-heading">${escapeHtml(row.label)}<small>EDITABLE</small></span><textarea name="${row.id}" rows="${row.value.length > 150 ? 4 : 2}" maxlength="12000">${escapeHtml(row.value)}</textarea></label>`).join('')}</div></details>`).join('')}${!rows.length ? '<div class="empty">No hay textos en esta página.</div>' : ''}</form>`;
+function sourceScopes(view = currentView()) {
+  if(view==='shared')return ['es:navigation','es:footer'];
+  const page=pages.find(page=>page[0]===view);
+  return [page ? page[2] : (state.catalogPage || '/linea-de-producto').replace(/^\/en\/product-lines/,'/linea-de-producto')];
 }
+function staleTranslation(row) { return row.translation?.state==='pending' && row.translation.source_hash!==state.translationHashes[row.translation.source_scope]; }
+function translationPanel(view) {
+  const rows=pageRows(view),pending=rows.filter(row=>row.translation?.state==='pending').length,stale=rows.some(staleTranslation);
+  return `<div class="translation-panel"><span class="translation-mark">ES <span>→</span> EN</span><div><b>${state.locale==='es' ? 'Escribe en español. Revisa el inglés.' : pending ? `${pending} propuestas listas para tu revisión` : 'Tu versión inglesa, bajo control.'}</b><p>${stale ? 'El español cambió. Genera de nuevo el inglés para poder validarlo.' : state.locale==='es' ? 'Al guardar, se prepara un borrador inglés. Tú decides cuándo validarlo.' : 'Compara con el original, ajusta y valida. Se conservan los bloques de la página inglesa; los borradores no cambian su contenido publicado.'}</p><span id="translation-status" role="status">${state.translating ? 'Traduciendo… Puede tardar unos segundos.' : escapeHtml(state.translationError || '')}</span></div><button type="button" class="button translate-button" data-action="translate-page" ${!state.config.translationReady || state.translating ? 'disabled' : ''}>${state.translating ? 'Traduciendo…' : state.locale==='es' ? 'Traducir al inglés' : 'Volver a traducir'} ${icon('spark')}</button></div>`;
+}
+function englishField(row) {
+  const draft=row.translation,stateLabel=staleTranslation(row) ? 'ESPAÑOL MODIFICADO' : draft?.state==='pending' ? 'POR VALIDAR' : 'EDITABLE';
+  const value=draft?.state==='pending' ? draft.value : row.value;
+  const sources=(draft?.source_ids || []).map(id=>collection('texts').find(source=>source.id===id)?.value).filter(value=>value!==undefined);
+  return `<div class="translation-pair">${sources.length ? `<label class="source-field"><span class="field-heading">Español · Original<small>ES</small></span><textarea readonly rows="${value.length>150 ? 5 : 3}" aria-label="Original español">${escapeHtml(sources.join('\n\n'))}</textarea></label>` : `<div class="source-field source-placeholder"><span>ESPAÑOL → ENGLISH</span><p>Genera una traducción para ver aquí el original español correspondiente.</p></div>`}<label class="editable-field"><span class="field-heading">${escapeHtml(row.label)}<small class="${draft?.state==='pending' ? 'needs-review' : ''}">${stateLabel}</small></span><textarea name="${row.id}" rows="${value.length>150 ? 5 : 3}" maxlength="12000">${escapeHtml(value)}</textarea></label></div>`;
+}
+function renderTexts(view) {
+  const rows=pageRows(view),groups=new Map(),english=state.locale==='en';
+  for(const row of rows){if(!groups.has(row.section))groups.set(row.section,[]);groups.get(row.section).push(row);}
+  return `<form id="texts-form"><div class="content-toolbar"><p><b>${rows.length}</b> textos · ${english ? 'Revisa, ajusta y valida antes de publicar.' : 'El español es la fuente de la traducción.'}</p><button type="submit" class="button orange" ${state.translating || (english && rows.some(staleTranslation)) ? 'disabled' : ''}>${english ? 'Validar y guardar inglés' : state.config.translationReady ? 'Guardar y traducir' : 'Guardar la página'} <span>↗</span></button></div><p id="texts-error" class="error" role="alert"></p>${[...groups].map(([section,fields],index)=>`<details class="text-section" ${index===0 ? 'open' : ''}><summary><span>${escapeHtml(section)}</span><small>${fields.length} textos <span>＋</span></small></summary><div class="text-grid ${english ? 'review-grid' : ''}">${fields.sort((a,b)=>a.sort-b.sort).map(row=>english ? englishField(row) : `<label class="editable-field"><span class="field-heading">${escapeHtml(row.label)}<small>ESPAÑOL</small></span><textarea name="${row.id}" rows="${row.value.length>150 ? 4 : 2}" maxlength="12000">${escapeHtml(row.value)}</textarea></label>`).join('')}</div></details>`).join('')}${!rows.length ? '<div class="empty">No hay textos en esta página.</div>' : ''}</form>`;
+}
+function mergeTextRecords(records) {
+  for(const record of records){const index=collection('texts').findIndex(row=>row.id===record.id);if(index>=0)state.content.etapel_texts[index]=record;}
+  if(records.length){state.pending=true;state.version++;}
+}
+async function generateEnglish({force=false} = {}) {
+  if(state.translating)return;
+  if(state.dirty){notify('Guarda los cambios de esta página antes de generar el inglés.');return;}
+  const view=currentView(),scopes=sourceScopes(view);
+  state.translating=true;state.translationError='';render();
+  try{
+    let pending=0;
+    for(const page of scopes){const result=await request('/api/translations/propose',{method:'POST',body:JSON.stringify({page,force})});mergeTextRecords(result.records);pending+=result.pending;}
+    state.locale='en';if(view==='catalog-pages')state.catalogPage=scopes[0].replace(/^\/linea-de-producto/,'/en/product-lines');
+    notify(`${pending} propuestas en inglés listas para revisar. Valídalas antes de publicar.`);
+  }catch(error){state.translationError=error.message;notify(error.message);}
+  finally{state.translating=false;render();}
+}
+
 function overview() {
   const count = name => collection(name).filter(r => r.status === 'published').length;
   const drafts = collection('products').filter(r => r.status === 'draft').length;
-  const published = !state.pending && state.liveHash && state.liveHash === state.hash;
-  const publication = state.publishing ? 'Publicación en curso' : !state.liveHash && !state.pending ? 'Publicación por verificar' : published ? 'Todo está al día' : 'Cambios por publicar';
+  const pendingEnglish=collection('texts').filter(row=>row.translation?.state==='pending').length;
+  const published = !state.pending && !pendingEnglish && state.liveHash && state.liveHash === state.hash;
+  const publication = state.publishing ? 'Publicación en curso' : pendingEnglish ? `${pendingEnglish} traducciones por validar` : !state.liveHash && !state.pending ? 'Publicación por verificar' : published ? 'Todo está al día' : 'Cambios por publicar';
   const firstName = escapeHtml((state.user?.name || 'equipo').split(' ')[0]);
   return `<div class="dashboard-intro"><div><p class="eyebrow">TU ESPACIO. TU IMPACTO.</p><h1>Vamos con todo, ${firstName}<span>.</span></h1><p>Todo lo que necesitas para llevar Etapel al siguiente nivel.</p></div><a class="button quiet" href="${escapeHtml(state.config.site)}" target="_blank" rel="noopener">Ver mi sitio ${icon('arrow')}</a></div>
   <div class="dashboard-grid"><section class="overview-hero"><div class="hero-copy"><span class="hero-label">${icon('spark')} ETAPEL EN MOVIMIENTO</span><h2>Haz que<br>tu experiencia<br><em>se vea.</em></h2><p>Tu catálogo. Tu equipo. Tu historia.<br>Dale fuerza a lo que viene.</p><div class="hero-actions"><a class="button white" href="#home">Editar mi inicio ${icon('arrow')}</a><a class="hero-link" href="#catalog">Ir al catálogo <span>→</span></a></div></div><div class="hero-photo"><img src="/assets/painting.webp" alt="Especialista en aplicación de pintura automotriz" fetchpriority="high"><span>TECNOLOGÍA QUE TRANSFORMA.</span></div><span class="hero-stamp" aria-hidden="true">DALE<br>EL SIGUIENTE<br><b>IMPULSO ↗</b></span></section>
-  <section class="publication-card"><div class="panel-heading"><h2>EN VIVO</h2><span class="status-dot"></span></div><div class="publication-body"><div class="publication-signal ${published ? 'is-live' : ''}">${icon(published ? 'check' : 'arrow')}</div><span class="badge ${published ? 'published' : 'draft'}" id="overview-publication">${publication}</span><h3>${published ? 'Tu sitio.<br>En línea.' : 'Tu próxima<br>gran versión.'}</h3><p>${published ? 'Tu contenido guardado ya está en línea. ¿Qué sigue?' : 'Guarda tus cambios y compártelos con el mundo cuando estén listos.'}</p><button class="button orange" data-action="publish-site" ${!state.config.publishReady || state.publishing ? 'disabled' : ''}>${state.publishing ? 'Publicando…' : 'Publicar sitio'} ${icon('arrow')}</button><small>${drafts ? `${number(drafts)} producto${drafts === 1 ? '' : 's'} en borrador, fuera del sitio.` : 'Guardar prepara. Publicar conecta.'}</small></div></section></div>
+  <section class="publication-card"><div class="panel-heading"><h2>EN VIVO</h2><span class="status-dot"></span></div><div class="publication-body"><div class="publication-signal ${published ? 'is-live' : ''}">${icon(published ? 'check' : 'arrow')}</div><span class="badge ${published ? 'published' : 'draft'}" id="overview-publication">${publication}</span><h3>${pendingEnglish ? 'Tu inglés.<br>Por validar.' : published ? 'Tu sitio.<br>En línea.' : 'Tu próxima<br>gran versión.'}</h3><p>${pendingEnglish ? 'Los borradores ingleses esperan tu visto bueno. La versión inglesa publicada se conserva.' : published ? 'Tu contenido guardado ya está en línea. ¿Qué sigue?' : 'Guarda tus cambios y compártelos con el mundo cuando estén listos.'}</p><button class="button orange" data-action="publish-site" ${!state.config.publishReady || state.publishing ? 'disabled' : ''}>${state.publishing ? 'Publicando…' : 'Publicar sitio'} ${icon('arrow')}</button><small>${drafts ? `${number(drafts)} producto${drafts === 1 ? '' : 's'} en borrador, fuera del sitio.` : 'Guardar prepara. Publicar conecta.'}</small></div></section></div>
   <div class="stats">${[['catalog','catalog','Productos publicados',count('products'),'Explorar catálogo','blue'],['families','families','Familias de producto',count('families'),'Organizar soluciones','orange'],['page','home','Textos editables',collection('texts').length,'Español + English','violet'],['media','media','Imágenes del sitio',collection('media').length,'Abrir biblioteca','green']].map(([symbol,view,label,value,note,tone])=>`<article class="stat-${tone}"><a href="#${view}" class="stat-link"><div class="stat-top"><span class="stat-icon">${icon(symbol)}</span><span class="stat-arrow">${icon('arrow')}</span></div><b>${number(value)}</b><span class="stat-label">${label}</span><small>${note} <span>→</span></small></a></article>`).join('')}</div>
   <div class="section-heading"><div><p class="eyebrow">MENOS VUELTAS. MÁS ACCIÓN.</p><h2>¿Qué movemos hoy?</h2></div><span>ELIGE TU SIGUIENTE PASO ${icon('arrow')}</span></div><div class="shortcut-grid">${[['home','01','Una portada con fuerza.','Dale a tu historia el mejor primer vistazo.','precision.webp'],['catalog','02','Productos que destacan.','Cada solución, con todos sus detalles.','jet-x.webp'],['media','03','Que tus imágenes hablen.','Renueva la forma de mostrar tu experiencia.','painting.webp']].map(([view,n,title,copy,photo]) => `<a class="shortcut shortcut-${view}" href="#${view}"><div class="shortcut-photo"><img src="/assets/${photo}" alt="" loading="lazy"><span>${n}</span><i>${icon('arrow')}</i></div><div class="shortcut-copy"><h3>${title}</h3><p>${copy}</p><b>${view === 'home' ? 'Editar inicio' : view === 'catalog' ? 'Ver productos' : 'Abrir biblioteca'} <span>→</span></b></div></a>`).join('')}</div><div class="workflow-note">${icon('spark')}<div><b>Lo que haces merece verse.</b><p>Guarda en el Studio. Publica en tu sitio. Sigue avanzando.</p></div><span>HECHO PARA ETAPEL ↗</span></div>`;
 }
@@ -105,12 +140,12 @@ function render() {
       selector = `<label class="page-selector">Página del catálogo<select id="catalog-page">${paths.map(path => `<option ${path === state.catalogPage ? 'selected' : ''}>${escapeHtml(path)}</option>`).join('')}</select></label>`;
     }
     const page = pages.find(p => p[0] === view), route = page?.[state.locale === 'es' ? 2 : 3] || state.catalogPage || '/';
-    html = `${heading(page?.[1] || titles[view], 'Los campos conservan la estructura y el diseño de tu sitio.',`<a class="button quiet" href="${escapeHtml(sitePath(route))}" target="_blank" rel="noopener">Ver la página ↗</a>`)}${languageBar()}${selector}${renderTexts(view)}`;
+    html = `${heading(page?.[1] || titles[view], 'Los campos conservan la estructura y el diseño de tu sitio.',`<a class="button quiet" href="${escapeHtml(sitePath(route))}" target="_blank" rel="noopener">Ver la página ↗</a>`)}${languageBar()}${selector}${translationPanel(view)}${renderTexts(view)}`;
   } else html = overview();
   $('#main').innerHTML = html;
   $('#main').querySelectorAll('textarea,input,select').forEach(field => field.addEventListener('input', () => { if (field.closest('#texts-form')) state.dirty = true; }));
 }
-async function reload() { const data = await request('/api/content'); state.content = data.content; state.hash = data.hash; }
+async function reload() { const data = await request('/api/content'); state.content = data.content; state.hash = data.hash; state.translationHashes = data.translationHashes || {}; }
 async function enter() {
   const [user, config] = await Promise.all([request('/api/session'),request('/api/config')]);
   state.config = config; state.user = user; $('#account-name').textContent = user.name || user.email; $('#visit-site').href = config.site;
@@ -163,7 +198,7 @@ $('#login-form').addEventListener('submit', async event => {
 });
 $('#logout').addEventListener('click',async()=>{if(hasUnsaved() && !confirm('Tienes cambios sin guardar. ¿Quieres salir?'))return;await request('/api/logout',{method:'POST',body:'{}'});state.content={};state.dirty=false;clearInterval(publicationTimer);$('#studio-view').hidden=true;$('#login-view').hidden=false;});
 window.addEventListener('beforeunload',event=>{if(hasUnsaved()){event.preventDefault();event.returnValue='';}});
-window.addEventListener('hashchange',()=>{if(state.dirty && !confirm('Hay textos sin guardar. ¿Quieres cambiar de sección?')){history.replaceState(null,'','#'+state.lastView);return;}state.dirty=false;state.query='';state.status='';state.family='';state.page=1;state.lastView=currentView();setNav(false);render();});
+window.addEventListener('hashchange',()=>{if(state.translating){history.replaceState(null,'','#'+state.lastView);notify('La traducción sigue en curso. Espera a que termine.');return;}if(state.dirty && !confirm('Hay textos sin guardar. ¿Quieres cambiar de sección?')){history.replaceState(null,'','#'+state.lastView);return;}state.dirty=false;state.translationError='';state.query='';state.status='';state.family='';state.page=1;state.lastView=currentView();setNav(false);render();});
 function setNav(open) { $('#sidebar').classList.toggle('open',open); $('#nav-backdrop').hidden=!open; $('#mobile-menu').setAttribute('aria-expanded',String(open)); }
 $('#mobile-menu').onclick=()=>setNav(true);
 $('#nav-backdrop').onclick=()=>setNav(false);
@@ -171,27 +206,44 @@ window.addEventListener('keydown',event=>{if(event.key==='Escape' && $('#sidebar
 $('#main').addEventListener('click',event=>{
   const editButton=event.target.closest('[data-edit]'); if(editButton)return edit(editButton.dataset.collection,editButton.dataset.edit);
   const action=event.target.closest('[data-action]')?.dataset.action;
+  if(action==='translate-page'){generateEnglish({force:state.locale==='en'});return;}
   if(action==='publish-site'){if(!$('#publish').disabled)$('#publish').click();return;}
   if(action==='previous' || action==='next'){state.page+=action==='next'?1:-1;render();$('#main').focus({preventScroll:true});window.scrollTo({top:0,behavior:'instant'});return;}
   if(action==='new')return edit(({catalog:'products',families:'families',brands:'brands'})[currentView()]);
   if(action==='upload-media'){state.uploadTarget=null;$('#image-upload').click();}
   const locale=event.target.closest('[data-locale]')?.dataset.locale;
-  if(locale){if(state.dirty && !confirm('¿Cambiar de idioma sin guardar?'))return;state.locale=locale;state.dirty=false;render();}
+  if(locale){if(state.translating){notify('Espera a que termine la traducción.');return;}if(state.dirty && !confirm('¿Cambiar de idioma sin guardar?'))return;if(currentView()==='catalog-pages')state.catalogPage=locale==='en' ? state.catalogPage.replace(/^\/linea-de-producto/,'/en/product-lines') : state.catalogPage.replace(/^\/en\/product-lines/,'/linea-de-producto');state.locale=locale;state.dirty=false;render();}
 });
 $('#main').addEventListener('input',event=>{
   if(event.target.id==='collection-search'){
     const position=event.target.selectionStart;state.query=event.target.value;state.page=1;render();const input=$('#collection-search');input.focus();try{input.setSelectionRange(position,position);}catch{}
   }
 });
-$('#main').addEventListener('change',event=>{if(['status-filter','family-filter'].includes(event.target.id)){state[event.target.id==='status-filter'?'status':'family']=event.target.value;state.page=1;render();return;}if(event.target.id==='catalog-page'){if(state.dirty && !confirm('¿Cambiar de página sin guardar?'))return;state.catalogPage=event.target.value;state.dirty=false;render();}});
+$('#main').addEventListener('change',event=>{if(['status-filter','family-filter'].includes(event.target.id)){state[event.target.id==='status-filter'?'status':'family']=event.target.value;state.page=1;render();return;}if(event.target.id==='catalog-page'){if(state.translating){notify('Espera a que termine la traducción.');render();return;}if(state.dirty && !confirm('¿Cambiar de página sin guardar?'))return;state.catalogPage=event.target.value;state.dirty=false;render();}});
 $('#main').addEventListener('submit',async event=>{
   if(event.target.id!=='texts-form')return;
-  event.preventDefault();const submit=event.target.querySelector('[type=submit]');submit.disabled=true;$('#texts-error').textContent='';
+  event.preventDefault();if(state.translating)return;
+  const submit=event.target.querySelector('[type=submit]');submit.disabled=true;$('#texts-error').textContent='';
+  const entries=[...new FormData(event.target)];
   try{
-    let count=0;for(const [id,value]of new FormData(event.target)){const row=collection('texts').find(r=>r.id===id);if(row && row.value!==value){await saveRecord('texts',row,{value,status:'published'});count++;}}
-    state.dirty=false;notify(count ? `${count} textos guardados. Publica el sitio para verlos en línea.` : 'No hay cambios pendientes.');
-  }catch(error){$('#texts-error').textContent=error.message;}finally{submit.disabled=false;}
+    let count=0;
+    if(state.locale==='en'){
+      for(const page of sourceScopes()){
+        const targetPage=page.startsWith('es:') ? page.replace(/^es:/,'en:') : pages.find(row=>row[2]===page)?.[3] || page.replace(/^\/linea-de-producto/,'/en/product-lines');
+        const values=entries.map(([id,value])=>{const row=collection('texts').find(row=>row.id===id);return row?.page===targetPage && (row.translation?.state==='pending' || row.value!==value) ? {id,value,revision:row.revision || 0} : null;}).filter(Boolean);
+        if(values.length){const result=await request('/api/translations/approve',{method:'POST',body:JSON.stringify({page,values})});mergeTextRecords(result.records);count+=result.approved;}
+      }
+      state.dirty=false;render();notify(count ? `${count} textos ingleses validados. Publica para compartirlos.` : 'No hay cambios pendientes.');
+    }else{
+      for(const [id,value]of entries){const row=collection('texts').find(row=>row.id===id);if(row && row.value!==value){await saveRecord('texts',row,{value,status:'published'});count++;}}
+      await reload();state.dirty=false;
+      if(state.config.translationReady)await generateEnglish();
+      else notify(count ? `${count} textos españoles guardados.` : 'No hay cambios pendientes.');
+    }
+  }catch(error){const panel=$('#texts-error');if(panel)panel.textContent=error.message;}
+  finally{submit.disabled=false;}
 });
+
 $('#editor-fields').addEventListener('input',()=>{state.editorDirty=true;});
 $('#editor-fields').addEventListener('change',()=>{state.editorDirty=true;});
 $('#editor').addEventListener('cancel',event=>{event.preventDefault();closeEditor();});
@@ -242,6 +294,7 @@ function setPublishing(active) {
   if(action){action.disabled=$('#publish').disabled;action.innerHTML=`${active ? 'Publicando…' : 'Publicar sitio'} ${icon('arrow')}`;}
 }
 $('#publish').addEventListener('click',async()=>{
+  if(state.translating){notify('Espera a que termine la traducción antes de publicar.');return;}
   if(hasUnsaved()){notify('Guarda tus cambios antes de publicar.');return;}
   setPublishing(true);const panel=$('#publication-status');panel.hidden=false;panel.textContent='Preparando la publicación…';
   try{

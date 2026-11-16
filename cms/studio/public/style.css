@@ -520,3 +520,24 @@ tbody tr:hover { background: #f6f8ff }
 @media (prefers-reduced-motion: reduce) {
   *, *:before, *:after { animation: none !important; transition: none !important; scroll-behavior: auto !important }
 }
+/* Spanish originals and English proposals are reviewed together. */
+.translation-panel { display:flex; align-items:center; gap:17px; padding:18px 20px; margin:0 0 21px; background:#eaf0ff; border:1px solid #d5e0ff; border-radius:12px }
+.translation-mark { display:flex; align-items:center; gap:7px; flex:none; font-size:12px; font-weight:800; color:#2d51c7; background:white; border:1px solid #d9e3ff; border-radius:9px; padding:11px }
+.translation-mark>span { color:#ff873e }
+.translation-panel>div { min-width:0 }
+.translation-panel b { font-size:11px; font-weight:800; color:#284598 }
+.translation-panel p { font-size:10px; color:#6279a8; line-height:1.8; margin:4px 0 0 }
+.translation-panel .button { margin-left:auto; flex:none; background:var(--blue); border-color:var(--blue); color:white; font-size:10px; padding:10px 13px; min-height:38px }
+#translation-status:not(:empty) { display:block; color:#315cf4; font-size:10px; font-weight:700; margin-top:8px }
+.review-grid { grid-template-columns:minmax(0,1fr); gap:23px }
+.translation-pair { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:20px; padding-bottom:22px; border-bottom:1px solid var(--line) }
+.translation-pair:last-child { border-bottom:0; padding-bottom:0 }
+.translation-pair .field-heading { min-height:32px }
+.source-field { min-width:0; align-content:start }
+.source-field textarea { background:#f1f4fa; color:#61718d; border-color:#e0e6f0; font-weight:450 }
+.source-placeholder { align-self:stretch; border:1px dashed #d9e2f6; border-radius:8px; padding:17px; background:#f8faff }
+.source-placeholder>span { font-size:8px; font-weight:800; letter-spacing:.08em; color:#7188b4 }
+.source-placeholder p { font-size:10px; line-height:1.9; color:#8a9ab7; margin:9px 0 0 }
+.field-heading>small.needs-review { background:#fff0da; color:#a36821 }
+@media(max-width:900px){.translation-panel{align-items:flex-start;flex-wrap:wrap}.translation-panel>div{flex:1;min-width:200px}.translation-panel .button{margin-left:0}}
+@media(max-width:600px){.translation-panel{padding:15px;gap:12px}.translation-mark{font-size:10px;padding:9px}.translation-panel>div{min-width:160px}.translation-panel b{font-size:10px}.translation-panel p{font-size:9px}.translation-panel .button{font-size:9px}.translation-pair{grid-template-columns:minmax(0,1fr);gap:12px}.source-placeholder{display:none}.source-field textarea{font-size:11px}.source-field .field-heading{font-size:9px}}
