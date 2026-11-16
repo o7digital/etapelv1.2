@@ -2,7 +2,7 @@ import { readdir, readFile, writeFile, mkdir, copyFile } from 'node:fs/promises'
 import { existsSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 import { createHash } from 'node:crypto';
-import { processDocument } from './content.mjs';
+import { processDocument, stableId } from './content.mjs';
 import { contentHash } from './model.mjs';
 import { parse, serialize } from 'parse5';
 const snapshot = existsSync('.cms/content.json') ? JSON.parse(await readFile('.cms/content.json', 'utf8')) : null;
@@ -61,6 +61,10 @@ for (const entry of await readdir('dist/_astro', { withFileTypes: true })) {
   if (!entry.name.endsWith('.css')) continue;
   const path = `dist/_astro/${entry.name}`;
   let css = await readFile(path, 'utf8');
+  for (const match of css.matchAll(/url\(["']?(\/[^"')]+\.(?:webp|png|jpe?g|avif))["']?\)/gi)) {
+    const source = match[1], id = stableId(`image:${source}`);
+    if (!media.has(id)) media.set(id, { id, source, title:source.split('/').pop(), page:'Fotografías de fondo', file:null, status:'published', sort:media.size });
+  }
   for (const [source, replacement] of mediaPaths) css = css.split(source).join(replacement);
   await writeFile(path, css);
 }

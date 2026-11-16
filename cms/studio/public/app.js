@@ -1,14 +1,29 @@
 const $ = selector => document.querySelector(selector);
 const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[char]));
-const state = { content: {}, config: {}, locale: 'es', query: '', editing: null, dirty: false, publishing: false };
+const state = { content: {}, config: {}, locale: 'es', query: '', status: '', family: '', page: 1, editing: null, editorDirty: false, dirty: false, publishing: false, liveHash: null, version: 0 };
 const pages = [
   ['home','Inicio','/','/en','01'], ['about','Nosotros','/quienes-somos','/en/about-us','02'],
   ['training','CEDETEC','/capacitacion','/en/training','03'], ['support','Soporte técnico','/postventa','/en/after-sales','04'],
   ['contact','Contacto','/contacto','/en/contact','05'], ['privacy','Privacidad','/aviso-de-privacidad','/en/privacy-policy','06'],
+  ['policies','Políticas de Etapel','/politicas-de-etapel','/en/etapel-policies','07'],
 ];
 const navigation = [['overview','Resumen','◈'], ...pages.map(p => [p[0],p[1],p[4]]), ['catalog','Productos','▦'], ['families','Familias de producto','▧'], ['catalog-pages','Páginas del catálogo','▤'], ['brands','Marcas','◎'], ['media','Biblioteca de imágenes','▣'], ['shared','Navegación y pie','≡']];
 const titles = { overview:'Tu sitio, bajo control.', catalog:'Tecnología que merece conocerse.', families:'Una solución para cada necesidad.', brands:'Marcas que nos respaldan.', media:'La imagen de tu experiencia.', shared:'Los detalles también comunican.', 'catalog-pages':'Cada especialidad, en su lugar.' };
 let toastTimer, publicationTimer;
+const paths = {
+  overview:'M3 3h7v7H3z M14 3h7v7h-7z M3 14h7v7H3z M14 14h7v7h-7z',
+  page:'M14 2H5v20h14V7z M14 2v5h5 M8 12h8 M8 16h6',
+  catalog:'m12 3 9 5-9 5-9-5z M3 8v9l9 5 9-5V8 M12 13v9',
+  families:'M3 7V4h6l3 3h9v13H3z',
+  brands:'M20 13 11 22 2 13V3h10z M7 8h.01',
+  media:'M3 3h18v18H3z M3 16l6-6 6 6 3-3 3 3 M16 7h.01',
+  shared:'M4 6h16 M4 12h16 M4 18h16 M8 4v4 M16 10v4 M10 16v4',
+  arrow:'M5 19 19 5 M5 5h14v14',
+  check:'m5 12 4 4L19 6',
+};
+const icon = name => `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${paths[name] || paths.page}"/></svg>`;
+const number = value => new Intl.NumberFormat('es-MX').format(value);
+const hasUnsaved = () => state.dirty || state.editorDirty;
 async function request(path, options = {}) {
   const response = await fetch(path, { ...options, headers: { ...(options.body && !(options.body instanceof File) ? { 'Content-Type':'application/json' } : {}), ...options.headers } });
   const data = await response.json();
@@ -39,21 +54,38 @@ function renderTexts(view) {
 }
 function overview() {
   const count = name => collection(name).filter(r => r.status === 'published').length;
-  return `${heading(titles.overview,'Tu equipo tiene el conocimiento. Este es el espacio para compartirlo.')}<section class="overview-hero"><div><p class="eyebrow light">TODO EMPIEZA CON UNA BUENA CONEXIÓN.</p><h2>Tu sitio.<br><span>Tu siguiente paso.</span></h2><p>Actualiza tus productos, renueva tus imágenes y cuenta lo que hace diferente a Etapel.</p><a class="button orange" href="#home">Editar el inicio <span>↗</span></a></div><div class="hero-lines"><b>E</b><span>EXPERIENCIA QUE SE COMPARTE.</span></div></section><div class="stats"><article><span>Productos publicados</span><b>${count('products')}</b><small>Tu catálogo actual</small></article><article><span>Familias de producto</span><b>${count('families')}</b><small>Soluciones organizadas</small></article><article><span>Textos editables</span><b>${collection('texts').length}</b><small>Español e inglés</small></article><article><span>Imágenes del sitio</span><b>${collection('media').length}</b><small>Una biblioteca compartida</small></article></div><div class="section-heading"><h2>¿Por dónde empezamos?</h2><span>CUIDA CADA PUNTO DE CONTACTO.</span></div><div class="shortcut-grid">${[['home','01','Tu historia, al día.','Textos, presentación y mensajes de la portada.'],['catalog','02','Un catálogo que avanza.','Productos, fichas, familias y detalles técnicos.'],['media','03','Una imagen que habla.','Fotografías del equipo, instalaciones y productos.']].map(([view,n,title,copy]) => `<a class="shortcut" href="#${view}"><span>${n} / CONTENIDO</span><h3>${title}</h3><p>${copy}</p><b>Explorar <i>↗</i></b></a>`).join('')}</div><div class="workflow-note"><span class="status-dot"></span><div><b>Guardar prepara. Publicar actualiza tu sitio.</b><p>Los cambios se guardan en Directus. «Publicar sitio» genera una nueva versión en Vercel. Tu sitio anterior sigue disponible durante la publicación.</p></div></div>`;
+  const drafts = collection('products').filter(r => r.status === 'draft').length;
+  const published = !state.pending && state.liveHash && state.liveHash === state.hash;
+  const publication = state.publishing ? 'Publicación en curso' : !state.liveHash && !state.pending ? 'Publicación por verificar' : published ? 'Todo está al día' : 'Cambios por publicar';
+  return `${heading('Tu experiencia, en movimiento.','Cada detalle cuenta. Haz que tu sitio hable de lo que mejor sabes hacer.',`<a class="button quiet" href="${escapeHtml(state.config.site)}" target="_blank" rel="noopener">Ver mi sitio ${icon('arrow')}</a>`)}
+  <div class="stats">${[['catalog','Productos publicados',count('products'),'Tu catálogo, siempre al día'],['families','Familias de producto',count('families'),'Cada solución en su lugar'],['page','Textos editables',collection('texts').length,'Español e inglés'],['media','Imágenes del sitio',collection('media').length,'Tu biblioteca compartida']].map(([symbol,label,value,note])=>`<article><div><span>${label}</span><b>${number(value)}</b><small>${note}</small></div><span class="stat-icon">${icon(symbol)}</span></article>`).join('')}</div>
+  <div class="dashboard-grid"><section class="overview-hero"><div class="hero-copy"><p class="eyebrow">EL CONOCIMIENTO NOS MUEVE.</p><h2>Tu historia.<br><em>El siguiente capítulo.</em></h2><p>Tu equipo, tus soluciones, tu manera de hacer las cosas. Dale a cada una el espacio que merece.</p><a class="button dark" href="#home">Cuidar mi portada ${icon('arrow')}</a></div><div class="hero-photo"><img src="/workshop.webp" alt="El equipo Etapel" fetchpriority="high"><span>EXPERIENCIA LOCAL. VISIÓN GLOBAL.</span></div></section>
+  <section class="publication-card"><div class="panel-heading"><h2>Listo para compartir</h2>${icon('arrow')}</div><div class="publication-body"><span class="badge ${published ? 'published' : 'draft'}" id="overview-publication">${publication}</span><h3>Una buena versión<br>empieza aquí.</h3><p>Guarda tus cambios y publica cuando todo esté como quieres.</p><ol><li><span>01</span> Elige una sección y edita.</li><li><span>02</span> Guarda tu nueva versión.</li><li><span>03</span> Publica para compartirla.</li></ol><small>${drafts ? `${number(drafts)} producto${drafts === 1 ? '' : 's'} en borrador, fuera del sitio.` : 'Tu catálogo no tiene borradores pendientes.'}</small></div></section></div>
+  <div class="section-heading"><h2>Un lugar para cada detalle.</h2><span>TU PRÓXIMA ACTUALIZACIÓN</span></div><div class="shortcut-grid">${[['home','01','Tu historia, al día.','Textos, presentación y mensajes de la portada.'],['catalog','02','Soluciones que se conocen.','Productos, familias y todos sus detalles técnicos.'],['media','03','Una imagen que habla.','Fotografías del equipo, instalaciones y productos.']].map(([view,n,title,copy]) => `<a class="shortcut" href="#${view}"><span>${n} / CONTENIDO</span><h3>${title}</h3><p>${copy}</p><b>Explorar ${icon('arrow')}</b></a>`).join('')}</div><div class="workflow-note"><span class="status-dot"></span><div><b>Tu ritmo. Tu próxima versión.</b><p>Guardar conserva tus cambios en el Studio. «Publicar sitio» los comparte con tus visitantes.</p></div></div>`;
+}
+function filters(showFamily = false) {
+  return `<div class="collection-filters"><label>Estado<select id="status-filter"><option value="">Todos los estados</option>${[['published','Publicados'],['draft','Borradores'],['archived','Archivados']].map(([value,label])=>`<option value="${value}" ${state.status === value ? 'selected' : ''}>${label}</option>`).join('')}</select></label>${showFamily ? `<label>Familia<select id="family-filter"><option value="">Todas las familias</option>${collection('families').map(row=>`<option value="${escapeHtml(row.payload.slug)}" ${state.family === row.payload.slug ? 'selected' : ''}>${escapeHtml(row.payload.title)}</option>`).join('')}</select></label>` : ''}</div>`;
+}
+function paginate(rows) {
+  const size = currentView() === 'media' ? 24 : 25, total = Math.max(1,Math.ceil(rows.length / size));
+  state.page = Math.min(Math.max(state.page,1),total);
+  return { rows: rows.slice((state.page - 1) * size, state.page * size), footer: `<div class="pagination"><span>${number(rows.length)} ${currentView() === 'media' ? 'imágenes' : 'fichas'} · Página ${state.page} de ${total}</span><div><button class="button quiet" data-action="previous" ${state.page === 1 ? 'disabled' : ''}>← Anterior</button><button class="button quiet" data-action="next" ${state.page === total ? 'disabled' : ''}>Siguiente →</button></div></div>` };
 }
 function renderCollection(view) {
   const names = { catalog:'products', families:'families', brands:'brands' }, name = names[view];
-  const filtered = collection(name).filter(row => `${row.payload.name || row.payload.title} ${row.payload.brand || ''}`.toLowerCase().includes(state.query.toLowerCase()));
-  return `${heading(titles[view], 'Edita las fichas y su estado. Los cambios aparecerán en el sitio después de publicar.', button('＋ ' + ({ catalog:'Nuevo producto', families:'Nueva familia', brands:'Nueva marca' }[view]),'new','button orange'))}<div class="list-toolbar"><span>${filtered.length} fichas</span><label class="search"><span>Buscar</span><input id="collection-search" type="search" placeholder="Nombre o marca…" value="${escapeHtml(state.query)}"></label></div><div class="table-panel"><div class="table-scroll"><table><thead><tr><th>${view === 'catalog' ? 'PRODUCTO' : 'CONTENIDO'}</th><th>${view === 'catalog' ? 'MARCA / FAMILIA' : 'ORDEN'}</th><th>ESTADO</th><th></th></tr></thead><tbody>${filtered.map(row => `<tr><td><div class="record-name">${row.payload.image ? `<img src="${escapeHtml(imageFor(row.payload.image))}" alt="" loading="lazy">` : '<span class="record-letter">'+escapeHtml((row.payload.name || row.payload.title).slice(0,1))+'</span>'}<div><b>${escapeHtml(row.payload.name || row.payload.title)}</b><small>${escapeHtml(row.payload.summary?.slice(0,100) || row.payload.pageDescription?.slice(0,100) || row.payload.note || '')}</small></div></div></td><td>${escapeHtml(view === 'catalog' ? row.payload.brand : row.sort)}${view === 'catalog' ? `<small class="family-name">${escapeHtml(collection('families').find(f => f.payload.slug === row.payload.familySlug)?.payload.title || '')}</small>` : ''}</td><td><span class="badge ${row.status}">${({ published:'Publicado',draft:'Borrador',archived:'Archivado' })[row.status]}</span></td><td><button class="edit-button" data-edit="${row.id}" data-collection="${name}">Editar ↗</button></td></tr>`).join('')}</tbody></table></div>${!filtered.length ? '<div class="empty">No se encontraron fichas.</div>' : ''}</div>`;
+  const filtered = collection(name).filter(row => `${row.payload.name || row.payload.title} ${row.payload.brand || ''} ${row.payload.slug}`.toLowerCase().includes(state.query.toLowerCase()) && (!state.status || row.status === state.status) && (view !== 'catalog' || !state.family || row.payload.familySlug === state.family)).sort((a,b)=>(a.sort || 0)-(b.sort || 0));
+  const page = paginate(filtered);
+  return `${heading(titles[view], 'Edita las fichas y su estado. Los cambios aparecerán en el sitio después de publicar.', button('＋ ' + ({ catalog:'Nuevo producto', families:'Nueva familia', brands:'Nueva marca' }[view]),'new','button orange'))}<div class="list-toolbar"><span>${filtered.length} fichas</span><label class="search"><span>Buscar</span><input id="collection-search" type="search" placeholder="Nombre o marca…" value="${escapeHtml(state.query)}"></label></div>${filters(view === 'catalog')}<div class="table-panel"><div class="table-scroll"><table><thead><tr><th>${view === 'catalog' ? 'PRODUCTO' : 'CONTENIDO'}</th><th>${view === 'catalog' ? 'MARCA / FAMILIA' : 'ORDEN'}</th><th>ESTADO</th><th></th></tr></thead><tbody>${page.rows.map(row => `<tr><td><div class="record-name">${row.payload.image ? `<img src="${escapeHtml(imageFor(row.payload.image))}" alt="" loading="lazy">` : '<span class="record-letter">'+escapeHtml((row.payload.name || row.payload.title).slice(0,1))+'</span>'}<div><b>${escapeHtml(row.payload.name || row.payload.title)}</b><small>${escapeHtml(row.payload.summary?.slice(0,100) || row.payload.pageDescription?.slice(0,100) || row.payload.note || '')}</small></div></div></td><td>${escapeHtml(view === 'catalog' ? row.payload.brand : row.sort)}${view === 'catalog' ? `<small class="family-name">${escapeHtml(collection('families').find(f => f.payload.slug === row.payload.familySlug)?.payload.title || '')}</small>` : ''}</td><td><span class="badge ${row.status}">${({ published:'Publicado',draft:'Borrador',archived:'Archivado' })[row.status]}</span></td><td><button class="edit-button" data-edit="${row.id}" data-collection="${name}">Editar ↗</button></td></tr>`).join('')}</tbody></table></div>${!filtered.length ? '<div class="empty">No se encontraron fichas.</div>' : ''}${page.footer}</div>`;
 }
 function renderMedia() {
   const filtered = collection('media').filter(row => `${row.title} ${row.page} ${row.source}`.toLowerCase().includes(state.query.toLowerCase()));
-  return `${heading(titles.media,'Sustituye una fotografía en todos los lugares donde se utiliza.',button('＋ Subir fotografía','upload-media','button orange'))}<div class="list-toolbar"><span>${filtered.length} imágenes</span><label class="search"><span>Buscar</span><input id="collection-search" type="search" placeholder="Imagen, producto o página…" value="${escapeHtml(state.query)}"></label></div><div class="media-grid">${filtered.map(row => `<article class="media-card"><div class="media-image"><img src="${escapeHtml(imageUrl(row))}" alt="${escapeHtml(row.title)}" loading="lazy">${row.file ? '<span class="badge published">Actualizada</span>' : ''}</div><div><b>${escapeHtml(row.title)}</b><small>${escapeHtml(row.page === '/' ? 'Inicio' : row.page)}</small><button class="edit-button" data-edit="${row.id}" data-collection="media">Cambiar imagen ↗</button></div></article>`).join('')}</div>`;
+  const page = paginate(filtered);
+  return `${heading(titles.media,'Sustituye una fotografía en todos los lugares donde se utiliza.',button('＋ Subir fotografía','upload-media','button orange'))}<div class="list-toolbar"><span>${filtered.length} imágenes</span><label class="search"><span>Buscar</span><input id="collection-search" type="search" placeholder="Imagen, producto o página…" value="${escapeHtml(state.query)}"></label></div><div class="media-grid">${page.rows.map(row => `<article class="media-card"><div class="media-image"><img src="${escapeHtml(imageUrl(row))}" alt="${escapeHtml(row.title)}" loading="lazy">${row.file ? '<span class="badge published">Actualizada</span>' : ''}</div><div><b>${escapeHtml(row.title)}</b><small>${escapeHtml(row.page === '/' ? 'Inicio' : row.page)}</small><button class="edit-button" data-edit="${row.id}" data-collection="media">Cambiar imagen ↗</button></div></article>`).join('')}</div>${!filtered.length ? '<div class="empty">No se encontraron imágenes.</div>' : ''}${page.footer}`;
 }
 function render() {
   const view = currentView();
   $('#breadcrumb').textContent = navigation.find(n => n[0] === view)?.[1] || 'Resumen';
-  $('#navigation').innerHTML = navigation.map(([key,name,icon]) => `<a href="#${key}" class="${view === key ? 'active' : ''}"><span class="nav-icon">${icon}</span>${name}${view === key ? '<i></i>' : ''}</a>`).join('');
+  $('#navigation').innerHTML = navigation.map(([key,name]) => `${({overview:'MI ESPACIO',home:'PÁGINAS DEL SITIO',catalog:'CATÁLOGO Y RECURSOS'})[key] ? `<span class="nav-label">${({overview:'MI ESPACIO',home:'PÁGINAS DEL SITIO',catalog:'CATÁLOGO Y RECURSOS'})[key]}</span>` : ''}<a href="#${key}" class="${view === key ? 'active' : ''}" ${view === key ? 'aria-current="page"' : ''}><span class="nav-icon">${icon(key)}</span>${name}${view === key ? '<i></i>' : ''}</a>`).join('');
   let html;
   if (['catalog','families','brands'].includes(view)) html = renderCollection(view);
   else if (view === 'media') html = renderMedia();
@@ -68,13 +100,18 @@ function render() {
     html = `${heading(page?.[1] || titles[view], 'Los campos conservan la estructura y el diseño de tu sitio.',`<a class="button quiet" href="${escapeHtml(sitePath(route))}" target="_blank" rel="noopener">Ver la página ↗</a>`)}${languageBar()}${selector}${renderTexts(view)}`;
   } else html = overview();
   $('#main').innerHTML = html;
-  $('#main').querySelectorAll('textarea,input,select').forEach(field => field.addEventListener('input', () => { if (field.id !== 'collection-search') state.dirty = true; }));
+  $('#main').querySelectorAll('textarea,input,select').forEach(field => field.addEventListener('input', () => { if (field.closest('#texts-form')) state.dirty = true; }));
 }
 async function reload() { const data = await request('/api/content'); state.content = data.content; state.hash = data.hash; }
 async function enter() {
   const [user, config] = await Promise.all([request('/api/session'),request('/api/config')]);
   state.config = config; $('#account-name').textContent = user.name || user.email; $('#visit-site').href = config.site;
-  await reload(); $('#login-view').hidden = true; $('#studio-view').hidden = false; $('#publish').disabled = !config.publishReady; render();
+  $('.account-avatar').textContent = (user.name || user.email || 'E').slice(0,1).toUpperCase();
+  $('#today').dateTime = new Date().toISOString().slice(0,10);
+  $('#today').textContent = new Intl.DateTimeFormat('es-MX',{day:'numeric',month:'long',year:'numeric'}).format(new Date());
+  await reload();
+  state.liveHash = (await request('/api/publication').catch(()=>({hash:null}))).hash;
+  $('#login-view').hidden = true; $('#studio-view').hidden = false; $('#publish').disabled = !config.publishReady; render();
 }
 function field(label, name, value, { type = 'text', rows, required = false, disabled = false, help = '' } = {}) {
   return `<label class="editable-field"><span class="field-heading">${label}<small>EDITABLE</small></span>${rows ? `<textarea name="${name}" rows="${rows}" ${required ? 'required' : ''}>${escapeHtml(value)}</textarea>` : `<input name="${name}" type="${type}" value="${escapeHtml(value)}" ${required ? 'required' : ''} ${disabled ? 'readonly' : ''}>`}${help ? `<small class="field-help">${help}</small>` : ''}</label>`;
@@ -89,23 +126,24 @@ function edit(name, id = null) {
   const row = id ? collection(name).find(r => r.id === id) : null;
   const family = collection('families').find(r => r.status === 'published')?.payload.slug;
   const defaults = name === 'products' ? { slug:'',name:'',brand:'ETAPEL',familySlug:family,category:'',technology:'',application:'',summary:'',description:'',summaryEn:'',descriptionEn:'',image:collection('media')[0]?.source,gallery:[],badges:[],specs:[],variants:[],highlights:[],detailBlocks:[],downloads:[] } : name === 'families' ? { slug:'',title:'',shortTitle:'',href:'',menuDescription:'',pageDescription:'',image:collection('media')[0]?.source,accent:'',items:[] } : { name:'',slug:'',note:'' };
-  state.editing = { name, row, payload: structuredClone(row?.payload || defaults) };
+  state.editing = { name, row, payload: structuredClone(row?.payload || defaults) }; state.editorDirty = false;
   const p = state.editing.payload;
   $('#editor-title').textContent = name === 'media' ? 'La fotografía correcta.' : row ? p.name || p.title : 'Una nueva ficha.';
   $('#editor-kind').textContent = ({products:'PRODUCTOS',families:'FAMILIAS DE PRODUCTO',brands:'MARCAS',media:'BIBLIOTECA DE IMÁGENES'})[name];
   let html = '';
   if (name === 'media') html = `<img class="editor-preview large" src="${escapeHtml(imageUrl(row))}" alt="${escapeHtml(row.title)}">${field('Descripción de la imagen','title',row.title,{ required:true })}<p class="notice">Esta fotografía se utiliza en el sitio. Al cambiarla se actualizarán todos sus usos después de publicar.</p>${button('Elegir una nueva imagen','replace-image','button orange')}<p class="field-help">JPG, PNG, WebP o AVIF · Máximo 25 MB.</p><input name="file" type="hidden" value="${row.file || ''}">`;
   else if (name === 'products') {
-    html = `<div class="editor-grid">${field('Nombre del producto','name',p.name,{required:true})}${field('Marca','brand',p.brand,{required:true})}${field('Dirección del producto','slug',p.slug,{required:true,disabled:!!row,help:row ? 'Conservamos el enlace actual del producto.' : 'Minúsculas y guiones, por ejemplo: nueva-pistola-sata.'})}<label class="editable-field"><span class="field-heading">Familia<small>EDITABLE</small></span><select name="familySlug">${collection('families').filter(r=>r.status === 'published').map(r=>`<option value="${r.payload.slug}" ${r.payload.slug === p.familySlug ? 'selected' : ''}>${escapeHtml(r.payload.title)}</option>`).join('')}</select></label></div>${field('Resumen · Español','summary',p.summary,{rows:3,required:true})}${field('Descripción · Español','description',p.description,{rows:5,required:true})}<details class="editor-details"><summary>Versión inglesa</summary>${field('Summary · English','summaryEn',p.summaryEn || '',{rows:3})}${field('Description · English','descriptionEn',p.descriptionEn || '',{rows:5})}</details>${mediaSelector(p.image)}<details class="editor-details"><summary>Galería de fotografías</summary><p class="field-help">La portada se añade automáticamente como primera fotografía.</p><div class="gallery-options">${collection('media').map(r=>`<label><input type="checkbox" name="gallery" value="${escapeHtml(r.source)}" ${p.gallery.includes(r.source) ? 'checked' : ''}>${escapeHtml(r.title)}</label>`).join('')}</div></details><div class="editor-grid">${field('Categoría','category',p.category)}${field('Línea de catálogo','catalogLine',p.catalogLine || '')}${field('Tecnología','technology',p.technology)}${field('Aplicación','application',p.application)}</div>${field('Puntos destacados · uno por línea','highlights',p.highlights.join('\n'),{rows:4})}${pairs('specs',p.specs,pairLabels.specs)}${pairs('variants',p.variants,pairLabels.variants)}${pairs('detailBlocks',p.detailBlocks,pairLabels.detailBlocks)}${pairs('downloads',(p.downloads||[]).filter(d=>typeof d !== 'string').map(d=>({label:d.label,url:d.url})),pairLabels.downloads)}`;
+    html = `<div class="editor-grid">${field('Nombre del producto','name',p.name,{required:true})}${field('Marca','brand',p.brand,{required:true})}${field('Dirección del producto','slug',p.slug,{required:true,disabled:!!row,help:row ? 'Conservamos el enlace actual del producto.' : 'Minúsculas y guiones, por ejemplo: nueva-pistola-sata.'})}<label class="editable-field"><span class="field-heading">Familia<small>EDITABLE</small></span><select name="familySlug">${collection('families').filter(r=>r.status === 'published').map(r=>`<option value="${r.payload.slug}" ${r.payload.slug === p.familySlug ? 'selected' : ''}>${escapeHtml(r.payload.title)}</option>`).join('')}</select></label></div>${field('Resumen · Español','summary',p.summary,{rows:3,required:true})}${field('Descripción · Español','description',p.description,{rows:5,required:true})}<details class="editor-details"><summary>Versión inglesa</summary>${field('Summary · English','summaryEn',p.summaryEn || '',{rows:3})}${field('Description · English','descriptionEn',p.descriptionEn || '',{rows:5})}</details>${mediaSelector(p.image)}<details class="editor-details"><summary>Galería de fotografías</summary><p class="field-help">La portada se añade automáticamente como primera fotografía.</p><div class="gallery-options">${collection('media').map(r=>`<label><input type="checkbox" name="gallery" value="${escapeHtml(r.source)}" ${p.gallery.includes(r.source) ? 'checked' : ''}>${escapeHtml(r.title)}</label>`).join('')}</div></details><div class="editor-grid">${field('Categoría','category',p.category)}${field('Línea de catálogo','catalogLine',p.catalogLine || '')}${field('Tecnología','technology',p.technology)}${field('Aplicación','application',p.application)}</div><details class="editor-details"><summary>Organización y detalles del catálogo</summary><div class="editor-grid">${field('Sección','catalogSection',p.catalogSection || '')}${field('Sublínea','catalogSubline',p.catalogSubline || '')}${field('Orden en catálogo','catalogOrder',p.catalogOrder ?? 0,{type:'number'})}${field('Patrón de aplicación','sprayPattern',p.sprayPattern || '')}${field('Tecnología de boquilla','nozzleTechnology',p.nozzleTechnology || '')}${field('Interés','interest',p.interest || '')}</div>${field('Etiquetas · una por línea','badges',(p.badges || []).join('\n'),{rows:3})}${field('Refacciones · una por línea','spareParts',(p.spareParts || []).join('\n'),{rows:3})}${field('Mensajes de galería · uno por línea','highlightSlides',(p.highlightSlides || []).join('\n'),{rows:3})}${field('Página del fabricante','sourceUrl',p.sourceUrl || '',{type:'url'})}</details>${field('Puntos destacados · uno por línea','highlights',p.highlights.join('\n'),{rows:4})}${pairs('specs',p.specs,pairLabels.specs)}${pairs('variants',p.variants,pairLabels.variants)}${pairs('detailBlocks',p.detailBlocks,pairLabels.detailBlocks)}${pairs('downloads',(p.downloads||[]).filter(d=>typeof d !== 'string').map(d=>({label:d.label,url:d.url})),pairLabels.downloads)}`;
   } else if (name === 'families') html = `${field('Nombre de la familia','title',p.title,{required:true})}${field('Nombre corto','shortTitle',p.shortTitle,{required:true})}${field('Dirección de la familia','slug',p.slug,{required:true,disabled:!!row})}${field('Descripción en el menú','menuDescription',p.menuDescription,{rows:3})}${field('Descripción de la página','pageDescription',p.pageDescription,{rows:4})}${mediaSelector(p.image)}${field('Especialidades · una por línea','items',p.items.join('\n'),{rows:5})}`;
   else html = `${field('Nombre de la marca','name',p.name,{required:true})}${field('Identificador','slug',p.slug,{required:true,disabled:!!row})}${field('Texto complementario','note',p.note || '')}`;
-  if (name !== 'media') html += `<div class="editor-grid"><label class="editable-field"><span class="field-heading">Estado<small>EDITABLE</small></span><select name="status">${[['draft','Borrador'],['published','Publicado'],['archived','Archivado']].map(([v,l])=>`<option value="${v}" ${(row?.status || 'draft') === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label>${field('Orden de aparición','sort',row?.sort ?? collection(name).length,{type:'number'})}</div><p class="notice">Guardar conserva tu ficha en Directus. «Publicar sitio» actualiza la web. Las fichas en borrador o archivadas no se incluyen.</p>`;
+  if (name !== 'media') html += `<div class="editor-grid"><label class="editable-field"><span class="field-heading">Estado<small>EDITABLE</small></span><select name="status">${[['draft','Borrador'],['published','Publicado'],['archived','Archivado']].map(([v,l])=>`<option value="${v}" ${(row?.status || 'draft') === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label>${field('Orden de aparición','sort',row?.sort ?? collection(name).length,{type:'number'})}</div><p class="notice">Guardar conserva tu ficha en el Studio. «Publicar sitio» actualiza la web. Las fichas en borrador o archivadas no se incluyen.</p>`;
   $('#editor-fields').innerHTML = html; $('#editor-error').textContent = ''; $('#editor').showModal();
 }
-function closeEditor() { $('#editor').close(); state.editing = null; }
+function closeEditor(force = false) { if (!force && state.editorDirty && !confirm('Tienes cambios sin guardar. ¿Quieres cerrar la ficha?')) return; $('#editor').close(); state.editing = null; state.editorDirty = false; }
 function lines(value) { return String(value || '').split('\n').map(v=>v.trim()).filter(Boolean); }
 async function saveRecord(name,row,values) {
   const saved = await request(`/api/records/etapel_${name}${row ? '/' + row.id : ''}`, { method:row ? 'PATCH' : 'POST', body:JSON.stringify({ ...values, revision:row?.revision || 0 }) });
+  state.pending = true; state.version++;
   const rows = collection(name), index = rows.findIndex(r=>r.id === saved.id);
   if (index >= 0) rows[index] = saved; else rows.push(saved);
   return saved;
@@ -115,14 +153,17 @@ $('#login-form').addEventListener('submit', async event => {
   try { const form = new FormData(formElement); await request('/api/login',{method:'POST',body:JSON.stringify(Object.fromEntries(form))}); formElement.reset(); await enter(); }
   catch(error) { $('#login-error').textContent = error.message; } finally { submit.disabled = false; }
 });
-$('#logout').addEventListener('click',async()=>{if(state.dirty && !confirm('Tienes cambios sin guardar. ¿Quieres salir?'))return;await request('/api/logout',{method:'POST',body:'{}'});state.content={};state.dirty=false;clearInterval(publicationTimer);$('#studio-view').hidden=true;$('#login-view').hidden=false;});
-window.addEventListener('beforeunload',event=>{if(state.dirty){event.preventDefault();event.returnValue='';}});
-window.addEventListener('hashchange',()=>{if(state.dirty && !confirm('Hay textos sin guardar. ¿Quieres cambiar de sección?')){history.replaceState(null,'','#'+state.lastView);return;}state.dirty=false;state.query='';state.lastView=currentView();$('#sidebar').classList.remove('open');$('#nav-backdrop').hidden=true;render();});
-$('#mobile-menu').onclick=()=>{$('#sidebar').classList.add('open');$('#nav-backdrop').hidden=false;};
-$('#nav-backdrop').onclick=()=>{$('#sidebar').classList.remove('open');$('#nav-backdrop').hidden=true;};
+$('#logout').addEventListener('click',async()=>{if(hasUnsaved() && !confirm('Tienes cambios sin guardar. ¿Quieres salir?'))return;await request('/api/logout',{method:'POST',body:'{}'});state.content={};state.dirty=false;clearInterval(publicationTimer);$('#studio-view').hidden=true;$('#login-view').hidden=false;});
+window.addEventListener('beforeunload',event=>{if(hasUnsaved()){event.preventDefault();event.returnValue='';}});
+window.addEventListener('hashchange',()=>{if(state.dirty && !confirm('Hay textos sin guardar. ¿Quieres cambiar de sección?')){history.replaceState(null,'','#'+state.lastView);return;}state.dirty=false;state.query='';state.status='';state.family='';state.page=1;state.lastView=currentView();setNav(false);render();});
+function setNav(open) { $('#sidebar').classList.toggle('open',open); $('#nav-backdrop').hidden=!open; $('#mobile-menu').setAttribute('aria-expanded',String(open)); }
+$('#mobile-menu').onclick=()=>setNav(true);
+$('#nav-backdrop').onclick=()=>setNav(false);
+window.addEventListener('keydown',event=>{if(event.key==='Escape' && $('#sidebar').classList.contains('open')){setNav(false);$('#mobile-menu').focus();}});
 $('#main').addEventListener('click',event=>{
   const editButton=event.target.closest('[data-edit]'); if(editButton)return edit(editButton.dataset.collection,editButton.dataset.edit);
   const action=event.target.closest('[data-action]')?.dataset.action;
+  if(action==='previous' || action==='next'){state.page+=action==='next'?1:-1;render();$('#main').focus({preventScroll:true});window.scrollTo({top:0,behavior:'instant'});return;}
   if(action==='new')return edit(({catalog:'products',families:'families',brands:'brands'})[currentView()]);
   if(action==='upload-media'){state.uploadTarget=null;$('#image-upload').click();}
   const locale=event.target.closest('[data-locale]')?.dataset.locale;
@@ -130,10 +171,10 @@ $('#main').addEventListener('click',event=>{
 });
 $('#main').addEventListener('input',event=>{
   if(event.target.id==='collection-search'){
-    const position=event.target.selectionStart;state.query=event.target.value;render();const input=$('#collection-search');input.focus();try{input.setSelectionRange(position,position);}catch{}
+    const position=event.target.selectionStart;state.query=event.target.value;state.page=1;render();const input=$('#collection-search');input.focus();try{input.setSelectionRange(position,position);}catch{}
   }
 });
-$('#main').addEventListener('change',event=>{if(event.target.id==='catalog-page'){if(state.dirty && !confirm('¿Cambiar de página sin guardar?'))return;state.catalogPage=event.target.value;state.dirty=false;render();}});
+$('#main').addEventListener('change',event=>{if(['status-filter','family-filter'].includes(event.target.id)){state[event.target.id==='status-filter'?'status':'family']=event.target.value;state.page=1;render();return;}if(event.target.id==='catalog-page'){if(state.dirty && !confirm('¿Cambiar de página sin guardar?'))return;state.catalogPage=event.target.value;state.dirty=false;render();}});
 $('#main').addEventListener('submit',async event=>{
   if(event.target.id!=='texts-form')return;
   event.preventDefault();const submit=event.target.querySelector('[type=submit]');submit.disabled=true;$('#texts-error').textContent='';
@@ -142,9 +183,12 @@ $('#main').addEventListener('submit',async event=>{
     state.dirty=false;notify(count ? `${count} textos guardados. Publica el sitio para verlos en línea.` : 'No hay cambios pendientes.');
   }catch(error){$('#texts-error').textContent=error.message;}finally{submit.disabled=false;}
 });
+$('#editor-fields').addEventListener('input',()=>{state.editorDirty=true;});
+$('#editor-fields').addEventListener('change',()=>{state.editorDirty=true;});
+$('#editor').addEventListener('cancel',event=>{event.preventDefault();closeEditor();});
 $('#editor-fields').addEventListener('click',event=>{
-  const add=event.target.closest('[data-add-pair]');if(add){const name=add.dataset.addPair;add.closest('[data-pairs]').querySelector('.pair-rows').insertAdjacentHTML('beforeend',pairRow({},pairLabels[name]));}
-  if(event.target.closest('[data-remove-pair]'))event.target.closest('.pair-row').remove();
+  const add=event.target.closest('[data-add-pair]');if(add){state.editorDirty=true;const name=add.dataset.addPair;add.closest('[data-pairs]').querySelector('.pair-rows').insertAdjacentHTML('beforeend',pairRow({},pairLabels[name]));}
+  if(event.target.closest('[data-remove-pair]')){state.editorDirty=true;event.target.closest('.pair-row').remove();}
   if(event.target.closest('[data-action="replace-image"]')){state.uploadTarget=state.editing.row;$('#image-upload').click();}
 });
 $('#editor-fields').addEventListener('change',event=>{if(event.target.name==='image')$('#editor-image-preview').src=imageFor(event.target.value);});
@@ -157,6 +201,8 @@ $('#editor-form').addEventListener('submit',async event=>{
       for(const [key,value]of form)if(!['gallery','sort','status'].includes(key))p[key]=value;
       if(name==='products'){
         p.gallery=[p.image,...form.getAll('gallery').filter(path=>path!==p.image)];p.highlights=lines(form.get('highlights'));
+        for(const key of ['badges','spareParts','highlightSlides'])p[key]=lines(form.get(key));
+        p.catalogOrder=Number(form.get('catalogOrder'));
         for(const [key,keys]of Object.entries({specs:['label','value'],variants:['name','note'],detailBlocks:['title','body'],downloads:['label','url']})){
           const rows=[...event.target.querySelectorAll(`[data-pairs="${key}"] .pair-row`)];
           p[key]=rows.map(el=>({[keys[0]]:el.querySelector('[data-pair-key]').value,[keys[1]]:el.querySelector('[data-pair-value]').value}));
@@ -165,28 +211,28 @@ $('#editor-form').addEventListener('submit',async event=>{
       }else if(name==='families'){p.items=lines(form.get('items'));p.href='/linea-de-producto/'+p.slug;}
       values={payload:p,status:form.get('status'),sort:Number(form.get('sort'))};
     }
-    await saveRecord(name,row,values);closeEditor();render();notify('Cambios guardados en Directus. Publica cuando estén listos.');
+    await saveRecord(name,row,values);closeEditor(true);render();notify('Cambios guardados. Publica cuando estén listos.');
   }catch(error){$('#editor-error').textContent=error.message;}finally{submit.disabled=false;}
 });
-$('#close-editor').onclick=closeEditor;$('#cancel-editor').onclick=closeEditor;
+$('#close-editor').onclick=()=>closeEditor();$('#cancel-editor').onclick=()=>closeEditor();
 $('#image-upload').addEventListener('change',async event=>{
   const file=event.target.files[0];if(!file)return;
   if(file.size>25*1024*1024){notify('El máximo es 25 MB por fotografía.');event.target.value='';return;}
   notify('Subiendo fotografía…');
   try{
     const {id}=await request('/api/upload',{method:'POST',headers:{'Content-Type':file.type},body:file});
-    if(state.uploadTarget){$('#editor-form [name=file]').value=id;$('#editor-fields .editor-preview').src='/api/files/'+id;}
-    else{const saved=await request('/api/records/etapel_media',{method:'POST',body:JSON.stringify({title:file.name,file:id,status:'published',revision:0})});collection('media').push(saved);render();}
+    if(state.uploadTarget){state.editorDirty=true;$('#editor-form [name=file]').value=id;$('#editor-fields .editor-preview').src='/api/files/'+id;}
+    else{state.pending=true;state.version++;const saved=await request('/api/records/etapel_media',{method:'POST',body:JSON.stringify({title:file.name,file:id,status:'published',revision:0})});collection('media').push(saved);render();}
     notify(state.uploadTarget?'Fotografía subida. Guarda la ficha para conservar el cambio.':'Fotografía añadida a la biblioteca.');
   }catch(error){notify(error.message);}finally{event.target.value='';}
 });
 $('#publish').addEventListener('click',async()=>{
-  if(state.dirty){notify('Guarda tus textos antes de publicar.');return;}
+  if(hasUnsaved()){notify('Guarda tus cambios antes de publicar.');return;}
   $('#publish').disabled=true;const panel=$('#publication-status');panel.hidden=false;panel.textContent='Preparando la publicación…';
   try{
-    const result=await request('/api/publish',{method:'POST',body:'{}'});state.publishing=true;panel.textContent=result.message;
+    const version=state.version;const result=await request('/api/publish',{method:'POST',body:'{}'});state.publishing=true;panel.textContent=result.message;
     let checks=0;clearInterval(publicationTimer);publicationTimer=setInterval(async()=>{
-      checks++;try{const current=await request('/api/publication');if(current.hash===result.hash){clearInterval(publicationTimer);state.publishing=false;panel.textContent='Tu sitio está actualizado. La nueva versión ya está en línea.';$('#publish').disabled=false;notify('Sitio publicado correctamente.');}}
+      checks++;try{const current=await request('/api/publication');if(current.hash===result.hash){clearInterval(publicationTimer);state.publishing=false;state.liveHash=result.hash;if(state.version===version){state.hash=result.hash;state.pending=false;}panel.textContent='Tu sitio está actualizado. La nueva versión ya está en línea.';$('#publish').disabled=false;notify('Sitio publicado correctamente.');if(currentView()==='overview')render();}}
       catch{}if(checks>=60){clearInterval(publicationTimer);state.publishing=false;panel.textContent='La publicación aún no se ha confirmado. Revisa el despliegue en Vercel; la versión anterior sigue disponible.';$('#publish').disabled=false;}
     },10000);
   }catch(error){panel.textContent=error.message;$('#publish').disabled=false;}

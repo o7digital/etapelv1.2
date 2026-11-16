@@ -18,6 +18,11 @@ const sharedScope = (node, route) => {
 export function processDocument(html, route, overrides = new Map()) {
   const document = parse(html), fields = new Map(), media = new Map();
   const locale = route.startsWith('/en') ? 'en' : 'es';
+  function image(source, title = '') {
+    if (!/^\/[^?#]+\.(avif|webp|png|jpe?g)$/i.test(source)) return;
+    const id = stableId(`image:${source}`);
+    media.set(id, { id, source, title: title || source.split('/').pop(), page: route, file: null, status: 'published', sort: media.size });
+  }
   function visit(node, ignored = false, section = 'Contenido de la página') {
     ignored ||= blocked.has(node.tagName) || attr(node, 'data-product-detail') !== undefined ||
       attr(node, 'data-catalog-card') !== undefined || attr(node, 'data-product-catalog') !== undefined ||
@@ -44,10 +49,15 @@ export function processDocument(html, route, overrides = new Map()) {
         if (overrides.has(id)) content.value = overrides.get(id);
       }
     }
+    if (!ignored && node.tagName === 'title') {
+      const source = textOf(node), id = stableId(`${route}:meta:title`);
+      fields.set(id, { id, page:route, locale, section:'SEO', label:'Título en buscadores', source, value:source, kind:'text', status:'published', sort:fields.size });
+      if (overrides.has(id)) node.childNodes = [{ nodeName:'#text', value:overrides.get(id), parentNode:node }];
+    }
     // All local content images, including product galleries, share one media entry.
-    for (const a of node.attrs || []) if (['src', 'poster'].includes(a.name) && /^\/(images|slider)\//.test(a.value)) {
-      const id = stableId(`image:${a.value}`);
-      media.set(id, { id, source: a.value, title: attr(node, 'alt') || a.value.split('/').pop(), page: route, file: null, status: 'published', sort: media.size });
+    for (const a of node.attrs || []) {
+      if (['src', 'poster'].includes(a.name)) image(a.value, attr(node, 'alt'));
+      if (a.name === 'srcset') for (const candidate of a.value.split(',')) image(candidate.trim().replace(/\s+\d+(?:\.\d+)?[wx]$/, ''), attr(node, 'alt'));
     }
     for (const child of node.childNodes || []) visit(child, ignored, section);
   }

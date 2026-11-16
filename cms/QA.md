@@ -13,3 +13,13 @@ La publication du contenu est confirmée uniquement par l’empreinte servie sur
 - Upload réel de la photographie approuvée de l’équipe, remplacement de son emplacement et rechargement du Studio : état conservé.
 - Premier Deploy Hook déclenché depuis l’API Studio : build de production READY et empreinte demandée retrouvée sur le site public.
 - Contrôle Vercel en production : accueil, anglais, catalogue, fiches, CEDETEC, support, contact et accès `/admin/`.
+
+# Validation Etapel Studio — 16 novembre 2026
+
+- `dev2` créée depuis `dev`, avec `origin/main` déjà inclus dans son historique ; aucune correction récente perdue.
+- `npm test` : 25 tests réussis. Nouveau contrôle des titres SEO et des sources d’images mobiles.
+- Build statique connecté au vrai Directus avec le jeton en lecture seule : 547 pages.
+- Synchronisation additive : 110 textes et 15 médias ajoutés ; aucun contenu existant écrasé. Total : 1 928 textes, 356 médias, 248 produits, 11 familles et 25 marques.
+- Firefox : connexion réelle, tableau de bord, filtres et pagination produits/médias, création et édition d’un brouillon, rechargement et persistance, confirmation des changements non enregistrés, politiques en espagnol/anglais, navigation à 390 px et déconnexion. Brouillons QA supprimés après les parcours.
+- Aucune erreur JavaScript constatée ; aucun débordement horizontal mobile.
+- Publication Vercel et Deploy Hook du Studio raccordés à `dev2`. Polices Manrope et Italiana servies localement, avec leurs licences.

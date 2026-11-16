@@ -2,7 +2,7 @@
 
 Studio éditorial : https://studio-production-f1a3.up.railway.app · Accès depuis le site : https://etapelv1-2.vercel.app/admin/
 
-Le projet Railway **etapel-cms** est entièrement indépendant de Nathalie : sa propre instance Directus 12.6.1, PostgreSQL 18, son volume de médias, son service Studio, ses comptes et ses jetons. Les identifiants non sensibles figurent dans `deployment.json`. L'interface reprend le bleu nuit, le blanc et l'orange Etapel. Le site vitrine reste sur Vercel ; la boutique `etapel-tienda` n'est pas modifiée.
+Le projet Railway **etapel-cms** est entièrement indépendant de Nathalie : sa propre instance Directus 12.6.1, PostgreSQL 18, son volume de médias, son service Studio, ses comptes et ses jetons. Les identifiants non sensibles figurent dans `deployment.json`. L'interface reprend l'esprit éditorial de Nathalie Studio : Manrope et Italiana hébergées localement, fond crème, navigation bleu nuit et accents cuivrés Etapel. Les données et les accès restent entièrement séparés. Le site vitrine reste sur Vercel ; la boutique `etapel-tienda` n'est pas modifiée.
 
 ## Accès
 
@@ -12,15 +12,15 @@ Le rôle `Etapel content editor` est préparé pour les comptes éditoriaux. L'i
 
 ## Éditer et publier
 
-- **Inicio, Nosotros, CEDETEC, Soporte técnico, Contacto, Privacidad** : textes et métadonnées SEO, classés selon les sections actuelles. Les textes sont préremplis ; le vert signale les champs éditables.
-- **Productos** : 225 fiches initiales, création, édition, brouillons et archivage, descriptions espagnoles/anglaises, marque, famille, photos, galerie, points forts, caractéristiques, variantes, blocs et documents. Les adresses existantes sont conservées.
+- **Inicio, Nosotros, CEDETEC, Soporte técnico, Contacto, Privacidad, Políticas de Etapel** : textes et métadonnées SEO, classés selon les sections actuelles. Les textes et titres SEO sont préremplis ; le vert signale les champs éditables. Les politiques sont disponibles en espagnol et en anglais.
+- **Productos** : 248 fiches, création, édition, brouillons et archivage, descriptions espagnoles/anglaises, marque, famille, photos, galerie, points forts, caractéristiques, variantes, blocs et documents. Les adresses existantes sont conservées.
 - **Familias de producto** : les 11 familles initiales, descriptions, photographie, ordre et spécialités. Les familles liées aux anciens liens et celles qui contiennent des produits publiés restent protégées contre l'archivage.
 - **Páginas del catálogo** : textes des pages de familles en espagnol et en anglais.
 - **Marcas** : les 25 marques du bandeau, ajout, libellé, ordre et archivage. Les styles propres aux marques existantes sont conservés.
-- **Biblioteca de imágenes** : 321 emplacements initiaux, photos des sections et galeries produits. Changer une photo met à jour tous ses usages. L'upload d'une nouvelle image l'ajoute à la bibliothèque ; elle peut ensuite être choisie dans une fiche. JPG, PNG, WebP, AVIF, 25 Mo maximum.
+- **Biblioteca de imágenes** : 356 emplacements, photos des sections et galeries produits. Changer une photo met à jour tous ses usages. L'upload d'une nouvelle image l'ajoute à la bibliothèque ; elle peut ensuite être choisie dans une fiche. JPG, PNG, WebP, AVIF, 25 Mo maximum. La bibliothèque inclut les variantes mobiles du diaporama et les photographies de fond.
 - **Navegación y pie** : libellés partagés des menus et pieds de page. La logique des formulaires, d'Olivia, les liens système et le filtrage catalogue restent dans le code.
 
-**Guardar** enregistre dans Directus. **Publicar sitio** déclenche le Deploy Hook Vercel de `dev`, désormais branche de production de ce projet. Le Studio vérifie l'empreinte du contenu servi pour confirmer sa publication ; l'acceptation du hook ne signifie pas que le build est terminé. Si le CMS, un média ou le build échoue, le site précédent reste disponible. La durée habituelle dépend de la file Vercel et du volume de médias. `main` n'est pas modifié. L'ancienne variable Olivia Preview spécifique à `dev` a été conservée avec une portée Preview générale pour permettre cette configuration ; la variable Production n'a pas changé.
+**Guardar** enregistre dans Directus. **Publicar sitio** déclenche le Deploy Hook Vercel de `dev2`, désormais branche de production de ce projet. Le Studio vérifie l'empreinte du contenu servi pour confirmer sa publication ; l'acceptation du hook ne signifie pas que le build est terminé. Si le CMS, un média ou le build échoue, le site précédent reste disponible. La durée habituelle dépend de la file Vercel et du volume de médias. `main` n'est pas modifié. L'ancienne variable Olivia Preview spécifique à `dev` a été conservée avec une portée Preview générale pour permettre cette configuration ; la variable Production n'a pas changé.
 
 L'espagnol et l'anglais sont éditables séparément ; aucune traduction automatique n'est facturée ni déclenchée. Les champs de collection en anglais existants sont conservés. L'archivage/brouillon d'un texte ou d'une photo rétablit sa valeur intégrée ; un produit ou une famille non publié est exclu du prochain build. Les textes ne peuvent pas injecter de HTML. Les médias sont copiés sur Vercel à la publication, sans exposer de jeton au navigateur.
 
@@ -31,6 +31,18 @@ L'espagnol et l'anglais sont éditables séparément ; aucune traduction automat
 La carte initiale est exportée depuis le HTML réellement produit et le catalogue du dépôt. Pour ajouter des textes après un changement de code : build sans `DIRECTUS_URL`, `node cms/export.mjs`, puis lancer le bootstrap avec les variables du **seul projet Etapel**. Le bootstrap ajoute les éléments manquants sans écraser les contenus existants. Ne pas le relancer après une suppression volontaire : préférer l'archivage. `.cms/` est ignoré par Git.
 
 Variables Vercel Production : `DIRECTUS_URL`, `DIRECTUS_READ_TOKEN`, `PUBLIC_STUDIO_URL`. Variables Studio : `DIRECTUS_URL`, `STUDIO_SESSION_SECRET`, `STUDIO_ORIGIN`, `STUDIO_SITE_URL`, `VERCEL_DEPLOY_HOOK`, `PORT`. Les sessions sont chiffrées dans un cookie HttpOnly, Secure, SameSite Strict ; les mutations exigent l'origine configurée et les permissions Directus de l'utilisateur. Les révisions empêchent d'écraser une fiche modifiée depuis son chargement. Aucun jeton administrateur de service n'est utilisé par le Studio.
+
+Le tableau de bord compare le contenu courant à l’empreinte du site pour signaler les changements à publier. Produits : recherche, filtres par famille et état, pagination de 25 fiches ; médias : recherche et pagination de 24 images. L’éditeur demande confirmation avant de fermer une fiche modifiée sans l’enregistrer.
+
+Pour ajouter les nouveaux textes et médias après un changement de code, générer le seed depuis un build sans CMS puis utiliser le script additif :
+
+```sh
+node cms/export.mjs
+railway variables --service directus --json | node cms/sync-content.mjs
+railway variables --service directus --json | node cms/sync-content.mjs --apply
+```
+
+Le premier passage est une simulation. Le script ne crée que les textes et médias manquants, sans modifier les contenus existants, les comptes, les permissions ou les jetons. Ne pas l’utiliser pour recréer une suppression volontaire.
 
 Le hook exige un dernier commit vérifié par GitHub quand la politique Vercel l'impose. Conserver cette protection. Les publications de code doivent être signées ou utiliser `createCommitOnBranch` avec contrôle du commit parent.
 

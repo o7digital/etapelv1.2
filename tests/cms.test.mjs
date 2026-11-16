@@ -21,6 +21,16 @@ test('Spanish and English content are isolated, shared navigation keys remain co
   assert.notEqual(home.find(r=>r.value==='Contenido').id,about.find(r=>r.value==='Contenido').id);
   assert.notEqual(home.find(r=>r.value==='Inicio').id,en.find(r=>r.value==='Inicio').id);
 });
+test('SEO titles and mobile picture sources are editable without changing markup', () => {
+  const html = '<html><head><title>Etapel original</title></head><body><picture><source media="(max-width:767px)" srcset="/slider/mobile/team.webp"><img src="/foto 1.webp" alt="Equipo"></picture></body></html>';
+  const result = processDocument(html,'/');
+  assert.deepEqual(result.media.map(row=>row.source),['/slider/mobile/team.webp','/foto 1.webp']);
+  const title = result.fields.find(row=>row.section==='SEO');
+  assert.ok(title);
+  const edited = processDocument(html,'/',new Map([[title.id,'Etapel <equipo>']]));
+  assert.match(edited.html,/<title>Etapel &lt;equipo&gt;<\/title>/);
+  assert.match(edited.html,/<source media="\(max-width:767px\)"/);
+});
 test('Product filter data and executable scripts cannot be changed by page text edits', () => {
   const html = '<main><div data-product-catalog><p>Product name</p><option>Category</option></div><script>dangerous()</script><h1>Catálogo</h1></main>';
   const result = processDocument(html,'/linea-de-producto');
