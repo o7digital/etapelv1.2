@@ -20,6 +20,13 @@ const paths = {
   shared:'M4 6h16 M4 12h16 M4 18h16 M8 4v4 M16 10v4 M10 16v4',
   arrow:'M5 19 19 5 M5 5h14v14',
   check:'m5 12 4 4L19 6',
+  spark:'m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5z',
+  home:'m3 10 9-7 9 7v11h-7v-7h-4v7H3z',
+  about:'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M13 3a4 4 0 0 1 0 8 M22 21v-2a4 4 0 0 0-3-3.87 M13 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0',
+  training:'m2 8 10-5 10 5-10 5z M6 10v7c4 3 8 3 12 0v-7 M22 8v7',
+  support:'M14 6a5 5 0 0 0-6 6L3 17a2.8 2.8 0 0 0 4 4l5-5a5 5 0 0 0 6-6l-3 3-3-3z',
+  contact:'M21 11a8 8 0 0 1-8 8H7l-5 3V11a9 9 0 0 1 19 0 M7 10h10 M7 14h6',
+  privacy:'m12 2 9 4v6c0 5-9 10-9 10S3 17 3 12V6z m-4 10 3 3 5-6',
 };
 const icon = name => `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${paths[name] || paths.page}"/></svg>`;
 const number = value => new Intl.NumberFormat('es-MX').format(value);
@@ -57,11 +64,12 @@ function overview() {
   const drafts = collection('products').filter(r => r.status === 'draft').length;
   const published = !state.pending && state.liveHash && state.liveHash === state.hash;
   const publication = state.publishing ? 'Publicación en curso' : !state.liveHash && !state.pending ? 'Publicación por verificar' : published ? 'Todo está al día' : 'Cambios por publicar';
-  return `${heading('Tu experiencia, en movimiento.','Cada detalle cuenta. Haz que tu sitio hable de lo que mejor sabes hacer.',`<a class="button quiet" href="${escapeHtml(state.config.site)}" target="_blank" rel="noopener">Ver mi sitio ${icon('arrow')}</a>`)}
-  <div class="stats">${[['catalog','Productos publicados',count('products'),'Tu catálogo, siempre al día'],['families','Familias de producto',count('families'),'Cada solución en su lugar'],['page','Textos editables',collection('texts').length,'Español e inglés'],['media','Imágenes del sitio',collection('media').length,'Tu biblioteca compartida']].map(([symbol,label,value,note])=>`<article><div><span>${label}</span><b>${number(value)}</b><small>${note}</small></div><span class="stat-icon">${icon(symbol)}</span></article>`).join('')}</div>
-  <div class="dashboard-grid"><section class="overview-hero"><div class="hero-copy"><p class="eyebrow">EL CONOCIMIENTO NOS MUEVE.</p><h2>Tu historia.<br><em>El siguiente capítulo.</em></h2><p>Tu equipo, tus soluciones, tu manera de hacer las cosas. Dale a cada una el espacio que merece.</p><a class="button dark" href="#home">Cuidar mi portada ${icon('arrow')}</a></div><div class="hero-photo"><img src="/workshop.webp" alt="El equipo Etapel" fetchpriority="high"><span>EXPERIENCIA LOCAL. VISIÓN GLOBAL.</span></div></section>
-  <section class="publication-card"><div class="panel-heading"><h2>Listo para compartir</h2>${icon('arrow')}</div><div class="publication-body"><span class="badge ${published ? 'published' : 'draft'}" id="overview-publication">${publication}</span><h3>Una buena versión<br>empieza aquí.</h3><p>Guarda tus cambios y publica cuando todo esté como quieres.</p><ol><li><span>01</span> Elige una sección y edita.</li><li><span>02</span> Guarda tu nueva versión.</li><li><span>03</span> Publica para compartirla.</li></ol><small>${drafts ? `${number(drafts)} producto${drafts === 1 ? '' : 's'} en borrador, fuera del sitio.` : 'Tu catálogo no tiene borradores pendientes.'}</small></div></section></div>
-  <div class="section-heading"><h2>Un lugar para cada detalle.</h2><span>TU PRÓXIMA ACTUALIZACIÓN</span></div><div class="shortcut-grid">${[['home','01','Tu historia, al día.','Textos, presentación y mensajes de la portada.'],['catalog','02','Soluciones que se conocen.','Productos, familias y todos sus detalles técnicos.'],['media','03','Una imagen que habla.','Fotografías del equipo, instalaciones y productos.']].map(([view,n,title,copy]) => `<a class="shortcut" href="#${view}"><span>${n} / CONTENIDO</span><h3>${title}</h3><p>${copy}</p><b>Explorar ${icon('arrow')}</b></a>`).join('')}</div><div class="workflow-note"><span class="status-dot"></span><div><b>Tu ritmo. Tu próxima versión.</b><p>Guardar conserva tus cambios en el Studio. «Publicar sitio» los comparte con tus visitantes.</p></div></div>`;
+  const firstName = escapeHtml((state.user?.name || 'equipo').split(' ')[0]);
+  return `<div class="dashboard-intro"><div><p class="eyebrow">TU ESPACIO. TU IMPACTO.</p><h1>Vamos con todo, ${firstName}<span>.</span></h1><p>Todo lo que necesitas para llevar Etapel al siguiente nivel.</p></div><a class="button quiet" href="${escapeHtml(state.config.site)}" target="_blank" rel="noopener">Ver mi sitio ${icon('arrow')}</a></div>
+  <div class="dashboard-grid"><section class="overview-hero"><div class="hero-copy"><span class="hero-label">${icon('spark')} ETAPEL EN MOVIMIENTO</span><h2>Haz que<br>tu experiencia<br><em>se vea.</em></h2><p>Tu catálogo. Tu equipo. Tu historia.<br>Dale fuerza a lo que viene.</p><div class="hero-actions"><a class="button white" href="#home">Editar mi inicio ${icon('arrow')}</a><a class="hero-link" href="#catalog">Ir al catálogo <span>→</span></a></div></div><div class="hero-photo"><img src="/assets/painting.webp" alt="Especialista en aplicación de pintura automotriz" fetchpriority="high"><span>TECNOLOGÍA QUE TRANSFORMA.</span></div><span class="hero-stamp" aria-hidden="true">DALE<br>EL SIGUIENTE<br><b>IMPULSO ↗</b></span></section>
+  <section class="publication-card"><div class="panel-heading"><h2>EN VIVO</h2><span class="status-dot"></span></div><div class="publication-body"><div class="publication-signal ${published ? 'is-live' : ''}">${icon(published ? 'check' : 'arrow')}</div><span class="badge ${published ? 'published' : 'draft'}" id="overview-publication">${publication}</span><h3>${published ? 'Tu sitio.<br>En línea.' : 'Tu próxima<br>gran versión.'}</h3><p>${published ? 'Tu contenido guardado ya está en línea. ¿Qué sigue?' : 'Guarda tus cambios y compártelos con el mundo cuando estén listos.'}</p><button class="button orange" data-action="publish-site" ${!state.config.publishReady || state.publishing ? 'disabled' : ''}>${state.publishing ? 'Publicando…' : 'Publicar sitio'} ${icon('arrow')}</button><small>${drafts ? `${number(drafts)} producto${drafts === 1 ? '' : 's'} en borrador, fuera del sitio.` : 'Guardar prepara. Publicar conecta.'}</small></div></section></div>
+  <div class="stats">${[['catalog','catalog','Productos publicados',count('products'),'Explorar catálogo','blue'],['families','families','Familias de producto',count('families'),'Organizar soluciones','orange'],['page','home','Textos editables',collection('texts').length,'Español + English','violet'],['media','media','Imágenes del sitio',collection('media').length,'Abrir biblioteca','green']].map(([symbol,view,label,value,note,tone])=>`<article class="stat-${tone}"><a href="#${view}" class="stat-link"><div class="stat-top"><span class="stat-icon">${icon(symbol)}</span><span class="stat-arrow">${icon('arrow')}</span></div><b>${number(value)}</b><span class="stat-label">${label}</span><small>${note} <span>→</span></small></a></article>`).join('')}</div>
+  <div class="section-heading"><div><p class="eyebrow">MENOS VUELTAS. MÁS ACCIÓN.</p><h2>¿Qué movemos hoy?</h2></div><span>ELIGE TU SIGUIENTE PASO ${icon('arrow')}</span></div><div class="shortcut-grid">${[['home','01','Una portada con fuerza.','Dale a tu historia el mejor primer vistazo.','precision.webp'],['catalog','02','Productos que destacan.','Cada solución, con todos sus detalles.','jet-x.webp'],['media','03','Que tus imágenes hablen.','Renueva la forma de mostrar tu experiencia.','painting.webp']].map(([view,n,title,copy,photo]) => `<a class="shortcut shortcut-${view}" href="#${view}"><div class="shortcut-photo"><img src="/assets/${photo}" alt="" loading="lazy"><span>${n}</span><i>${icon('arrow')}</i></div><div class="shortcut-copy"><h3>${title}</h3><p>${copy}</p><b>${view === 'home' ? 'Editar inicio' : view === 'catalog' ? 'Ver productos' : 'Abrir biblioteca'} <span>→</span></b></div></a>`).join('')}</div><div class="workflow-note">${icon('spark')}<div><b>Lo que haces merece verse.</b><p>Guarda en el Studio. Publica en tu sitio. Sigue avanzando.</p></div><span>HECHO PARA ETAPEL ↗</span></div>`;
 }
 function filters(showFamily = false) {
   return `<div class="collection-filters"><label>Estado<select id="status-filter"><option value="">Todos los estados</option>${[['published','Publicados'],['draft','Borradores'],['archived','Archivados']].map(([value,label])=>`<option value="${value}" ${state.status === value ? 'selected' : ''}>${label}</option>`).join('')}</select></label>${showFamily ? `<label>Familia<select id="family-filter"><option value="">Todas las familias</option>${collection('families').map(row=>`<option value="${escapeHtml(row.payload.slug)}" ${state.family === row.payload.slug ? 'selected' : ''}>${escapeHtml(row.payload.title)}</option>`).join('')}</select></label>` : ''}</div>`;
@@ -105,7 +113,7 @@ function render() {
 async function reload() { const data = await request('/api/content'); state.content = data.content; state.hash = data.hash; }
 async function enter() {
   const [user, config] = await Promise.all([request('/api/session'),request('/api/config')]);
-  state.config = config; $('#account-name').textContent = user.name || user.email; $('#visit-site').href = config.site;
+  state.config = config; state.user = user; $('#account-name').textContent = user.name || user.email; $('#visit-site').href = config.site;
   $('.account-avatar').textContent = (user.name || user.email || 'E').slice(0,1).toUpperCase();
   $('#today').dateTime = new Date().toISOString().slice(0,10);
   $('#today').textContent = new Intl.DateTimeFormat('es-MX',{day:'numeric',month:'long',year:'numeric'}).format(new Date());
@@ -163,6 +171,7 @@ window.addEventListener('keydown',event=>{if(event.key==='Escape' && $('#sidebar
 $('#main').addEventListener('click',event=>{
   const editButton=event.target.closest('[data-edit]'); if(editButton)return edit(editButton.dataset.collection,editButton.dataset.edit);
   const action=event.target.closest('[data-action]')?.dataset.action;
+  if(action==='publish-site'){if(!$('#publish').disabled)$('#publish').click();return;}
   if(action==='previous' || action==='next'){state.page+=action==='next'?1:-1;render();$('#main').focus({preventScroll:true});window.scrollTo({top:0,behavior:'instant'});return;}
   if(action==='new')return edit(({catalog:'products',families:'families',brands:'brands'})[currentView()]);
   if(action==='upload-media'){state.uploadTarget=null;$('#image-upload').click();}
@@ -226,16 +235,22 @@ $('#image-upload').addEventListener('change',async event=>{
     notify(state.uploadTarget?'Fotografía subida. Guarda la ficha para conservar el cambio.':'Fotografía añadida a la biblioteca.');
   }catch(error){notify(error.message);}finally{event.target.value='';}
 });
+function setPublishing(active) {
+  state.publishing=active;
+  $('#publish').disabled=active || !state.config.publishReady;
+  const action=$('[data-action="publish-site"]');
+  if(action){action.disabled=$('#publish').disabled;action.innerHTML=`${active ? 'Publicando…' : 'Publicar sitio'} ${icon('arrow')}`;}
+}
 $('#publish').addEventListener('click',async()=>{
   if(hasUnsaved()){notify('Guarda tus cambios antes de publicar.');return;}
-  $('#publish').disabled=true;const panel=$('#publication-status');panel.hidden=false;panel.textContent='Preparando la publicación…';
+  setPublishing(true);const panel=$('#publication-status');panel.hidden=false;panel.textContent='Preparando la publicación…';
   try{
-    const version=state.version;const result=await request('/api/publish',{method:'POST',body:'{}'});state.publishing=true;panel.textContent=result.message;
+    const version=state.version;const result=await request('/api/publish',{method:'POST',body:'{}'});panel.textContent=result.message;
     let checks=0;clearInterval(publicationTimer);publicationTimer=setInterval(async()=>{
-      checks++;try{const current=await request('/api/publication');if(current.hash===result.hash){clearInterval(publicationTimer);state.publishing=false;state.liveHash=result.hash;if(state.version===version){state.hash=result.hash;state.pending=false;}panel.textContent='Tu sitio está actualizado. La nueva versión ya está en línea.';$('#publish').disabled=false;notify('Sitio publicado correctamente.');if(currentView()==='overview')render();}}
-      catch{}if(checks>=60){clearInterval(publicationTimer);state.publishing=false;panel.textContent='La publicación aún no se ha confirmado. Revisa el despliegue en Vercel; la versión anterior sigue disponible.';$('#publish').disabled=false;}
+      checks++;try{const current=await request('/api/publication');if(current.hash===result.hash){clearInterval(publicationTimer);setPublishing(false);state.liveHash=result.hash;if(state.version===version){state.hash=result.hash;state.pending=false;}panel.textContent='Tu sitio está actualizado. La nueva versión ya está en línea.';notify('Sitio publicado correctamente.');if(currentView()==='overview')render();}}
+      catch{}if(checks>=60){clearInterval(publicationTimer);setPublishing(false);panel.textContent='La publicación aún no se ha confirmado. Revisa el despliegue en Vercel; la versión anterior sigue disponible.';}
     },10000);
-  }catch(error){panel.textContent=error.message;$('#publish').disabled=false;}
+  }catch(error){panel.textContent=error.message;setPublishing(false);}
 });
 state.lastView=currentView();
 enter().catch(error=>{if(!error.message.includes('Entra a tu Studio'))$('#login-error').textContent=error.message;});

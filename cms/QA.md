@@ -26,3 +26,12 @@ La publication du contenu est confirmée uniquement par l’empreinte servie sur
 
 - Studio Railway et site Vercel déployés puis contrôlés en production. Déclenchement réel depuis le Studio : déploiement Vercel READY, source Git `dev2`, hook « Etapel Studio dev2 ».
 - Lecture des cinq collections en parallèle pour réduire l’attente du tableau de bord et de la publication.
+
+# Refonte visuelle du Studio — 16 novembre 2026
+
+- Nouvelle direction : Manrope en gras, bleu électrique, orange franc, repères vert/violet, photographie de peinture en action, accès rapides illustrés et statistiques cliquables. Connexion, navigation, contenus et éditeur utilisent la même identité.
+- Visuels existants Etapel copiés dans les assets du Studio et servis depuis une liste de routes fixe. Aucune dépendance de police ou d’image externe.
+- `npm test` : 26 tests réussis. Build connecté au Directus réel : 547 pages.
+- Firefox : parcours complet du catalogue et des médias, création/édition/rechargement d’un brouillon puis suppression des données QA, politiques bilingues, confirmation des modifications non enregistrées et déconnexion.
+- Connexion avec le compte Olivier, images réelles, contrôles à 360, 390, 768, 1024 et 1440 px, absence de débordement, éditeur mobile et préférence de mouvement réduit vérifiés.
+- Les boutons de publication de l’en-tête et du tableau de bord restent synchronisés. Les réponses de succès et d’échec de publication ont été simulées dans le navigateur pour ce contrôle de l’interface ; aucun déploiement n’a été déclenché par ces fixtures.

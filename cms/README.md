@@ -2,7 +2,7 @@
 
 Studio éditorial : https://studio-production-f1a3.up.railway.app · Accès depuis le site : https://etapelv1-2.vercel.app/admin/
 
-Le projet Railway **etapel-cms** est entièrement indépendant de Nathalie : sa propre instance Directus 12.6.1, PostgreSQL 18, son volume de médias, son service Studio, ses comptes et ses jetons. Les identifiants non sensibles figurent dans `deployment.json`. L'interface reprend l'esprit éditorial de Nathalie Studio : Manrope et Italiana hébergées localement, fond crème, navigation bleu nuit et accents cuivrés Etapel. Les données et les accès restent entièrement séparés. Le site vitrine reste sur Vercel ; la boutique `etapel-tienda` n'est pas modifiée.
+Le projet Railway **etapel-cms** est entièrement indépendant de Nathalie : sa propre instance Directus 12.6.1, PostgreSQL 18, son volume de médias, son service Studio, ses comptes et ses jetons. Les identifiants non sensibles figurent dans `deployment.json`. L'interface adopte une direction plus vive : titres Manrope en gras, bleu électrique, orange Etapel, repères colorés et photographies techniques en action. La police et les visuels sont servis localement. Le tableau de bord propose des accès directs au catalogue, aux pages et aux médias, ainsi qu’un bouton de publication synchronisé avec celui de l’en-tête. Les données et les accès restent entièrement séparés. Le site vitrine reste sur Vercel ; la boutique `etapel-tienda` n'est pas modifiée.
 
 ## Accès
 

@@ -162,7 +162,7 @@ export function createStudioServer(options = {}) {
       }
       throw new StudioError(404, 'Ruta no disponible.');
     }
-    const files = { '/': ['index.html', 'text/html'], '/app.js': ['app.js','text/javascript'], '/style.css': ['style.css','text/css'], '/logo.svg': ['logo.svg','image/svg+xml'], '/workshop.webp': ['workshop.webp','image/webp'], '/fonts/manrope-studio-wght.ttf': ['fonts/manrope-studio-wght.ttf','font/ttf'], '/fonts/italiana.ttf': ['fonts/italiana.ttf','font/ttf'] };
+    const files = { '/': ['index.html', 'text/html'], '/app.js': ['app.js','text/javascript'], '/style.css': ['style.css','text/css'], '/logo.svg': ['logo.svg','image/svg+xml'], '/workshop.webp': ['workshop.webp','image/webp'], '/fonts/manrope-studio-wght.ttf': ['fonts/manrope-studio-wght.ttf','font/ttf'], '/fonts/italiana.ttf': ['fonts/italiana.ttf','font/ttf'], ...Object.fromEntries(['painting','precision','jet-x'].map(name=>[`/assets/${name}.webp`,[`assets/${name}.webp`,'image/webp']])) };
     const staticFile = files[path];
     if (!staticFile || !['GET','HEAD'].includes(req.method)) throw new StudioError(404, 'Página no disponible.');
     const data = await readFile(new URL(`./public/${staticFile[0]}`, import.meta.url)).catch(error => {
