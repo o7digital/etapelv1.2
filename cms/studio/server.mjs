@@ -68,6 +68,9 @@ export function createStudioServer(options = {}) {
     }
     return rows;
   }
+  async function loadContent(token) {
+    return Object.fromEntries(await Promise.all(collections.map(async name => [name, await all(name, token)])));
+  }
   async function serve(req, res) {
     const url = new URL(req.url, 'http://studio.local'), path = url.pathname;
     res.setHeader('X-Content-Type-Options', 'nosniff'); res.setHeader('X-Frame-Options', 'DENY'); res.setHeader('Referrer-Policy', 'same-origin');
@@ -94,7 +97,7 @@ export function createStudioServer(options = {}) {
       const s = await auth(req, res);
       if (path === '/api/session' && req.method === 'GET') return send(res, { email: s.user.email, name: [s.user.first_name, s.user.last_name].filter(Boolean).join(' ') });
       if (path === '/api/content' && req.method === 'GET') {
-        const content = {}; for (const name of collections) content[name] = await all(name, s.access);
+        const content = await loadContent(s.access);
         return send(res, { content, hash: contentHash(content) });
       }
       const record = path.match(/^\/api\/records\/(etapel_\w+)(?:\/([a-zA-Z0-9_-]{1,180}))?$/);
@@ -146,7 +149,7 @@ export function createStudioServer(options = {}) {
         if (!['full','partial'].includes(permissions?.etapel_texts?.update?.access)) throw new StudioError(403, 'Tu cuenta no tiene permiso para publicar.');
         if (!config.hook) throw new StudioError(503, 'La publicación aún no está conectada.');
         if (Date.now() - lastPublish < 60000) throw new StudioError(429, 'Hay una publicación reciente. Espera un minuto.');
-        const content = {}; for (const name of collections) content[name] = await all(name, s.access);
+        const content = await loadContent(s.access);
         if (!content.etapel_products.some(r => r.status === 'published') || !content.etapel_families.some(r => r.status === 'published')) throw new StudioError(400, 'Conserva al menos un producto y una familia publicados.');
         const response = await fetch(config.hook, { method: 'POST', signal: AbortSignal.timeout(30000), redirect: 'error' });
         if (!response.ok) throw new StudioError(502, 'Vercel no aceptó la publicación.');

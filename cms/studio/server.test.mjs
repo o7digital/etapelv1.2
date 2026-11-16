@@ -38,3 +38,43 @@ test('Studio keeps tokens private, enforces sessions, origins, field allowlists,
   assert.equal((await write('/api/logout',{},cookie)).status,200);
   assert.equal((await fetch(root+'/api/session',{headers:{cookie}})).status,401);
 });
+
+test('Studio publishes the current content fingerprint only for a content editor', async t => {
+  const { collections, contentHash } = await import('../model.mjs');
+  const content = Object.fromEntries(collections.map(name=>[name,[{id:name,status:'published',revision:0}]]));
+  let canPublish=true, hookCalls=0;
+  const upstream=http.createServer(async(req,res)=>{
+    const chunks=[];for await(const part of req)chunks.push(part);
+    const send=data=>{res.writeHead(200,{'Content-Type':'application/json'});res.end(JSON.stringify({data}));};
+    if(req.url==='/auth/login')return send({access_token:'secret-access',refresh_token:'secret-refresh',expires:900000});
+    if(req.url.startsWith('/users/me'))return send({id:'editor',email:'editor@example.com'});
+    if(req.url==='/permissions/me')return send({etapel_texts:{update:{access:canPublish?'full':'none'}}});
+    if(req.url==='/deploy'){hookCalls++;res.writeHead(200,{'Content-Type':'application/json'});return res.end('{}');}
+    const name=req.url.match(/^\/items\/(etapel_\w+)\?/)?.[1];
+    if(name && content[name])return send(content[name]);
+    res.writeHead(404);res.end();
+  });
+  await new Promise(resolve=>upstream.listen(0,'127.0.0.1',resolve));
+  const cms=`http://127.0.0.1:${upstream.address().port}`;
+  const server=createStudioServer({cms,secret:'b'.repeat(64),origin:'http://studio.test',hook:cms+'/deploy',secure:false});
+  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+  t.after(()=>{server.closeAllConnections();server.close();upstream.closeAllConnections();upstream.close();});
+  const root=`http://127.0.0.1:${server.address().port}`;
+  const login=await fetch(root+'/api/login',{method:'POST',headers:{origin:'http://studio.test','Content-Type':'application/json'},body:JSON.stringify({email:'editor@example.com',password:'correct'})});
+  const cookie=login.headers.get('set-cookie').split(';')[0];
+  const headers={cookie,origin:'http://studio.test','Content-Type':'application/json'};
+  const snapshot=await (await fetch(root+'/api/content',{headers})).json();
+  assert.deepEqual(snapshot.content,content);
+  assert.equal(snapshot.hash,contentHash(content));
+  canPublish=false;
+  assert.equal((await fetch(root+'/api/publish',{method:'POST',headers,body:'{}'})).status,403);
+  assert.equal(hookCalls,0);
+  canPublish=true;
+  const published=await fetch(root+'/api/publish',{method:'POST',headers,body:'{}'});
+  assert.equal(published.status,200);
+  const result=await published.json();
+  assert.equal(result.hash,snapshot.hash);
+  assert.equal(result.requested,true);
+  assert.equal(hookCalls,1);
+  assert(!JSON.stringify(result).includes('secret-'));
+});
