@@ -1,0 +1,6 @@
+{
+  "repository": "https://github.com/o7digital/olivia-v3.git",
+  "commit": "92864288d7e1919bb7465b5d4076f3410c10f42a",
+  "version": "3.6.0",
+  "paths": ["app", "requirements.txt", "tests", "pytest.ini"]
+}

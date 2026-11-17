@@ -14,10 +14,21 @@ test('forwards only supported fields and keeps credentials server-side', async()
  globalThis.fetch=async(url,options)=>{
   assert.equal(options.headers.Authorization,'Bearer test-secret');
   assert.deepEqual(JSON.parse(options.body),{message:'Hello',language:'en',routing:'POWERFUL'});
-  return {ok:true,json:async()=>({answer:'Hello from Etapel',conversation:'signed-id',version:'3.5'})};
+  return {ok:true,json:async()=>({answer:'Hello from Etapel',conversation:'signed-id',version:'3.6.0',routing:'POWERFUL'})};
  };
  try { const res=response();await handler(req({message:' Hello ',language:'en',tenant:'other',routing:'FAST'}),res);assert.equal(res.code,200);assert.equal(res.data.answer,'Hello from Etapel');assert.ok(!JSON.stringify(res.data).includes('test-secret')); }
  finally { globalThis.fetch=original;delete process.env.OLIVIA_GATEWAY_KEY; }
+});
+
+test('rejects an older engine or downgraded routing instead of claiming Olivia 3.6', async()=>{
+ process.env.OLIVIA_GATEWAY_KEY='test-secret';
+ const original=globalThis.fetch;
+ try {
+  for(const data of [{version:'3.5',routing:'POWERFUL'},{version:'3.6.0',routing:'FAST'}]){
+   globalThis.fetch=async()=>({ok:true,json:async()=>({answer:'Hello',conversation:'signed-id',...data})});
+   const res=response();await handler(req({message:'Hello',language:'en',version:'3.6.0'}),res);assert.equal(res.code,503);
+  }
+ }finally{globalThis.fetch=original;delete process.env.OLIVIA_GATEWAY_KEY;}
 });
 
 test('information requests open contact capture without treating greetings or refusals as leads', async () => {

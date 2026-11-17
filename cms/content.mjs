@@ -15,9 +15,15 @@ const sharedScope = (node, route) => {
 
 // Keys derive from source text, never the edited text or a fragile DOM offset.
 // Rebuilds always start from Astro's source output, then apply the CMS snapshot.
-export function processDocument(html, route, overrides = new Map()) {
+export function processDocument(html, route, overrides = new Map(), { preview = false } = {}) {
   const document = parse(html), fields = new Map(), media = new Map();
+  const annotations = [];
   const locale = route.startsWith('/en') ? 'en' : 'es';
+  function image(source, title = '') {
+    if (!/^\/[^?#]+\.(avif|webp|png|jpe?g)$/i.test(source)) return;
+    const id = stableId(`image:${source}`);
+    media.set(id, { id, source, title: title || source.split('/').pop(), page: route, file: null, status: 'published', sort: media.size });
+  }
   function visit(node, ignored = false, section = 'Contenido de la página') {
     ignored ||= blocked.has(node.tagName) || attr(node, 'data-product-detail') !== undefined ||
       attr(node, 'data-catalog-card') !== undefined || attr(node, 'data-product-catalog') !== undefined ||
@@ -32,6 +38,12 @@ export function processDocument(html, route, overrides = new Map()) {
         const page = sharedScope(node, route), tag = node.parentNode.tagName;
         const id = stableId(`${page}:${tag}:${source}`);
         fields.set(id, { id, page, locale, section: page.includes(':') ? 'Elementos compartidos' : section, label: source.slice(0, 110), source, value: source, kind: 'text', status: 'published', sort: fields.size });
+        if (preview && !['title', 'head'].includes(tag)) annotations.push(() => {
+          const parent = node.parentNode;
+          let attribute = parent.attrs.find(a => a.name === 'data-etapel-texts');
+          if (!attribute) parent.attrs.push(attribute = { name: 'data-etapel-texts', value: '{}' });
+          attribute.value = JSON.stringify({ ...JSON.parse(attribute.value), [parent.childNodes.indexOf(node)]: id });
+        });
         const value = overrides.get(id);
         if (value !== undefined) node.value = node.value.replace(/\S[\s\S]*\S|\S/, () => value);
       }
@@ -44,10 +56,19 @@ export function processDocument(html, route, overrides = new Map()) {
         if (overrides.has(id)) content.value = overrides.get(id);
       }
     }
+    if (!ignored && node.tagName === 'title') {
+      const source = textOf(node), id = stableId(`${route}:meta:title`);
+      fields.set(id, { id, page:route, locale, section:'SEO', label:'Título en buscadores', source, value:source, kind:'text', status:'published', sort:fields.size });
+      if (overrides.has(id)) node.childNodes = [{ nodeName:'#text', value:overrides.get(id), parentNode:node }];
+    }
     // All local content images, including product galleries, share one media entry.
-    for (const a of node.attrs || []) if (['src', 'poster'].includes(a.name) && /^\/(images|slider)\//.test(a.value)) {
-      const id = stableId(`image:${a.value}`);
-      media.set(id, { id, source: a.value, title: attr(node, 'alt') || a.value.split('/').pop(), page: route, file: null, status: 'published', sort: media.size });
+    for (const a of node.attrs || []) {
+      if (['src', 'poster'].includes(a.name)) image(a.value, attr(node, 'alt'));
+      if (a.name === 'srcset') for (const candidate of a.value.split(',')) image(candidate.trim().replace(/\s+\d+(?:\.\d+)?[wx]$/, ''), attr(node, 'alt'));
+    }
+    if (preview && ['img', 'source'].includes(node.tagName)) {
+      const sources = [attr(node, 'src'), ...(attr(node, 'srcset') || '').split(',').map(value => value.trim().replace(/\s+\d+(?:\.\d+)?[wx]$/, ''))].filter(source => source && media.has(stableId(`image:${source}`)));
+      if (sources.length) annotations.push(() => node.attrs.push({ name: 'data-etapel-images', value: JSON.stringify([...new Set(sources)]) }));
     }
     for (const child of node.childNodes || []) visit(child, ignored, section);
   }
@@ -58,5 +79,7 @@ export function processDocument(html, route, overrides = new Map()) {
   }
   function textOf(node) { return node.nodeName === '#text' ? node.value : (node.childNodes || []).map(textOf).join(' '); }
   visit(document);
-  return { html: serialize(document), fields: [...fields.values()], media: [...media.values()] };
+  const result = { html: serialize(document), fields: [...fields.values()], media: [...media.values()] };
+  if (preview) { for (const annotate of annotations) annotate(); result.preview = serialize(document); }
+  return result;
 }

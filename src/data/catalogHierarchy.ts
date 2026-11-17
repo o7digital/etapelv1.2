@@ -32,7 +32,7 @@ export const catalogHierarchy: CatalogLineDefinition[] = [
   { familySlug: 'equipo-mayor', section: 'Mecánica', sectionEn: 'Mechanical service', name: 'Alineadoras', nameEn: 'Wheel aligners', sublines: children(['Hofmann', 'Hofmann']) },
   { familySlug: 'equipo-mayor', section: 'Mecánica', sectionEn: 'Mechanical service', name: 'Desmontadoras', nameEn: 'Tire changers', sublines: children(['Bright', 'Bright']) },
   { familySlug: 'equipo-mayor', section: 'Mecánica', sectionEn: 'Mechanical service', name: 'Balanceadoras', nameEn: 'Wheel balancers', sublines: children(['Bright', 'Bright']) },
-  { familySlug: 'equipo-mayor', section: 'Mecánica', sectionEn: 'Mechanical service', name: 'ADAS', nameEn: 'ADAS calibration', sublines: children(['SUN', 'SUN']) },
+  { familySlug: 'equipo-mayor', section: 'Mecánica', sectionEn: 'Mechanical service', name: 'ADAS', nameEn: 'ADAS calibration', sublines: children(['Car-O-Liner', 'Car-O-Liner']) },
 
   { familySlug: 'equipo-menor', section: 'Pintura y Aplicación', sectionEn: 'Paint & application', name: 'Lámparas infrarrojas', nameEn: 'Infrared lamps', sublines: children(['Solary', 'Solary'], ['IRT', 'IRT']) },
   { familySlug: 'equipo-menor', section: 'Preparación y acabado', sectionEn: 'Preparation & finishing', name: 'Sistemas de lijado', nameEn: 'Sanding systems', sublines: children(['Lijadoras', 'Sanders'], ['Aspiradoras', 'Vacuum systems']) },
@@ -41,7 +41,7 @@ export const catalogHierarchy: CatalogLineDefinition[] = [
   { familySlug: 'equipo-menor', section: 'Desabollo de carrocería', sectionEn: 'Body dent repair', name: 'Desabollo de carrocería de vehículos pesados', nameEn: 'Heavy-vehicle body repair', sublines: children(['JOSAM', 'JOSAM'], ['Wieländer+Schill', 'Wieländer+Schill'], ['GYS', 'GYS']) },
   { familySlug: 'equipo-menor', section: 'Desabollo de carrocería', sectionEn: 'Body dent repair', name: 'Reparación de plásticos', nameEn: 'Plastic repair', sublines: children(['Polyvance', 'Polyvance']) },
   { familySlug: 'equipo-menor', section: 'Baterías', sectionEn: 'Batteries', name: 'Cargadores', nameEn: 'Battery chargers', sublines: children(['GYSFLASH', 'GYSFLASH'], ['STARTIUM', 'STARTIUM']) },
-  { familySlug: 'equipo-menor', section: 'Baterías', sectionEn: 'Batteries', name: 'Arrancadores', nameEn: 'Battery starters', sublines: [], contactOnly: true },
+  { familySlug: 'equipo-menor', section: 'Baterías', sectionEn: 'Batteries', name: 'Arrancadores', nameEn: 'Battery starters', sublines: children(['GYS', 'GYS'], ['STARTIUM', 'STARTIUM']) },
   { familySlug: 'equipo-menor', section: 'Baterías', sectionEn: 'Batteries', name: 'Probadores de baterías', nameEn: 'Battery testers', sublines: children(['GYS', 'GYS']) },
   { familySlug: 'equipo-menor', section: 'Mecánica', sectionEn: 'Mechanical service', name: 'Escáner', nameEn: 'Diagnostic scanners', sublines: children(['SUN', 'SUN']) },
   { familySlug: 'equipo-menor', section: 'Mecánica', sectionEn: 'Mechanical service', name: 'Aire acondicionado', nameEn: 'Air conditioning', sublines: children(['SUN', 'SUN']) },
@@ -56,6 +56,7 @@ export const catalogHierarchy: CatalogLineDefinition[] = [
   { familySlug: 'pintura', section: 'Pintura y Aplicación', sectionEn: 'Paint & application', name: 'Tecnología de filtros y aire comprimido', nameEn: 'Filtration and compressed air', sublines: children(['Filtros SATA', 'SATA filters'], ['Filtros para cabina', 'Spray-booth filters'], ['Prevost', 'Prevost']) },
   { familySlug: 'pintura', section: 'Pintura', sectionEn: 'Paint', name: 'PPG automotriz', nameEn: 'PPG automotive coatings', sublines: children(['Deltron', 'Deltron'], ['Autolux', 'Autolux'], ['Envirobase', 'Envirobase']) },
   { familySlug: 'pintura', section: 'Pintura', sectionEn: 'Paint', name: 'PPG industrial', nameEn: 'PPG industrial coatings', sublines: children(['Versolon', 'Versolon']) },
+  { familySlug: 'pintura', section: 'Pintura', sectionEn: 'Paint', name: 'Lámparas de igualación', nameEn: 'Colour-matching lights', sublines: children(['Scangrip', 'Scangrip']) },
   { familySlug: 'pintura', section: 'Pintura', sectionEn: 'Paint', name: 'Pintura en polvo', nameEn: 'Powder coatings', sublines: children(['PPG', 'PPG']) },
 
   { familySlug: 'consumibles', section: 'Consumibles de pintura', sectionEn: 'Paint consumables', name: 'Lijas', nameEn: 'Abrasives', sublines: children(['Tecnología cerámica', 'Ceramic technology'], ['Tecnología de óxido de aluminio', 'Aluminum-oxide technology'], ['Sistema de lijado para pulir', 'Finishing sanding system']) },
@@ -113,6 +114,7 @@ const canonicalLine = (product: CatalogProduct) => {
 };
 
 const sublineFor = (product: CatalogProduct, line: string) => {
+  if (product.catalogSubline) return product.catalogSubline;
   const source = normalize(product.interest || product.category);
   const slug = product.slug;
   if (line === 'Pistolas para pintar') return ({ 'pistolas con vaso de gravedad': 'Pistolas de gravedad', 'pistolas con calderin': 'Pistolas de olla de presión', 'pistolas aerograficas': 'Pistolas aerográficas', 'pistolas de vaso inferior': 'Pistolas de vaso inferior', 'pistolas roboticas': 'Pistolas para robot' }[source] || product.name);
@@ -123,7 +125,7 @@ const sublineFor = (product: CatalogProduct, line: string) => {
     if (slug.includes('star-c')) return 'Air star C';
     return 'Air star F';
   }
-  if (line === 'Tecnología de filtros y aire comprimido') return product.brand === 'SATA' ? 'Filtros SATA' : ['catalogo-plenum', 'catalogo-bolsa', 'catalogo-piso'].includes(slug) ? 'Filtros para cabina' : 'Prevost';
+  if (line === 'Tecnología de filtros y aire comprimido') return product.brand === 'SATA' ? 'Filtros SATA' : ['catalogo-plenum', 'catalogo-bolsa', 'catalogo-piso', 'catalogo-filtro-techo'].includes(slug) ? 'Filtros para cabina' : 'Prevost';
   if (line === 'Cabinas de pintura' || line === 'Zonas de preparación') return product.brand === 'Etapel' ? 'Proyecto integral Etapel' : product.brand;
   if (line === 'Bancos de enderezado autos y SUV') return slug.includes('versa') ? 'BenchRack Versa' : slug.includes('speed') ? 'Speed 3T' : 'BenchRack';
   if (line === 'Equipos de medición') return slug.includes('point') ? 'POINT X' : 'Car-O-Tronic';
@@ -147,6 +149,8 @@ const sublineFor = (product: CatalogProduct, line: string) => {
   if (line === 'Desabollo de carrocería de vehículos pesados') return product.brand;
   if (line === 'Reparación de plásticos') return 'Polyvance';
   if (line === 'Cargadores') return /startium/i.test(product.name) ? 'STARTIUM' : 'GYSFLASH';
+  if (line === 'Arrancadores') return /startium/i.test(product.name) ? 'STARTIUM' : 'GYS';
+  if (line === 'Lámparas de igualación') return 'Scangrip';
   if (line === 'Probadores de baterías') return 'GYS';
   if (line === 'Neumáticas') return product.brand === 'PneuTrend' ? 'PneuTrend' : 'Porto Power';
   if (line === 'Herramientas manuales') return ['Jonnesway', 'SUN'].includes(product.brand) ? 'Herramientas de mecánica' : product.brand === 'ShineMate' ? 'Garlopas ShineMate' : product.brand.includes('Wiel') ? 'Limas Wieländer+Schill' : 'Cuñas Colad';
@@ -193,7 +197,7 @@ const workbookLineOrder: Record<string, string[]> = {
   'enderezado-de-carroceria': ['Bancos de enderezado autos y SUV', 'Equipos de medición', 'Accesorios Car-O-Liner', 'Alineación y enderezado de vehículos pesados'],
   'desabollado-de-carroceria': ['Desabollo de carrocería auto y SUV', 'Desabollo de carrocería de vehículos pesados', 'Reparación de plásticos'],
   'cargadores-y-arrancadores-de-baterias': ['Cargadores', 'Arrancadores', 'Probadores de baterías', 'Líneas de aire comprimido', 'Compresores Denair'],
-  pintura: ['PPG automotriz', 'PPG industrial', 'Pintura en polvo'],
+  pintura: ['PPG automotriz', 'PPG industrial', 'Lámparas de igualación', 'Pintura en polvo'],
   mecanica: ['Rampas y elevadores EAE', 'Escáner', 'Alineadoras', 'Desmontadoras', 'Balanceadoras', 'Aire acondicionado', 'ADAS'],
   'consumibles-de-pintura': ['Lijas', 'Enmascarado', 'Pulimento', 'Seguridad personal', 'Otros'],
   'consumibles-de-hojalateria': ['Masillas y rellenadores', 'Antipiedras y selladores', 'Consumibles herramientas'],

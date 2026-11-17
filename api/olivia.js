@@ -16,6 +16,7 @@ export default async function handler(req, res) {
     });
     const data = await response.json();
     if (!response.ok) return res.status(response.status === 429 ? 429 : 503).json({ error: 'Olivia unavailable' });
+    if (data.version !== '3.6.0' || data.routing !== 'POWERFUL' || typeof data.answer !== 'string' || typeof data.conversation !== 'string') return res.status(503).json({ error: 'Olivia unavailable' });
     return res.status(200).json(data);
   } catch { return res.status(503).json({ error: 'Olivia unavailable' }); }
 }

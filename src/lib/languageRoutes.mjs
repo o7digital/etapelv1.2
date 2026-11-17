@@ -3,6 +3,7 @@ const pairs = [
   ['/quienes-somos', '/en/about-us'], ['/capacitacion', '/en/training'],
   ['/postventa', '/en/after-sales'], ['/contacto', '/en/contact'],
   ['/aviso-de-privacidad', '/en/privacy-policy'],
+  ['/politicas-de-etapel', '/en/etapel-policies'],
 ];
 export function languagePath(pathname) {
   const path = pathname.replace(/\/+$/, '') || '/';

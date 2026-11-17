@@ -1,0 +1,53 @@
+---
+interface Props { productName: string; lang?: 'es' | 'en'; }
+const { productName, lang = 'es' } = Astro.props;
+const en = lang === 'en';
+---
+
+<section id="cotizar-filtros" class="filter-quote" aria-labelledby="filter-quote-title">
+  <div class="container">
+    <div class="quote-copy">
+      <div class="label">{en ? 'Spray-booth filters' : 'Filtros para cabina'}</div>
+      <h2 id="filter-quote-title">{en ? 'Request the right filter for your booth' : 'Cotiza el filtro adecuado para tu cabina'}</h2>
+      <p>{en ? 'Tell us the booth brand and model, share photos of the identification plate, ceiling and floor, and let us know whether you also need maintenance.' : 'Indica la marca y modelo de la cabina, comparte fotos de la placa de identificación, techo y piso, y cuéntanos si también necesitas mantenimiento.'}</p>
+      <p>{en ? 'You can share a photo link in this form or send the photos by WhatsApp.' : 'Puedes compartir un enlace a las fotos en este formulario o enviarlas por WhatsApp.'}</p>
+      <a class="btn outline-dark" href="https://wa.link/oowyzu" target="_blank" rel="noopener noreferrer">{en ? 'Send photos by WhatsApp' : 'Enviar fotos por WhatsApp'} ↗</a>
+    </div>
+    <form class="quote-form" action="https://formspree.io/f/xeewlkng" method="POST">
+      <input type="hidden" name="_subject" value="Cotización de filtros para cabina — Etapel" />
+      <input type="hidden" name="producto" value={productName} />
+      <label>{en ? 'Name *' : 'Nombre *'}<input name="nombre" autocomplete="name" required /></label>
+      <label>{en ? 'Email *' : 'Correo *'}<input type="email" name="email" autocomplete="email" required /></label>
+      <label>{en ? 'Booth brand *' : 'Marca de la cabina *'}<input name="marca_cabina" required /></label>
+      <label>{en ? 'Booth model *' : 'Modelo de la cabina *'}<input name="modelo_cabina" required /></label>
+      <label>{en ? 'Phone' : 'Teléfono'}<input type="tel" name="telefono" autocomplete="tel" /></label>
+      <label>{en ? 'Do you need maintenance? *' : '¿Necesitas mantenimiento? *'}
+        <select name="mantenimiento" required>
+          <option value="">{en ? 'Choose an option' : 'Selecciona una opción'}</option>
+          <option value="Sí">{en ? 'Yes' : 'Sí'}</option>
+          <option value="No">No</option>
+          <option value="Quiero asesoría">{en ? 'I need advice' : 'Quiero asesoría'}</option>
+        </select>
+      </label>
+      <label class="wide">{en ? 'Link to booth photos' : 'Enlace a fotos de la cabina'}<input type="url" name="fotos_cabina" placeholder="https://…" aria-describedby="filter-photos-help" /></label>
+      <p class="wide help" id="filter-photos-help">{en ? 'Use a shared photo link that our team can open, or send the photos through the WhatsApp link.' : 'Pega un enlace compartido que nuestro equipo pueda abrir, o envía las fotos mediante el enlace de WhatsApp.'}</p>
+      <label class="wide">{en ? 'Filter dimensions and details' : 'Medidas del filtro y detalles'}<textarea name="mensaje" rows="4" /></label>
+      <p class="wide help">{en ? 'By sending this request, you accept our ' : 'Al enviar esta solicitud, aceptas nuestro '}<a href={en ? '/en/privacy-policy' : '/aviso-de-privacidad'}>{en ? 'Privacy Notice' : 'Aviso de Privacidad'}</a>.</p>
+      <button class="btn orange wide" type="submit">{en ? 'Request a quote' : 'Solicitar cotización'}</button>
+    </form>
+  </div>
+</section>
+
+<style>
+  .filter-quote{background:#f5f7fb;scroll-margin-top:100px}
+  .filter-quote .container{display:grid;grid-template-columns:1fr 1.2fr;gap:40px;align-items:start}
+  h2{font-size:clamp(28px,3.2vw,42px);line-height:1.1;color:var(--navy);letter-spacing:-.04em;margin:10px 0 20px}
+  .quote-copy p{line-height:1.7;color:#647083}
+  .quote-form{display:grid;grid-template-columns:1fr 1fr;gap:16px;background:#fff;border:1px solid var(--line);padding:28px}
+  label{display:grid;gap:8px;font-weight:750;color:var(--navy);font-size:14px;min-width:0}
+  input,select,textarea{box-sizing:border-box;width:100%;min-width:0;border:1px solid var(--line);padding:12px;background:#fff;color:var(--ink);font:inherit}
+  input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--orange-dark);outline-offset:2px}
+  .wide{grid-column:1/-1}.help{font-size:13px;color:#647083;line-height:1.6;margin:0}.help a{color:var(--navy);text-decoration:underline}
+  @media(max-width:800px){.filter-quote .container{grid-template-columns:1fr}.quote-form{padding:20px}}
+  @media(max-width:480px){.quote-form{grid-template-columns:1fr}}
+</style>

@@ -2,13 +2,15 @@ import { readdir, readFile, writeFile, mkdir, copyFile } from 'node:fs/promises'
 import { existsSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 import { createHash } from 'node:crypto';
-import { processDocument } from './content.mjs';
+import { processDocument, stableId } from './content.mjs';
 import { contentHash } from './model.mjs';
 import { parse, serialize } from 'parse5';
+import { previewPath } from './studio/preview.mjs';
 const snapshot = existsSync('.cms/content.json') ? JSON.parse(await readFile('.cms/content.json', 'utf8')) : null;
 const overrides = new Map((snapshot?.etapel_texts || []).filter(row => row.status === 'published').map(row => [row.id, row.value]));
 const mediaPaths = new Map();
 await mkdir('dist/_cms', { recursive: true });
+await mkdir('dist/_studio/pages', { recursive: true });
 for (const row of snapshot?.etapel_media || []) {
   if (row.status !== 'published' || !row.file) continue;
   if (!/^[a-f\d-]{36}$/i.test(row.file)) throw new Error('Invalid CMS media ID.');
@@ -28,15 +30,16 @@ const fields = new Map(), media = new Map();
 async function walk(directory) {
   for (const entry of await readdir(directory, { withFileTypes: true })) {
     const path = join(directory, entry.name);
-    if (entry.isDirectory()) { if (!['_astro', '_cms', 'assets'].includes(entry.name)) await walk(path); continue; }
+    if (entry.isDirectory()) { if (!['_astro', '_cms', '_studio', 'assets'].includes(entry.name)) await walk(path); continue; }
     if (!entry.name.endsWith('.html')) continue;
     const route = '/' + path.replace(/^dist\//, '').replace(/\/?index\.html$/, '').replace(/\/$/, '');
     let html = await readFile(path, 'utf8');
     if (!route.startsWith('/admin') && !route.includes('/productos/') && !route.includes('/products/')) {
-      const result = processDocument(html, route, overrides);
+      const result = processDocument(html, route, overrides, { preview: true });
       for (const row of result.fields) if (!fields.has(row.id)) fields.set(row.id, row);
       for (const row of result.media) if (!media.has(row.id)) media.set(row.id, row);
       html = result.html;
+      await writeFile(`dist${previewPath(route)}`, JSON.stringify({ version:1, route, html:result.preview, mediaPaths:Object.fromEntries(mediaPaths) }));
     }
     if (mediaPaths.size) {
       const document = parse(html);
@@ -61,6 +64,10 @@ for (const entry of await readdir('dist/_astro', { withFileTypes: true })) {
   if (!entry.name.endsWith('.css')) continue;
   const path = `dist/_astro/${entry.name}`;
   let css = await readFile(path, 'utf8');
+  for (const match of css.matchAll(/url\(["']?(\/[^"')]+\.(?:webp|png|jpe?g|avif))["']?\)/gi)) {
+    const source = match[1], id = stableId(`image:${source}`);
+    if (!media.has(id)) media.set(id, { id, source, title:source.split('/').pop(), page:'Fotografías de fondo', file:null, status:'published', sort:media.size });
+  }
   for (const [source, replacement] of mediaPaths) css = css.split(source).join(replacement);
   await writeFile(path, css);
 }

@@ -1,5 +1,6 @@
 ---
 import SiteLayout from '../../../layouts/SiteLayout.astro';
+import CabinFilterQuote from '../../../components/CabinFilterQuote.astro';
 import { catalogProducts, productDetailPath, type CatalogProduct } from '../../../data/products';
 import { productFamilies } from '../../../data/productLines';
 import type { ProductDownload } from '../../../data/productTypes';
@@ -76,9 +77,14 @@ const displaySpecs = en
   : product.specs;
 const family = productFamilies.find((item) => item.slug === product.familySlug);
 const familyTitle = en ? productArea.replace(/^./, (letter) => letter.toUpperCase()) : family?.shortTitle;
+const isBoothFilter = product.catalogSubline === 'Filtros para cabina';
+const isOverview = ['catalogo-scanner', 'catalogo-rampas-y-elevadores-eae'].includes(product.slug);
 const relatedProducts = catalogProducts
-  .filter((item) => item.familySlug === product.familySlug && item.slug !== product.slug)
-  .slice(0, 4);
+  .filter((item) => item.slug !== product.slug && (isOverview
+    ? item.catalogLine === product.catalogLine
+    : item.familySlug === product.familySlug))
+  .sort((a, b) => Number(b.catalogLine === product.catalogLine) - Number(a.catalogLine === product.catalogLine))
+  .slice(0, isOverview ? 12 : 4);
 const productDownloads = product.downloads || ['Ficha técnica', 'Manual de operación'];
 const getDownloadLabel = (download: string | ProductDownload) => typeof download === 'string' ? download : download.label;
 const getDownloadHref = (download: string | ProductDownload) => typeof download === 'string' ? '/contacto' : download.url;
@@ -90,11 +96,11 @@ const isLinkedDownload = (download: string | ProductDownload) => typeof download
     <section class="page-hero">
       <div class="page-hero-inner">
         <div>
-          <span class="eyebrow"><span class="dot"></span> {product.brand} / {familyTitle}</span>
+          <span class="eyebrow"><span class="dot"></span> {product.brand ? `${product.brand} / ` : ''}{familyTitle}</span>
           <h1>{product.name}</h1>
           <p>{displaySummary}</p>
           <div class="hero-actions">
-            <a class="btn orange" href={en ? '/en/contact#contact-form' : '/contacto#formulario-contacto'}>{en ? 'Ask now' : 'Pregunte ahora'}</a>
+            <a class="btn orange" href={isBoothFilter ? '#cotizar-filtros' : en ? '/en/contact#contact-form' : '/contacto#formulario-contacto'}>{isBoothFilter ? (en ? 'Request a quote' : 'Cotizar filtros') : en ? 'Ask now' : 'Pregunte ahora'}</a>
             {family && <a class="btn outline" href={en ? '/en/product-lines#product-catalog' : `${family.href}#catalogo-productos`}>{en ? 'Back to catalog' : 'Volver al catálogo'}</a>}
           </div>
         </div>
@@ -197,6 +203,8 @@ const isLinkedDownload = (download: string | ProductDownload) => typeof download
         </div>
       </div>
     </section>
+
+    {isBoothFilter && <CabinFilterQuote productName={product.name} lang={lang} />}
 
     {relatedProducts.length > 0 && (
       <section class="related">

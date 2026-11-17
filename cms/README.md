@@ -2,7 +2,7 @@
 
 Studio éditorial : https://studio-production-f1a3.up.railway.app · Accès depuis le site : https://etapelv1-2.vercel.app/admin/
 
-Le projet Railway **etapel-cms** est entièrement indépendant de Nathalie : sa propre instance Directus 12.6.1, PostgreSQL 18, son volume de médias, son service Studio, ses comptes et ses jetons. Les identifiants non sensibles figurent dans `deployment.json`. L'interface reprend le bleu nuit, le blanc et l'orange Etapel. Le site vitrine reste sur Vercel ; la boutique `etapel-tienda` n'est pas modifiée.
+Le projet Railway **etapel-cms** est entièrement indépendant de Nathalie : sa propre instance Directus 12.6.1, PostgreSQL 18, son volume de médias, son service Studio, ses comptes et ses jetons. Les identifiants non sensibles figurent dans `deployment.json`. L'interface adopte une direction plus vive : titres Manrope en gras, bleu électrique, orange Etapel, repères colorés et photographies techniques en action. La police et les visuels sont servis localement. Le tableau de bord propose des accès directs au catalogue, aux pages et aux médias, ainsi qu’un bouton de publication synchronisé avec celui de l’en-tête. Les données et les accès restent entièrement séparés. Le site vitrine reste sur Vercel ; la boutique `etapel-tienda` n'est pas modifiée.
 
 ## Accès
 
@@ -12,25 +12,41 @@ Le rôle `Etapel content editor` est préparé pour les comptes éditoriaux. L'i
 
 ## Éditer et publier
 
-- **Inicio, Nosotros, CEDETEC, Soporte técnico, Contacto, Privacidad** : textes et métadonnées SEO, classés selon les sections actuelles. Les textes sont préremplis ; le vert signale les champs éditables.
-- **Productos** : 225 fiches initiales, création, édition, brouillons et archivage, descriptions espagnoles/anglaises, marque, famille, photos, galerie, points forts, caractéristiques, variantes, blocs et documents. Les adresses existantes sont conservées.
+- **Inicio, Nosotros, CEDETEC, Soporte técnico, Contacto, Privacidad, Políticas de Etapel** : la vue visuelle affiche la vraie page avec ses textes, photos et styles. Cliquer sur un texte pour écrire sur la page ou dans le panneau latéral ; sélectionner une photo, y compris un fond, pour importer une image ou choisir dans la bibliothèque. Les formats ordinateur, tablette et mobile, le plein écran et la vue sans édition permettent de vérifier le résultat. **Contenido** localise les textes et photos ; **Textos y SEO** donne accès aux métadonnées et à la comparaison anglaise complète.
+- **Productos** : 248 fiches, création, édition, brouillons et archivage, descriptions espagnoles/anglaises, marque, famille, photos, galerie, points forts, caractéristiques, variantes, blocs et documents. Les adresses existantes sont conservées.
 - **Familias de producto** : les 11 familles initiales, descriptions, photographie, ordre et spécialités. Les familles liées aux anciens liens et celles qui contiennent des produits publiés restent protégées contre l'archivage.
 - **Páginas del catálogo** : textes des pages de familles en espagnol et en anglais.
 - **Marcas** : les 25 marques du bandeau, ajout, libellé, ordre et archivage. Les styles propres aux marques existantes sont conservés.
-- **Biblioteca de imágenes** : 321 emplacements initiaux, photos des sections et galeries produits. Changer une photo met à jour tous ses usages. L'upload d'une nouvelle image l'ajoute à la bibliothèque ; elle peut ensuite être choisie dans une fiche. JPG, PNG, WebP, AVIF, 25 Mo maximum.
+- **Biblioteca de imágenes** : 356 emplacements, photos des sections et galeries produits. Changer une photo met à jour tous ses usages. L'upload d'une nouvelle image l'ajoute à la bibliothèque ; elle peut ensuite être choisie dans une fiche. JPG, PNG, WebP, AVIF, 25 Mo maximum. La bibliothèque inclut les variantes mobiles du diaporama et les photographies de fond.
 - **Navegación y pie** : libellés partagés des menus et pieds de page. La logique des formulaires, d'Olivia, les liens système et le filtrage catalogue restent dans le code.
 
-**Guardar** enregistre dans Directus. **Publicar sitio** déclenche le Deploy Hook Vercel de `dev`, désormais branche de production de ce projet. Le Studio vérifie l'empreinte du contenu servi pour confirmer sa publication ; l'acceptation du hook ne signifie pas que le build est terminé. Si le CMS, un média ou le build échoue, le site précédent reste disponible. La durée habituelle dépend de la file Vercel et du volume de médias. `main` n'est pas modifié. L'ancienne variable Olivia Preview spécifique à `dev` a été conservée avec une portée Preview générale pour permettre cette configuration ; la variable Production n'a pas changé.
+**Guardar** enregistre dans Directus. **Publicar sitio** déclenche le Deploy Hook Vercel de `dev2`, désormais branche de production de ce projet. Le Studio vérifie l'empreinte du contenu servi pour confirmer sa publication ; l'acceptation du hook ne signifie pas que le build est terminé. Si le CMS, un média ou le build échoue, le site précédent reste disponible. La durée habituelle dépend de la file Vercel et du volume de médias. `main` n'est pas modifié. L'ancienne variable Olivia Preview spécifique à `dev` a été conservée avec une portée Preview générale pour permettre cette configuration ; la variable Production n'a pas changé.
 
-L'espagnol et l'anglais sont éditables séparément ; aucune traduction automatique n'est facturée ni déclenchée. Les champs de collection en anglais existants sont conservés. L'archivage/brouillon d'un texte ou d'une photo rétablit sa valeur intégrée ; un produit ou une famille non publié est exclu du prochain build. Les textes ne peuvent pas injecter de HTML. Les médias sont copiés sur Vercel à la publication, sans exposer de jeton au navigateur.
+L’espagnol est la source éditoriale des pages. **Guardar y traducir** enregistre l’espagnol puis prépare un brouillon anglais ; **Traducir al inglés** prépare aussi une première traduction sans modifier l’original. Le Studio affiche les passages espagnols correspondants à côté des propositions anglaises. **Validar y guardar inglés** enregistre la version relue ; **Publicar sitio** la met ensuite en ligne. Les brouillons ne remplacent jamais les valeurs anglaises publiées. La structure des pages anglaises reste conservée : le rapprochement des blocs est sémantique, pas fondé sur leur ordre. Un texte anglais sans équivalent espagnol est conservé. Si la source espagnole change, il faut régénérer une proposition avant de la valider. Les fiches produit gardent leurs champs anglais existants et leur édition manuelle. L'archivage/brouillon d'un texte ou d'une photo rétablit sa valeur intégrée ; un produit ou une famille non publié est exclu du prochain build. Les textes ne peuvent pas injecter de HTML. Les médias sont copiés sur Vercel à la publication, sans exposer de jeton au navigateur.
+
+L’éditeur visuel conserve les changements en mémoire jusqu’à **Guardar**. Une photo sélectionnée dans la bibliothèque réutilise son fichier Directus ; une image d’origine du dépôt est importée dans Directus avant son affectation. La page et ses photos restent inchangées en ligne jusqu’à **Publicar sitio**. La proposition anglaise est visible dans l’aperçu, et le panneau du texte sélectionné affiche son original espagnol lorsqu’il est disponible. **Validar inglés** conserve l’étape de validation explicite.
 
 ## Fonctionnement technique
 
 `npm run build` exécute `cms/prepare.mjs`, Astro puis `cms/finalize.mjs`. Un instantané privé est lu au build ; `cmsCollection` raccorde les fiches structurées. Les clés des textes proviennent de la page, du type d'élément et du texte source original : une modification dans Directus ne change pas sa clé. Le post-traitement conserve les éléments inline et les scripts, puis applique les textes et images publiés. Les menus et pieds de page utilisent des clés partagées par langue. Les fiches et filtres de produit proviennent des collections structurées, pas du remplacement de texte.
 
+Le même build produit des gabarits JSON dans `dist/_studio/pages/`, annotés avec les clés originales des textes et photos. Ces annotations ne sont pas ajoutées au HTML public. `/api/preview` exige une session Studio et sert le gabarit du site configuré dans une iframe de même origine, sans scripts, formulaires actifs ni suivi Analytics. Le parent Studio applique les valeurs courantes ou les brouillons anglais et gère l’édition. Les clés restent stables après publication d’un texte modifié. Après une modification du gabarit, déployer Vercel avant le Studio Railway. Le conteneur Studio installe sa dépendance `parse5` depuis son propre lockfile.
+
 La carte initiale est exportée depuis le HTML réellement produit et le catalogue du dépôt. Pour ajouter des textes après un changement de code : build sans `DIRECTUS_URL`, `node cms/export.mjs`, puis lancer le bootstrap avec les variables du **seul projet Etapel**. Le bootstrap ajoute les éléments manquants sans écraser les contenus existants. Ne pas le relancer après une suppression volontaire : préférer l'archivage. `.cms/` est ignoré par Git.
 
-Variables Vercel Production : `DIRECTUS_URL`, `DIRECTUS_READ_TOKEN`, `PUBLIC_STUDIO_URL`. Variables Studio : `DIRECTUS_URL`, `STUDIO_SESSION_SECRET`, `STUDIO_ORIGIN`, `STUDIO_SITE_URL`, `VERCEL_DEPLOY_HOOK`, `PORT`. Les sessions sont chiffrées dans un cookie HttpOnly, Secure, SameSite Strict ; les mutations exigent l'origine configurée et les permissions Directus de l'utilisateur. Les révisions empêchent d'écraser une fiche modifiée depuis son chargement. Aucun jeton administrateur de service n'est utilisé par le Studio.
+Variables Vercel Production : `DIRECTUS_URL`, `DIRECTUS_READ_TOKEN`, `PUBLIC_STUDIO_URL`. Variables Studio : `DIRECTUS_URL`, `STUDIO_SESSION_SECRET`, `STUDIO_ORIGIN`, `STUDIO_SITE_URL`, `VERCEL_DEPLOY_HOOK`, `PORT`, `OPENAI_API_KEY`, `TRANSLATION_MODEL`. Les sessions sont chiffrées dans un cookie HttpOnly, Secure, SameSite Strict ; les mutations exigent l'origine configurée et les permissions Directus de l'utilisateur. Les révisions empêchent d'écraser une fiche modifiée depuis son chargement. Aucun jeton administrateur de service n'est utilisé par le Studio.
+
+Le tableau de bord compare le contenu courant à l’empreinte du site pour signaler les changements à publier. Produits : recherche, filtres par famille et état, pagination de 25 fiches ; médias : recherche et pagination de 24 images. L’éditeur demande confirmation avant de fermer une fiche modifiée sans l’enregistrer.
+
+Pour ajouter les nouveaux textes et médias après un changement de code, générer le seed depuis un build sans CMS puis utiliser le script additif :
+
+```sh
+node cms/export.mjs
+railway variables --service directus --json | node cms/sync-content.mjs
+railway variables --service directus --json | node cms/sync-content.mjs --apply
+```
+
+Le premier passage est une simulation. Le script ne crée que les textes et médias manquants, sans modifier les contenus existants, les comptes, les permissions ou les jetons. Ne pas l’utiliser pour recréer une suppression volontaire.
 
 Le hook exige un dernier commit vérifié par GitHub quand la politique Vercel l'impose. Conserver cette protection. Les publications de code doivent être signées ou utiliser `createCommitOnBranch` avec contrôle du commit parent.
 
@@ -45,3 +61,19 @@ Références API : [authentification Directus](https://directus.com/docs/api/aut
 Le choix d’une photographie reste dans le formulaire : vérifier son aperçu puis enregistrer la fiche pour conserver le remplacement.
 
 Au premier montage du volume de médias Railway, son répertoire doit appartenir à l’utilisateur Directus `node` (UID/GID 1000). L’instance Etapel a été configurée ainsi ; conserver cette propriété lors d’une restauration. Le service Directus continue de fonctionner sans droits root.
+
+## Traduction des pages et validation
+
+`cms/translations.mjs` utilise l’API Responses OpenAI avec le modèle `gpt-5.4-mini`, une sortie JSON stricte et `store: false`. Seuls les textes éditoriaux nécessaires sont transmis. Les noms de marques, chiffres, adresses et liens sont protégés et vérifiés avant tout enregistrement. La clé reste sur le service Railway Studio, jamais dans le navigateur, Git ou Vercel. Les appels ont lieu lors de l’enregistrement espagnol ou à la demande, pas pendant les visites du site.
+
+Le champ JSON `etapel_texts.translation` contient la proposition, les références des originaux, l’empreinte espagnole et l’état de validation. `value` reste la valeur publiée jusqu’à une validation explicite. Une régénération conserve donc aussi l’anglais précédemment validé. Les écritures et validations utilisent les permissions du compte connecté et vérifient les révisions pour éviter les écrasements.
+
+Initialisation idempotente du seul champ de revue, sans toucher aux textes existants :
+
+```sh
+railway variables --service directus --json | node cms/provision-translations.mjs
+```
+
+Une panne du fournisseur conserve l’espagnol enregistré et les versions anglaises antérieures ; le Studio permet de réessayer. Les brouillons anglais sont persistants et restent accessibles après rechargement. Le tableau de bord signale les propositions en attente.
+
+Référence : [sorties structurées OpenAI](https://developers.openai.com/api/docs/guides/structured-outputs?api-mode=responses).
