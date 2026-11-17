@@ -4,13 +4,14 @@ import { canonicalUrl, jsonLd, languageAlternates, siteOrigin } from '../lib/seo
 interface Props {
   title: string;
   description: string;
+  keywords?: string[];
   lang?: 'es' | 'en';
   path?: string;
   image?: string;
   breadcrumbs?: { name: string; path: string }[];
   structuredData?: Record<string, unknown>[];
 }
-const { title, description, lang = 'es', path = Astro.url.pathname,
+const { title, description, keywords = [], lang = 'es', path = Astro.url.pathname,
   image = '/images/contacto-etapel.webp', breadcrumbs = [], structuredData = [] } = Astro.props;
 const canonical = canonicalUrl(path);
 const imageUrl = new URL(image, siteOrigin).href;
@@ -42,6 +43,7 @@ const graph = [
 ---
 <title>{title}</title>
 <meta name="description" content={description} />
+{keywords.length > 0 && <meta name="keywords" content={keywords.join(', ')} />}
 <link rel="canonical" href={canonical} />
 {languageAlternates(path).map(item => <link rel="alternate" hreflang={item.lang} href={item.href} />)}
 <meta property="og:type" content="website" />

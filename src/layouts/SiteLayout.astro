@@ -5,6 +5,7 @@ import { languagePath } from '../lib/languageRoutes.mjs';
 import BackToTop from '../components/BackToTop.astro';
 import OliviaChat from '../components/OliviaChat.astro';
 import SeoHead from '../components/SeoHead.astro';
+import { englishFooterKeywords } from '../data/englishFooterKeywords';
 
 interface Props {
   title: string;
@@ -20,6 +21,7 @@ const { title, description, lang = 'es', canonicalPath, image, breadcrumbs, stru
 const english = lang === 'en';
 const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
 const languageHref = languagePath(currentPath);
+const footerKeywords = english ? englishFooterKeywords[currentPath] || englishFooterKeywords['/en'] : [];
 ---
 
 <!doctype html>
@@ -28,7 +30,7 @@ const languageHref = languagePath(currentPath);
     <GoogleTag />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <SeoHead title={title} description={description} lang={lang} path={canonicalPath} image={image} breadcrumbs={breadcrumbs} structuredData={structuredData} />
+    <SeoHead title={title} description={description} keywords={footerKeywords} lang={lang} path={canonicalPath} image={image} breadcrumbs={breadcrumbs} structuredData={structuredData} />
     <link rel="icon" type="image/svg+xml" href="/etapel-logo.svg" />
     <style is:global>
       :root{--navy:#070b2f;--navy-2:#0b1145;--navy-3:#101a5f;--ink:#111827;--muted:#5f6b7a;--line:#e8edf5;--white:#fff;--soft:#f5f7fb;--orange:#f58220;--orange-dark:#d96e12;--green:#559a17;--shadow:0 26px 70px rgba(7,11,47,.18);--shadow-soft:0 16px 44px rgba(7,11,47,.10);--max:1180px}
@@ -75,6 +77,7 @@ const languageHref = languagePath(currentPath);
           <div><h3>Contact</h3><ul><li><a href="mailto:ventas@etapel.com.mx">ventas@etapel.com.mx</a></li><li><a href="tel:+525556895055">55 5689 5055</a></li><li><a href="https://wa.link/oowyzu">WhatsApp</a></li></ul></div>
         </div>
         <div class="footer-bottom"><span>Copyright © 2026 Etapel. All rights reserved.</span><div><a href="/en/contact">Need help? Contact us</a><a href="/en/privacy-policy">Privacy Policy</a><a href="/en/etapel-policies">Etapel Policies</a><a href={languageHref} data-language-switch>Spanish version</a></div></div>
+        <div class="footer-keywords" lang="en">{footerKeywords.join(' · ')}</div>
       </footer>
     ) : (
       <footer class="footer footer-full">
@@ -92,6 +95,7 @@ const languageHref = languagePath(currentPath);
     <BackToTop lang={lang} />
     <OliviaChat lang={lang} />
     <style is:global>
+      .lang-en .footer-full .footer-keywords{max-width:var(--max);margin:18px auto 0;padding-top:18px;border-top:1px solid rgba(255,255,255,.1);font-size:11px;line-height:1.8;color:#8f9ab2;text-align:center}
       .lang-en .menu{gap:18px;font-size:12px}.footer-full{padding:58px 28px 28px}.footer-full>.footer-grid,.footer-full>.footer-bottom{max-width:var(--max);margin-left:auto;margin-right:auto}.footer-full .footer-grid{display:grid;grid-template-columns:1.15fr .95fr .75fr .9fr;gap:36px}.footer-full img{width:150px}.footer-full p{color:#aeb8cf;line-height:1.7}.footer-full h3{font-size:12px;text-transform:uppercase;letter-spacing:.18em;color:#fff;margin:0 0 18px}.footer-full ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}.footer-full a{color:#c8d2e5}.footer-full .footer-bottom{margin-top:36px;padding-top:22px;border-top:1px solid rgba(255,255,255,.12);display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}.footer-full .footer-bottom div{display:flex;gap:18px;flex-wrap:wrap}@media(max-width:800px){.footer-full .footer-grid{grid-template-columns:1fr}}
     </style>
   </body>
