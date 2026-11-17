@@ -4,6 +4,7 @@ import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { collections, contentHash, validateRecord, StudioError } from '../model.mjs';
 import { pageContext, translationHash, translatePage, approvalWrites } from '../translations.mjs';
+import { previewPath, previewDocument } from './preview.mjs';
 
 export function createStudioServer(options = {}) {
   const config = { cms: process.env.DIRECTUS_URL, secret: process.env.STUDIO_SESSION_SECRET, origin: process.env.STUDIO_ORIGIN, site: process.env.STUDIO_SITE_URL || 'https://etapelv1-2.vercel.app', hook: process.env.VERCEL_DEPLOY_HOOK, translationKey:process.env.OPENAI_API_KEY, translationModel:process.env.TRANSLATION_MODEL || 'gpt-5.4-mini', translationEndpoint:'https://api.openai.com/v1/responses', secure: process.env.NODE_ENV === 'production', ...options };
@@ -75,7 +76,7 @@ export function createStudioServer(options = {}) {
   async function serve(req, res) {
     const url = new URL(req.url, 'http://studio.local'), path = url.pathname;
     res.setHeader('X-Content-Type-Options', 'nosniff'); res.setHeader('X-Frame-Options', 'DENY'); res.setHeader('Referrer-Policy', 'same-origin');
-    res.setHeader('Content-Security-Policy', `default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' blob: data: ${new URL(config.site).origin}; connect-src 'self'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'`);
+    res.setHeader('Content-Security-Policy', `default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' blob: data: ${new URL(config.site).origin}; connect-src 'self'; frame-src 'self'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'`);
     if (path === '/health' && req.method === 'GET') return send(res, { ok: true });
     if (path === '/api/config' && req.method === 'GET') return send(res, { site: config.site, publishReady: Boolean(config.hook), translationReady:Boolean(config.translationKey) });
     if (path.startsWith('/api/')) {
@@ -96,6 +97,32 @@ export function createStudioServer(options = {}) {
       }
       if (path === '/api/logout' && req.method === 'POST') { const s = session(req); if (s?.refresh) await api('/auth/logout', null, 'POST', { refresh_token: s.refresh }).catch(() => {}); setSession(res, null); return send(res, { ok: true }); }
       const s = await auth(req, res);
+      if (path === '/api/preview' && req.method === 'GET') {
+        const route = url.searchParams.get('page'), template = previewPath(route);
+        const response = await fetch(new URL(template, config.site), { signal:AbortSignal.timeout(20000), redirect:'error' });
+        if (!response.ok) throw new StudioError(503, 'La vista visual de esta página no está disponible. Vuelve a intentar en unos instantes.');
+        if (Number(response.headers.get('content-length')) > 5_000_000) throw new StudioError(502, 'La página supera el tamaño de vista previa.');
+        const text = await response.text();
+        if (text.length > 5_000_000) throw new StudioError(502, 'La página supera el tamaño de vista previa.');
+        const html = previewDocument(JSON.parse(text), route, config.site);
+        const siteOrigin = new URL(config.site).origin;
+        res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+        res.setHeader('Content-Security-Policy', `default-src 'none'; script-src 'none'; style-src 'self' 'unsafe-inline' ${siteOrigin}; img-src 'self' blob: data: ${siteOrigin}; font-src 'self' data: ${siteOrigin}; media-src ${siteOrigin}; frame-ancestors 'self'; form-action 'none'; base-uri ${siteOrigin}; sandbox allow-same-origin`);
+        res.writeHead(200, { 'Content-Type':'text/html; charset=utf-8', 'Cache-Control':'private, no-store', 'X-Robots-Tag':'noindex, nofollow' });
+        return res.end(html);
+      }
+      const originalImage = path.match(/^\/api\/media\/([a-zA-Z0-9_-]{1,180})\/image$/);
+      if (originalImage && req.method === 'GET') {
+        const row = await api(`/items/etapel_media/${originalImage[1]}`, s.access);
+        if (!row?.source || !/^\/(?!\/)[^?#]+\.(webp|png|jpe?g|avif)$/i.test(row.source) || row.source.includes('..') || row.source.includes('\\') || new URL(row.source, config.site).origin !== new URL(config.site).origin || (row.file && !/^[a-f\d-]{36}$/i.test(row.file))) throw new StudioError(400, 'Selecciona una fotografía de la biblioteca.');
+        const response = await fetch(row.file ? `${config.cms}/assets/${row.file}` : new URL(row.source, config.site), { headers:row.file ? {Authorization:`Bearer ${s.access}`} : {}, signal:AbortSignal.timeout(30000), redirect:'error' });
+        const type = response.headers.get('content-type')?.split(';')[0];
+        if (!response.ok || !['image/jpeg','image/png','image/webp','image/avif'].includes(type)) throw new StudioError(404, 'Fotografía no disponible.');
+        const data = Buffer.from(await response.arrayBuffer());
+        if (data.length > 25 * 1024 * 1024) throw new StudioError(413, 'Fotografía demasiado grande.');
+        res.writeHead(200, {'Content-Type':type,'Cache-Control':'private, no-store'});
+        return res.end(data);
+      }
       if (path === '/api/session' && req.method === 'GET') return send(res, { email: s.user.email, name: [s.user.first_name, s.user.last_name].filter(Boolean).join(' ') });
       if (path === '/api/content' && req.method === 'GET') {
         const content = await loadContent(s.access);
@@ -191,7 +218,7 @@ export function createStudioServer(options = {}) {
       }
       throw new StudioError(404, 'Ruta no disponible.');
     }
-    const files = { '/': ['index.html', 'text/html'], '/app.js': ['app.js','text/javascript'], '/style.css': ['style.css','text/css'], '/logo.svg': ['logo.svg','image/svg+xml'], '/workshop.webp': ['workshop.webp','image/webp'], '/fonts/manrope-studio-wght.ttf': ['fonts/manrope-studio-wght.ttf','font/ttf'], '/fonts/italiana.ttf': ['fonts/italiana.ttf','font/ttf'], ...Object.fromEntries(['painting','precision','jet-x'].map(name=>[`/assets/${name}.webp`,[`assets/${name}.webp`,'image/webp']])) };
+    const files = { '/': ['index.html', 'text/html'], '/app.js': ['app.js','text/javascript'], '/visual-editor.js': ['visual-editor.js','text/javascript'], '/visual-editor.css': ['visual-editor.css','text/css'], '/style.css': ['style.css','text/css'], '/logo.svg': ['logo.svg','image/svg+xml'], '/workshop.webp': ['workshop.webp','image/webp'], '/fonts/manrope-studio-wght.ttf': ['fonts/manrope-studio-wght.ttf','font/ttf'], '/fonts/italiana.ttf': ['fonts/italiana.ttf','font/ttf'], ...Object.fromEntries(['painting','precision','jet-x'].map(name=>[`/assets/${name}.webp`,[`assets/${name}.webp`,'image/webp']])) };
     const staticFile = files[path];
     if (!staticFile || !['GET','HEAD'].includes(req.method)) throw new StudioError(404, 'Página no disponible.');
     const data = await readFile(new URL(`./public/${staticFile[0]}`, import.meta.url)).catch(error => {

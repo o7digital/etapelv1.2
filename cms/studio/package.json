@@ -1,1 +1,1 @@
-{"name":"etapel-studio","private":true,"type":"module","scripts":{"start":"node server.mjs","test":"node --test *.test.mjs"},"engines":{"node":">=22"}}
+{"name":"etapel-studio","private":true,"type":"module","scripts":{"start":"node server.mjs","test":"node --test *.test.mjs"},"engines":{"node":">=22"},"dependencies":{"parse5":"8.1.1"}}

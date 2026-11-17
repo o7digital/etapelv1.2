@@ -1,6 +1,9 @@
+import { visualEditorMarkup, mountVisualEditor } from './visual-editor.js';
 const $ = selector => document.querySelector(selector);
 const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[char]));
 const state = { content: {}, config: {}, locale: 'es', query: '', status: '', family: '', page: 1, editing: null, editorDirty: false, dirty: false, publishing: false, liveHash: null, version: 0, translating: false, translationHashes: {} };
+Object.assign(state, { editorMode:'visual', visualDrafts:{}, visualMediaDrafts:{}, visualPrefs:{device:'desktop'}, saving:false });
+let visualEditor;
 const pages = [
   ['home','Inicio','/','/en','01'], ['about','Nosotros','/quienes-somos','/en/about-us','02'],
   ['training','CEDETEC','/capacitacion','/en/training','03'], ['support','Soporte técnico','/postventa','/en/after-sales','04'],
@@ -30,7 +33,18 @@ const paths = {
 };
 const icon = name => `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${paths[name] || paths.page}"/></svg>`;
 const number = value => new Intl.NumberFormat('es-MX').format(value);
-const hasUnsaved = () => state.dirty || state.editorDirty || state.translating;
+const hasUnsaved = () => state.dirty || state.editorDirty || state.translating || state.saving;
+const textValue = row => state.visualDrafts[row.id] ?? (row.translation?.state==='pending' ? row.translation.value : row.value);
+function clearPageDrafts() { state.visualDrafts={};state.visualMediaDrafts={};state.dirty=false; }
+function setTextDraft(row,value) {
+  const original=row.translation?.state==='pending' ? row.translation.value : row.value;
+  if(value===original)delete state.visualDrafts[row.id];else state.visualDrafts[row.id]=value;
+  state.dirty=Boolean(Object.keys(state.visualDrafts).length || Object.keys(state.visualMediaDrafts).length);
+}
+function setMediaDraft(row,value) {
+  if(value.file===row.file && value.title===row.title)delete state.visualMediaDrafts[row.id];else state.visualMediaDrafts[row.id]=value;
+  state.dirty=Boolean(Object.keys(state.visualDrafts).length || Object.keys(state.visualMediaDrafts).length);
+}
 async function request(path, options = {}) {
   const response = await fetch(path, { ...options, headers: { ...(options.body && !(options.body instanceof File) ? { 'Content-Type':'application/json' } : {}), ...options.headers } });
   const data = await response.json();
@@ -66,14 +80,14 @@ function translationPanel(view) {
 }
 function englishField(row) {
   const draft=row.translation,stateLabel=staleTranslation(row) ? 'ESPAÑOL MODIFICADO' : draft?.state==='pending' ? 'POR VALIDAR' : 'EDITABLE';
-  const value=draft?.state==='pending' ? draft.value : row.value;
+  const value=textValue(row);
   const sources=(draft?.source_ids || []).map(id=>collection('texts').find(source=>source.id===id)?.value).filter(value=>value!==undefined);
   return `<div class="translation-pair">${sources.length ? `<label class="source-field"><span class="field-heading">Español · Original<small>ES</small></span><textarea readonly rows="${value.length>150 ? 5 : 3}" aria-label="Original español">${escapeHtml(sources.join('\n\n'))}</textarea></label>` : `<div class="source-field source-placeholder"><span>ESPAÑOL → ENGLISH</span><p>Genera una traducción para ver aquí el original español correspondiente.</p></div>`}<label class="editable-field"><span class="field-heading">${escapeHtml(row.label)}<small class="${draft?.state==='pending' ? 'needs-review' : ''}">${stateLabel}</small></span><textarea name="${row.id}" rows="${value.length>150 ? 5 : 3}" maxlength="12000">${escapeHtml(value)}</textarea></label></div>`;
 }
 function renderTexts(view) {
   const rows=pageRows(view),groups=new Map(),english=state.locale==='en';
   for(const row of rows){if(!groups.has(row.section))groups.set(row.section,[]);groups.get(row.section).push(row);}
-  return `<form id="texts-form"><div class="content-toolbar"><p><b>${rows.length}</b> textos · ${english ? 'Revisa, ajusta y valida antes de publicar.' : 'El español es la fuente de la traducción.'}</p><button type="submit" class="button orange" ${state.translating || (english && rows.some(staleTranslation)) ? 'disabled' : ''}>${english ? 'Validar y guardar inglés' : state.config.translationReady ? 'Guardar y traducir' : 'Guardar la página'} <span>↗</span></button></div><p id="texts-error" class="error" role="alert"></p>${[...groups].map(([section,fields],index)=>`<details class="text-section" ${index===0 ? 'open' : ''}><summary><span>${escapeHtml(section)}</span><small>${fields.length} textos <span>＋</span></small></summary><div class="text-grid ${english ? 'review-grid' : ''}">${fields.sort((a,b)=>a.sort-b.sort).map(row=>english ? englishField(row) : `<label class="editable-field"><span class="field-heading">${escapeHtml(row.label)}<small>ESPAÑOL</small></span><textarea name="${row.id}" rows="${row.value.length>150 ? 4 : 2}" maxlength="12000">${escapeHtml(row.value)}</textarea></label>`).join('')}</div></details>`).join('')}${!rows.length ? '<div class="empty">No hay textos en esta página.</div>' : ''}</form>`;
+  return `<form id="texts-form"><div class="content-toolbar"><p><b>${rows.length}</b> textos · ${english ? 'Revisa, ajusta y valida antes de publicar.' : 'El español es la fuente de la traducción.'}</p><button type="submit" class="button orange" ${state.translating || (english && rows.some(staleTranslation)) ? 'disabled' : ''}>${english ? 'Validar y guardar inglés' : state.config.translationReady ? 'Guardar y traducir' : 'Guardar la página'} <span>↗</span></button></div><p id="texts-error" class="error" role="alert"></p>${[...groups].map(([section,fields],index)=>`<details class="text-section" ${index===0 ? 'open' : ''}><summary><span>${escapeHtml(section)}</span><small>${fields.length} textos <span>＋</span></small></summary><div class="text-grid ${english ? 'review-grid' : ''}">${fields.sort((a,b)=>a.sort-b.sort).map(row=>english ? englishField(row) : `<label class="editable-field"><span class="field-heading">${escapeHtml(row.label)}<small>ESPAÑOL</small></span><textarea name="${row.id}" rows="${row.value.length>150 ? 4 : 2}" maxlength="12000">${escapeHtml(textValue(row))}</textarea></label>`).join('')}</div></details>`).join('')}${!rows.length ? '<div class="empty">No hay textos en esta página.</div>' : ''}</form>`;
 }
 function mergeTextRecords(records) {
   for(const record of records){const index=collection('texts').findIndex(row=>row.id===record.id);if(index>=0)state.content.etapel_texts[index]=record;}
@@ -126,7 +140,10 @@ function renderMedia() {
   return `${heading(titles.media,'Sustituye una fotografía en todos los lugares donde se utiliza.',button('＋ Subir fotografía','upload-media','button orange'))}<div class="list-toolbar"><span>${filtered.length} imágenes</span><label class="search"><span>Buscar</span><input id="collection-search" type="search" placeholder="Imagen, producto o página…" value="${escapeHtml(state.query)}"></label></div><div class="media-grid">${page.rows.map(row => `<article class="media-card"><div class="media-image"><img src="${escapeHtml(imageUrl(row))}" alt="${escapeHtml(row.title)}" loading="lazy">${row.file ? '<span class="badge published">Actualizada</span>' : ''}</div><div><b>${escapeHtml(row.title)}</b><small>${escapeHtml(row.page === '/' ? 'Inicio' : row.page)}</small><button class="edit-button" data-edit="${row.id}" data-collection="media">Cambiar imagen ↗</button></div></article>`).join('')}</div>${!filtered.length ? '<div class="empty">No se encontraron imágenes.</div>' : ''}${page.footer}`;
 }
 function render() {
+  visualEditor?.destroy();visualEditor=null;
   const view = currentView();
+  const pageEditor=pages.some(p=>p[0]===view) || ['shared','catalog-pages'].includes(view);
+  $('#main').classList.toggle('visual-page',pageEditor && state.editorMode==='visual');
   $('#breadcrumb').textContent = navigation.find(n => n[0] === view)?.[1] || 'Resumen';
   $('#navigation').innerHTML = navigation.map(([key,name]) => `${({overview:'MI ESPACIO',home:'PÁGINAS DEL SITIO',catalog:'CATÁLOGO Y RECURSOS'})[key] ? `<span class="nav-label">${({overview:'MI ESPACIO',home:'PÁGINAS DEL SITIO',catalog:'CATÁLOGO Y RECURSOS'})[key]}</span>` : ''}<a href="#${key}" class="${view === key ? 'active' : ''}" ${view === key ? 'aria-current="page"' : ''}><span class="nav-icon">${icon(key)}</span>${name}${view === key ? '<i></i>' : ''}</a>`).join('');
   let html;
@@ -139,11 +156,16 @@ function render() {
       if (!paths.includes(state.catalogPage)) state.catalogPage = paths[0];
       selector = `<label class="page-selector">Página del catálogo<select id="catalog-page">${paths.map(path => `<option ${path === state.catalogPage ? 'selected' : ''}>${escapeHtml(path)}</option>`).join('')}</select></label>`;
     }
-    const page = pages.find(p => p[0] === view), route = page?.[state.locale === 'es' ? 2 : 3] || state.catalogPage || '/';
-    html = `${heading(page?.[1] || titles[view], 'Los campos conservan la estructura y el diseño de tu sitio.',`<a class="button quiet" href="${escapeHtml(sitePath(route))}" target="_blank" rel="noopener">Ver la página ↗</a>`)}${languageBar()}${selector}${translationPanel(view)}${renderTexts(view)}`;
+    const page = pages.find(p => p[0] === view), route = view==='shared' ? (state.locale==='en' ? '/en' : '/') : page?.[state.locale === 'es' ? 2 : 3] || state.catalogPage || '/';
+    const modes=`<div class="page-editor-modes"><button class="button ${state.editorMode==='visual' ? 'selected' : 'quiet'}" data-action="editor-visual">Vista visual</button><button class="button ${state.editorMode==='fields' ? 'selected' : 'quiet'}" data-action="editor-fields">Textos y SEO</button><a class="button quiet" href="${escapeHtml(sitePath(route))}" target="_blank" rel="noopener">Ver sitio ↗</a></div>`;
+    html = `${heading(page?.[1] || titles[view], 'Tu página real. Haz clic en un texto o una fotografía para editar.',modes)}${languageBar()}${selector}${state.editorMode==='visual' ? visualEditorMarkup({route,locale:state.locale,translationReady:state.config.translationReady,translating:state.translating,stale:state.locale==='en' && pageRows(view).some(staleTranslation)}) : translationPanel(view)+renderTexts(view)}${state.translationError ? `<p class="error">${escapeHtml(state.translationError)}</p>` : ''}`;
+    state.visualRoute=route;
   } else html = overview();
   $('#main').innerHTML = html;
-  $('#main').querySelectorAll('textarea,input,select').forEach(field => field.addEventListener('input', () => { if (field.closest('#texts-form')) state.dirty = true; }));
+  $('#main').querySelectorAll('textarea,input,select').forEach(field => field.addEventListener('input', () => { if (field.closest('#texts-form')) { const row=collection('texts').find(row=>row.id===field.name);if(row)setTextDraft(row,field.value); } }));
+  const root=$('.visual-editor');
+  if(root)visualEditor=mountVisualEditor(root,{route:state.visualRoute,locale:state.locale,rows:pageRows(view),allTexts:collection('texts'),media:collection('media'),drafts:state.visualDrafts,mediaDrafts:state.visualMediaDrafts,prefs:state.visualPrefs,imageUrl,onText:setTextDraft,onMedia:setMediaDraft,onSave:()=>savePage(pageRows(view).map(row=>[row.id,textValue(row)])),notify});
+  if(state.translating){const editor=root || $('#texts-form');if(editor){editor.inert=true;editor.setAttribute('aria-busy','true');}if(root)root.insertAdjacentHTML('beforebegin','<p class="visual-translation-progress" role="status">ES → EN · Traducción en curso. Preparando el inglés para tu revisión…</p>');}
 }
 async function reload() { const data = await request('/api/content'); state.content = data.content; state.hash = data.hash; state.translationHashes = data.translationHashes || {}; }
 async function enter() {
@@ -196,9 +218,9 @@ $('#login-form').addEventListener('submit', async event => {
   try { const form = new FormData(formElement); await request('/api/login',{method:'POST',body:JSON.stringify(Object.fromEntries(form))}); formElement.reset(); await enter(); }
   catch(error) { $('#login-error').textContent = error.message; } finally { submit.disabled = false; }
 });
-$('#logout').addEventListener('click',async()=>{if(hasUnsaved() && !confirm('Tienes cambios sin guardar. ¿Quieres salir?'))return;await request('/api/logout',{method:'POST',body:'{}'});state.content={};state.dirty=false;clearInterval(publicationTimer);$('#studio-view').hidden=true;$('#login-view').hidden=false;});
+$('#logout').addEventListener('click',async()=>{if(hasUnsaved() && !confirm('Tienes cambios sin guardar. ¿Quieres salir?'))return;await request('/api/logout',{method:'POST',body:'{}'});state.content={};clearPageDrafts();visualEditor?.destroy();clearInterval(publicationTimer);$('#studio-view').hidden=true;$('#login-view').hidden=false;});
 window.addEventListener('beforeunload',event=>{if(hasUnsaved()){event.preventDefault();event.returnValue='';}});
-window.addEventListener('hashchange',()=>{if(state.translating){history.replaceState(null,'','#'+state.lastView);notify('La traducción sigue en curso. Espera a que termine.');return;}if(state.dirty && !confirm('Hay textos sin guardar. ¿Quieres cambiar de sección?')){history.replaceState(null,'','#'+state.lastView);return;}state.dirty=false;state.translationError='';state.query='';state.status='';state.family='';state.page=1;state.lastView=currentView();setNav(false);render();});
+window.addEventListener('hashchange',()=>{if(state.translating || state.saving){history.replaceState(null,'','#'+state.lastView);notify('La traducción sigue en curso. Espera a que termine.');return;}if(state.dirty && !confirm('Hay textos sin guardar. ¿Quieres cambiar de sección?')){history.replaceState(null,'','#'+state.lastView);return;}clearPageDrafts();state.translationError='';state.query='';state.status='';state.family='';state.page=1;state.lastView=currentView();setNav(false);render();});
 function setNav(open) { $('#sidebar').classList.toggle('open',open); $('#nav-backdrop').hidden=!open; $('#mobile-menu').setAttribute('aria-expanded',String(open)); }
 $('#mobile-menu').onclick=()=>setNav(true);
 $('#nav-backdrop').onclick=()=>setNav(false);
@@ -206,42 +228,52 @@ window.addEventListener('keydown',event=>{if(event.key==='Escape' && $('#sidebar
 $('#main').addEventListener('click',event=>{
   const editButton=event.target.closest('[data-edit]'); if(editButton)return edit(editButton.dataset.collection,editButton.dataset.edit);
   const action=event.target.closest('[data-action]')?.dataset.action;
+  if(action==='editor-visual' || action==='editor-fields'){state.editorMode=action==='editor-visual' ? 'visual' : 'fields';render();return;}
   if(action==='translate-page'){generateEnglish({force:state.locale==='en'});return;}
   if(action==='publish-site'){if(!$('#publish').disabled)$('#publish').click();return;}
   if(action==='previous' || action==='next'){state.page+=action==='next'?1:-1;render();$('#main').focus({preventScroll:true});window.scrollTo({top:0,behavior:'instant'});return;}
   if(action==='new')return edit(({catalog:'products',families:'families',brands:'brands'})[currentView()]);
   if(action==='upload-media'){state.uploadTarget=null;$('#image-upload').click();}
   const locale=event.target.closest('[data-locale]')?.dataset.locale;
-  if(locale){if(state.translating){notify('Espera a que termine la traducción.');return;}if(state.dirty && !confirm('¿Cambiar de idioma sin guardar?'))return;if(currentView()==='catalog-pages')state.catalogPage=locale==='en' ? state.catalogPage.replace(/^\/linea-de-producto/,'/en/product-lines') : state.catalogPage.replace(/^\/en\/product-lines/,'/linea-de-producto');state.locale=locale;state.dirty=false;render();}
+  if(locale){if(state.translating){notify('Espera a que termine la traducción.');return;}if(state.dirty && !confirm('¿Cambiar de idioma sin guardar?'))return;if(currentView()==='catalog-pages')state.catalogPage=locale==='en' ? state.catalogPage.replace(/^\/linea-de-producto/,'/en/product-lines') : state.catalogPage.replace(/^\/en\/product-lines/,'/linea-de-producto');state.locale=locale;clearPageDrafts();render();}
 });
 $('#main').addEventListener('input',event=>{
   if(event.target.id==='collection-search'){
     const position=event.target.selectionStart;state.query=event.target.value;state.page=1;render();const input=$('#collection-search');input.focus();try{input.setSelectionRange(position,position);}catch{}
   }
 });
-$('#main').addEventListener('change',event=>{if(['status-filter','family-filter'].includes(event.target.id)){state[event.target.id==='status-filter'?'status':'family']=event.target.value;state.page=1;render();return;}if(event.target.id==='catalog-page'){if(state.translating){notify('Espera a que termine la traducción.');render();return;}if(state.dirty && !confirm('¿Cambiar de página sin guardar?'))return;state.catalogPage=event.target.value;state.dirty=false;render();}});
-$('#main').addEventListener('submit',async event=>{
-  if(event.target.id!=='texts-form')return;
-  event.preventDefault();if(state.translating)return;
-  const submit=event.target.querySelector('[type=submit]');submit.disabled=true;$('#texts-error').textContent='';
-  const entries=[...new FormData(event.target)];
-  try{
+$('#main').addEventListener('change',event=>{if(['status-filter','family-filter'].includes(event.target.id)){state[event.target.id==='status-filter'?'status':'family']=event.target.value;state.page=1;render();return;}if(event.target.id==='catalog-page'){if(state.translating){notify('Espera a que termine la traducción.');render();return;}if(state.dirty && !confirm('¿Cambiar de página sin guardar?'))return;state.catalogPage=event.target.value;clearPageDrafts();render();}});
+async function savePage(entries) {
+  if(state.translating || state.saving)return;
+  state.saving=true;
+  const workspace=$('.visual-editor') || $('#texts-form');if(workspace)workspace.inert=true;
+  const errorPanel=$('#texts-error');if(errorPanel)errorPanel.textContent='';
+  try {
     let count=0;
-    if(state.locale==='en'){
-      for(const page of sourceScopes()){
+    for(const [id,values] of Object.entries(state.visualMediaDrafts)) {
+      const row=collection('media').find(row=>row.id===id);
+      if(row && (row.file!==values.file || row.title!==values.title)){await saveRecord('media',row,{...values,status:'published'});count++;}
+    }
+    if(state.locale==='en') {
+      for(const page of sourceScopes()) {
         const targetPage=page.startsWith('es:') ? page.replace(/^es:/,'en:') : pages.find(row=>row[2]===page)?.[3] || page.replace(/^\/linea-de-producto/,'/en/product-lines');
         const values=entries.map(([id,value])=>{const row=collection('texts').find(row=>row.id===id);return row?.page===targetPage && (row.translation?.state==='pending' || row.value!==value) ? {id,value,revision:row.revision || 0} : null;}).filter(Boolean);
         if(values.length){const result=await request('/api/translations/approve',{method:'POST',body:JSON.stringify({page,values})});mergeTextRecords(result.records);count+=result.approved;}
       }
-      state.dirty=false;render();notify(count ? `${count} textos ingleses validados. Publica para compartirlos.` : 'No hay cambios pendientes.');
-    }else{
-      for(const [id,value]of entries){const row=collection('texts').find(row=>row.id===id);if(row && row.value!==value){await saveRecord('texts',row,{value,status:'published'});count++;}}
-      await reload();state.dirty=false;
+      clearPageDrafts();await reload();render();notify(count ? 'Inglés validado y cambios guardados. Publica para compartirlos.' : 'No hay cambios pendientes.');
+    } else {
+      for(const [id,value] of entries){const row=collection('texts').find(row=>row.id===id);if(row && row.value!==value){await saveRecord('texts',row,{value,status:'published'});count++;}}
+      await reload();clearPageDrafts();state.saving=false;
       if(state.config.translationReady)await generateEnglish();
-      else notify(count ? `${count} textos españoles guardados.` : 'No hay cambios pendientes.');
+      else{render();notify(count ? 'Cambios guardados. Publica cuando estén listos.' : 'No hay cambios pendientes.');}
     }
-  }catch(error){const panel=$('#texts-error');if(panel)panel.textContent=error.message;}
-  finally{submit.disabled=false;}
+  } catch(error) {
+    const panel=$('#texts-error') || $('.visual-error');if(panel)panel.textContent=error.message;notify(error.message);
+  } finally {state.saving=false;if(workspace?.isConnected)workspace.inert=false;}
+}
+$('#main').addEventListener('submit',async event=>{
+  if(event.target.id!=='texts-form')return;
+  event.preventDefault();await savePage([...new FormData(event.target)]);
 });
 
 $('#editor-fields').addEventListener('input',()=>{state.editorDirty=true;});

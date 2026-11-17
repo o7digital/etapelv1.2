@@ -43,3 +43,11 @@ La publication du contenu est confirmée uniquement par l’empreinte servie sur
 - Firefox avec le compte Olivier : génération réelle, comparaison espagnol/anglais, rechargement des brouillons conservés et affichage à 390 px sans débordement.
 - Parcours réel dans des enregistrements QA isolés Directus : enregistrement espagnol déclenchant automatiquement la traduction, valeur anglaise publiée conservée, modification de l’original entraînant HTTP 409, validation manuelle anglaise persistante après rechargement. Seuls les enregistrements temporaires QA ont été supprimés ensuite.
 - Build connecté au CMS : 547 pages. Le build continue d’utiliser uniquement les valeurs anglaises validées (`value`) ; les propositions sont conservées dans `translation`.
+
+# Éditeur visuel du Studio — 16 novembre 2026
+
+- Vue fidèle de la page Nosotros et 75 zones de texte éditables : saisie directe, synchronisation du panneau latéral, conservation des changements entre vue visuelle et champs.
+- Formats ordinateur, tablette et mobile ; vue sans édition ; bibliothèque des photos et photographies de fond.
+- Parcours Firefox avec des enregistrements Directus temporaires isolés : réutilisation d’une photo du dépôt, upload privé, texte et photo enregistrés puis conservés après rechargement ; rejet HTTP 409 d’une révision périmée. Enregistrements et fichiers de test supprimés ensuite.
+- Vérification des annotations sur les nœuds de texte, de la conservation du HTML public et des éléments inline, du nettoyage des scripts et attributs actifs, des routes de prévisualisation, des sessions et de l’absence de transfert des jetons CMS vers Vercel.
+- L’aperçu n’exécute ni JavaScript du site ni Analytics. Les textes restent du texte simple, avec mise en forme issue du site.
