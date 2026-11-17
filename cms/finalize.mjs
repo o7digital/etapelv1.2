@@ -6,6 +6,7 @@ import { processDocument, stableId } from './content.mjs';
 import { contentHash } from './model.mjs';
 import { parse, serialize } from 'parse5';
 import { previewPath } from './studio/preview.mjs';
+import { finalizeSeo, renderSitemap } from './seo.mjs';
 const snapshot = existsSync('.cms/content.json') ? JSON.parse(await readFile('.cms/content.json', 'utf8')) : null;
 const overrides = new Map((snapshot?.etapel_texts || []).filter(row => row.status === 'published').map(row => [row.id, row.value]));
 const mediaPaths = new Map();
@@ -26,7 +27,7 @@ for (const row of snapshot?.etapel_media || []) {
   await writeFile(`dist/_cms/${file}`, bytes);
   mediaPaths.set(row.source, `/_cms/${file}`);
 }
-const fields = new Map(), media = new Map();
+const fields = new Map(), media = new Map(), sitemapEntries = [];
 async function walk(directory) {
   for (const entry of await readdir(directory, { withFileTypes: true })) {
     const path = join(directory, entry.name);
@@ -55,10 +56,13 @@ async function walk(directory) {
       replace(document); html = serialize(document);
       for (const [source, replacement] of mediaPaths) html = html.split(source).join(replacement);
     }
-    await writeFile(path, html);
+    const seo = finalizeSeo(html, route, overrides);
+    if (seo.entry) sitemapEntries.push(seo.entry);
+    await writeFile(path, seo.html);
   }
 }
 await walk('dist');
+await writeFile('dist/sitemap.xml', renderSitemap(sitemapEntries));
 // CSS background photographs must receive the same replacements as <img>.
 for (const entry of await readdir('dist/_astro', { withFileTypes: true })) {
   if (!entry.name.endsWith('.css')) continue;

@@ -1,6 +1,7 @@
 ---
 import { familyEnglish } from '../../data/familyEnglish';
 import SiteLayout from '../../layouts/SiteLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import ProductCatalog from '../../components/ProductCatalog.astro';
 import ProductFamilyMenu from '../../components/ProductFamilyMenu.astro';
 import { legacyFamilyRoutes, productFamilies, type ProductFamily } from '../../data/productLines';
@@ -18,13 +19,20 @@ const { family, lang = 'es' } = Astro.props as { family: ProductFamily; lang?: '
 const en = lang === 'en';
 const title = en ? familyEnglish[family.slug]?.title || family.title : family.title;
 const description = en ? familyEnglish[family.slug]?.description || family.pageDescription : family.pageDescription;
+const canonicalPath = `${en ? '/en/product-lines' : '/linea-de-producto'}/${family.slug}`;
+const breadcrumbs = [
+  { name: en ? 'Home' : 'Inicio', path: en ? '/en' : '/' },
+  { name: en ? 'Product lines' : 'Línea de producto', path: en ? '/en/product-lines' : '/linea-de-producto' },
+  { name: title, path: canonicalPath },
+];
 ---
 
-<SiteLayout title={`${title} | Etapel`} description={description} lang={lang}>
+<SiteLayout title={`${title} | Etapel`} description={description} lang={lang} canonicalPath={canonicalPath} image={family.image} breadcrumbs={breadcrumbs}>
   <main>
     <section class="page-hero">
       <div class="page-hero-inner">
         <div>
+          <Breadcrumbs items={breadcrumbs} lang={lang} />
           <span class="eyebrow"><span class="dot"></span> {title}</span>
           <h1>{title}</h1>
           <p>{description}</p>
