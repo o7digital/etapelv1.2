@@ -4,14 +4,19 @@ import LanguageNavigation from '../components/LanguageNavigation.astro';
 import { languagePath } from '../lib/languageRoutes.mjs';
 import BackToTop from '../components/BackToTop.astro';
 import OliviaChat from '../components/OliviaChat.astro';
+import SeoHead from '../components/SeoHead.astro';
 
 interface Props {
   title: string;
   description: string;
   lang?: 'es' | 'en';
+  canonicalPath?: string;
+  image?: string;
+  breadcrumbs?: { name: string; path: string }[];
+  structuredData?: Record<string, unknown>[];
 }
 
-const { title, description, lang = 'es' } = Astro.props as Props;
+const { title, description, lang = 'es', canonicalPath, image, breadcrumbs, structuredData } = Astro.props as Props;
 const english = lang === 'en';
 const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
 const languageHref = languagePath(currentPath);
@@ -23,8 +28,7 @@ const languageHref = languagePath(currentPath);
     <GoogleTag />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content={description} />
-    <title>{title}</title>
+    <SeoHead title={title} description={description} lang={lang} path={canonicalPath} image={image} breadcrumbs={breadcrumbs} structuredData={structuredData} />
     <link rel="icon" type="image/svg+xml" href="/etapel-logo.svg" />
     <style is:global>
       :root{--navy:#070b2f;--navy-2:#0b1145;--navy-3:#101a5f;--ink:#111827;--muted:#5f6b7a;--line:#e8edf5;--white:#fff;--soft:#f5f7fb;--orange:#f58220;--orange-dark:#d96e12;--green:#559a17;--shadow:0 26px 70px rgba(7,11,47,.18);--shadow-soft:0 16px 44px rgba(7,11,47,.10);--max:1180px}

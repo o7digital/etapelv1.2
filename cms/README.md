@@ -56,6 +56,8 @@ Railway contient deux volumes persistants : PostgreSQL et `/directus/uploads`. C
 
 Vérifications : `npm test`, `npm run build`, puis les parcours Studio et la publication en navigateur. Déploiement Studio : `railway up --service studio --detach`, depuis le projet lié indiqué dans `deployment.json`. La variable `RAILWAY_DOCKERFILE_PATH` fixe le Dockerfile ; `.railwayignore` limite l'archive aux sources utiles au Studio. Vérifier `/health` après chaque déploiement. Site : `vercel --prod --yes` dans ce checkout lié au projet Vercel existant.
 
+Sur `dev`, utiliser un déploiement Vercel Preview (`vercel --yes`, ou `vercel deploy --prebuilt` après `vercel build`), sans `--prod`. Le domaine SEO de référence reste `https://www.etapel.com` pour les canoniques, les variantes ES/EN et les données structurées. `cms/finalize.mjs` synchronise les métadonnées sociales avec les textes publiés du CMS et génère `/sitemap.xml` depuis les seules pages canoniques effectivement construites ; les anciennes URL de familles et `/admin` en sont exclus. Les aperçus protégés Vercel restent réservés à la validation.
+
 Références API : [authentification Directus](https://directus.com/docs/api/authentication), [contenus Directus](https://directus.com/docs/api/items), [fichiers Directus](https://directus.com/docs/api/files), [Deploy Hooks Vercel](https://vercel.com/docs/deploy-hooks).
 
 Le choix d’une photographie reste dans le formulaire : vérifier son aperçu puis enregistrer la fiche pour conserver le remplacement.

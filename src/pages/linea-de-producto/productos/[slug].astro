@@ -1,5 +1,8 @@
 ---
 import SiteLayout from '../../../layouts/SiteLayout.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import { canonicalUrl, siteOrigin } from '../../../lib/seo.mjs';
+import { familyEnglish } from '../../../data/familyEnglish';
 import CabinFilterQuote from '../../../components/CabinFilterQuote.astro';
 import { catalogProducts, productDetailPath, type CatalogProduct } from '../../../data/products';
 import { productFamilies } from '../../../data/productLines';
@@ -89,13 +92,31 @@ const productDownloads = product.downloads || ['Ficha técnica', 'Manual de oper
 const getDownloadLabel = (download: string | ProductDownload) => typeof download === 'string' ? download : download.label;
 const getDownloadHref = (download: string | ProductDownload) => typeof download === 'string' ? '/contacto' : download.url;
 const isLinkedDownload = (download: string | ProductDownload) => typeof download !== 'string';
+const detailPath = `${en ? '/en/product-lines/products' : '/linea-de-producto/productos'}/${product.slug}`;
+const breadcrumbs = [
+  { name: en ? 'Home' : 'Inicio', path: en ? '/en' : '/' },
+  { name: en ? 'Product lines' : 'Línea de producto', path: en ? '/en/product-lines' : '/linea-de-producto' },
+  ...(family ? [{ name: en ? familyEnglish[family.slug]?.title || family.title : family.title,
+    path: `${en ? '/en/product-lines' : '/linea-de-producto'}/${family.slug}` }] : []),
+  { name: product.name, path: detailPath },
+];
+const structuredData = [{
+  '@type': 'Product', '@id': `${canonicalUrl(detailPath)}#product`,
+  name: product.name, description: displayDescription, url: canonicalUrl(detailPath),
+  image: [...new Set([product.image, ...product.gallery])].filter(Boolean).map(image => new URL(image, siteOrigin).href),
+  ...(product.brand ? { brand: { '@type': 'Brand', name: product.brand } } : {}),
+  category: product.category,
+  additionalProperty: displaySpecs.map(spec => ({ '@type': 'PropertyValue', name: spec.label, value: spec.value })),
+  mainEntityOfPage: { '@id': `${canonicalUrl(detailPath)}#webpage` },
+}];
 ---
 
-<SiteLayout title={`${product.name} | ${en ? 'Etapel Catalog' : 'Catálogo Etapel'}`} description={displaySummary} lang={lang}>
+<SiteLayout title={`${product.name} | ${en ? 'Etapel Catalog' : 'Catálogo Etapel'}`} description={displaySummary} lang={lang} image={product.image} breadcrumbs={breadcrumbs} structuredData={structuredData}>
   <main data-product-detail>
     <section class="page-hero">
       <div class="page-hero-inner">
         <div>
+          <Breadcrumbs items={breadcrumbs} lang={lang} />
           <span class="eyebrow"><span class="dot"></span> {product.brand ? `${product.brand} / ` : ''}{familyTitle}</span>
           <h1>{product.name}</h1>
           <p>{displaySummary}</p>
@@ -126,7 +147,7 @@ const isLinkedDownload = (download: string | ProductDownload) => typeof download
 
           <div class="detail-copy">
             <div class="badges">{product.badges.map((badge) => <span class="badge">{tr(badge)}</span>)}</div>
-            <h1>{displaySummary}</h1>
+            <h2 class="product-summary" style="font-size:clamp(34px,4vw,54px);line-height:.94;letter-spacing:-.07em;margin:24px 0 18px;color:var(--navy)">{displaySummary}</h2>
             <p style="color:#647083;line-height:1.8;font-size:17px">{displayDescription}</p>
 
             {(product.optionGroups || []).map((group) => (

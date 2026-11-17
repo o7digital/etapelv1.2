@@ -1,0 +1,60 @@
+---
+import { canonicalUrl, jsonLd, languageAlternates, siteOrigin } from '../lib/seo.mjs';
+
+interface Props {
+  title: string;
+  description: string;
+  lang?: 'es' | 'en';
+  path?: string;
+  image?: string;
+  breadcrumbs?: { name: string; path: string }[];
+  structuredData?: Record<string, unknown>[];
+}
+const { title, description, lang = 'es', path = Astro.url.pathname,
+  image = '/images/contacto-etapel.webp', breadcrumbs = [], structuredData = [] } = Astro.props;
+const canonical = canonicalUrl(path);
+const imageUrl = new URL(image, siteOrigin).href;
+const graph = [
+  {
+    '@type': 'Organization', '@id': `${siteOrigin}/#organization`, name: 'Etapel',
+    url: `${siteOrigin}/`, logo: `${siteOrigin}/etapel-logo.svg`,
+    telephone: '+52-55-5689-5055', email: 'ventas@etapel.com.mx',
+    address: { '@type': 'PostalAddress', streetAddress: 'California 167, Col. Parque San Andrés',
+      addressLocality: 'Ciudad de México', postalCode: '04040', addressCountry: 'MX' },
+  },
+  {
+    '@type': 'WebSite', '@id': `${siteOrigin}/#website`, url: `${siteOrigin}/`, name: 'Etapel',
+    publisher: { '@id': `${siteOrigin}/#organization` }, inLanguage: ['es-MX', 'en'],
+  },
+  {
+    '@type': 'WebPage', '@id': `${canonical}#webpage`, url: canonical, name: title, description,
+    inLanguage: lang === 'es' ? 'es-MX' : 'en', isPartOf: { '@id': `${siteOrigin}/#website` },
+    ...(breadcrumbs.length ? { breadcrumb: { '@id': `${canonical}#breadcrumb` } } : {}),
+  },
+  ...(breadcrumbs.length ? [{
+    '@type': 'BreadcrumbList', '@id': `${canonical}#breadcrumb`,
+    itemListElement: breadcrumbs.map((item, index) => ({
+      '@type': 'ListItem', position: index + 1, name: item.name, item: canonicalUrl(item.path),
+    })),
+  }] : []),
+  ...structuredData,
+];
+---
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+{languageAlternates(path).map(item => <link rel="alternate" hreflang={item.lang} href={item.href} />)}
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Etapel" />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={imageUrl} />
+<meta property="og:image:alt" content={title} />
+<meta property="og:locale" content={lang === 'es' ? 'es_MX' : 'en_US'} />
+<meta property="og:locale:alternate" content={lang === 'es' ? 'en_US' : 'es_MX'} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={imageUrl} />
+<script type="application/ld+json" data-etapel-schema set:html={jsonLd({ '@context': 'https://schema.org', '@graph': graph })} />
