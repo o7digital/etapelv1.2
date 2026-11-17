@@ -1,4 +1,5 @@
 ---
+import GoogleTag from '../components/GoogleTag.astro';
 import LanguageNavigation from '../components/LanguageNavigation.astro';
 import { languagePath } from '../lib/languageRoutes.mjs';
 import BackToTop from '../components/BackToTop.astro';
@@ -19,6 +20,7 @@ const languageHref = languagePath(currentPath);
 <!doctype html>
 <html lang={lang}>
   <head>
+    <GoogleTag />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
