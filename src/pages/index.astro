@@ -1,5 +1,6 @@
 ---
 import GoogleTag from '../components/GoogleTag.astro';
+import LanguageSwitcher from '../components/LanguageSwitcher.astro';
 import SeoHead from '../components/SeoHead.astro';
 import HeroSlider from '../components/HeroSlider.astro';
 import LanguageNavigation from '../components/LanguageNavigation.astro';
@@ -99,7 +100,7 @@ import BrandMarquee from '../components/BrandMarquee.astro';
       <div class="menu">
         <a href="/">INICIO</a><a href="/linea-de-producto">LÍNEA DE PRODUCTO</a><a href="/capacitacion">CEDETEC</a><a href="/postventa">SOPORTE TÉCNICO</a><a href="/quienes-somos">NOSOTROS</a><a href="/contacto">CONTACTO</a>
       </div>
-      <div class="nav-actions"><a class="lang" href="/en" data-language-switch aria-label="Cambiar idioma a inglés">EN</a><a class="btn orange" href="/contacto#formulario-contacto">Solicitar información</a></div>
+      <div class="nav-actions"><LanguageSwitcher lang="es" /><a class="btn orange" href="/contacto#formulario-contacto">Solicitar información</a></div>
       <details class="mobile-menu">
         <summary aria-label="Abrir menú"><span class="hamburger"></span></summary>
         <div class="mobile-panel">
@@ -109,7 +110,7 @@ import BrandMarquee from '../components/BrandMarquee.astro';
           <a href="/postventa">SOPORTE TÉCNICO</a>
           <a href="/quienes-somos">NOSOTROS</a>
           <a href="/contacto">CONTACTO</a>
-          <a href="/en" data-language-switch aria-label="Cambiar idioma a inglés">EN</a>
+          <LanguageSwitcher lang="es" />
           <a class="mobile-cta" href="/contacto#formulario-contacto">Solicitar información</a>
         </div>
       </details>
@@ -228,7 +229,7 @@ import BrandMarquee from '../components/BrandMarquee.astro';
           <a href="mailto:ventas@etapel.com.mx">¿Necesitas ayuda? ¡Contáctanos!</a>
           <a href="/aviso-de-privacidad">Aviso de Privacidad</a>
           <a href="/politicas-de-etapel">Políticas de Etapel</a>
-          <a href="/en" data-language-switch>English version</a>
+          <LanguageSwitcher lang="es" />
         </div>
       </div>
       <div class="footer-keywords">

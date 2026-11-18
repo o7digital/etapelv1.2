@@ -9,7 +9,7 @@ test('canonical URLs use the public domain and language alternates are reciproca
   assert.equal(canonicalUrl('/?campaign=test#top'), 'https://www.etapel.com/');
   for (const path of ['/', '/capacitacion', '/politicas-de-etapel', '/linea-de-producto/pintura', '/linea-de-producto/productos/sata-jet-x']) {
     const alternates = languageAlternates(path + (path === '/' ? '' : '/'));
-    assert.equal(alternates.length, 3);
+    assert.equal(alternates.length, 7);
     assert.deepEqual(languageAlternates(new URL(alternates[1].href).pathname), alternates);
     assert.equal(alternates[0].href, canonicalUrl(path));
   }

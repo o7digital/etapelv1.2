@@ -2,6 +2,24 @@
 
 Studio éditorial : https://studio-production-f1a3.up.railway.app · Accès depuis le site : https://etapelv1-2.vercel.app/admin/
 
+## Versions du site
+
+Le site public propose six langues : espagnol `/`, anglais `/en/`, allemand `/de/`, italien `/it/`, français `/fr/` et portugais du Brésil `/pt/`. Les quatre nouvelles versions couvrent les pages, les familles et les fiches produit, les formulaires et Olivia. Le sélecteur conserve la page, les filtres, les paramètres et les ancres correspondantes. Les identifiants de produits et de familles restent communs ; les sections principales ont des adresses traduites. Les anciens liens de familles restent accessibles sans entrer dans le sitemap.
+
+Après les corrections du CMS, `cms/localize.mjs` génère les quatre nouvelles langues depuis le HTML anglais final. Les textes, métadonnées, descriptions d’images, messages interactifs et données structurées utilisent les catalogues versionnés dans `cms/locales/`. Les mêmes photographies, documents et styles sont réutilisés. Les canoniques et les liens `hreflang` relient les six versions sur `www.etapel.com`. Le Studio continue d’éditer et de valider l’espagnol et l’anglais ; l’édition directe des quatre catalogues supplémentaires se fait dans ces fichiers.
+
+Pour traduire de nouveaux textes après une évolution du code ou une validation anglaise dans le CMS :
+
+```sh
+ETAPEL_SKIP_LOCALES=1 npm run build
+npm run translations:generate
+ETAPEL_REQUIRE_TRANSLATIONS=1 npm run build
+```
+
+Le premier build doit recevoir les variables CMS habituelles pour utiliser les contenus courants. La génération exige `OPENAI_API_KEY` dans l’environnement et utilise par défaut `gpt-5.4-mini` avec des sorties structurées et `store: false`. Elle ne transmet que les textes publics et reprend les traductions manquantes sans écraser celles déjà revues. Ne jamais enregistrer cette clé dans Git ou dans une commande. La clé n’est pas nécessaire sur Vercel : les visites et les builds ordinaires n’appellent aucun service de traduction. Si un nouveau texte anglais n’a pas encore de traduction, sa valeur anglaise sert temporairement de repli et le build signale les clés manquantes ; la publication des autres corrections du CMS reste possible. `ETAPEL_REQUIRE_TRANSLATIONS=1` exige une couverture complète avant une livraison multilingue.
+
+Pour voir ces pages localement, utiliser `npm run preview` après le build : les quatre langues sont produites au post-traitement, pas par le serveur Astro de développement.
+
 Le projet Railway **etapel-cms** est entièrement indépendant de Nathalie : sa propre instance Directus 12.6.1, PostgreSQL 18, son volume de médias, son service Studio, ses comptes et ses jetons. Les identifiants non sensibles figurent dans `deployment.json`. L'interface adopte une direction plus vive : titres Manrope en gras, bleu électrique, orange Etapel, repères colorés et photographies techniques en action. La police et les visuels sont servis localement. Le tableau de bord propose des accès directs au catalogue, aux pages et aux médias, ainsi qu’un bouton de publication synchronisé avec celui de l’en-tête. Les données et les accès restent entièrement séparés. Le site vitrine reste sur Vercel ; la boutique `etapel-tienda` n'est pas modifiée.
 
 ## Accès

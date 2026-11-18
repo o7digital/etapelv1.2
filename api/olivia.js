@@ -3,11 +3,11 @@ export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
   if (req.method !== 'POST') { res.setHeader('Allow', 'POST'); return res.status(405).json({ error: 'Method not allowed' }); }
   const origin = req.headers.origin;
-  const allowed = new Set(['https://etapelv1-2.vercel.app', process.env.VERCEL_URL && `https://${process.env.VERCEL_URL}`, process.env.VERCEL_BRANCH_URL && `https://${process.env.VERCEL_BRANCH_URL}`].filter(Boolean));
+  const allowed = new Set(['https://www.etapel.com', 'https://etapel.com', 'https://etapelv1-2.vercel.app', process.env.VERCEL_URL && `https://${process.env.VERCEL_URL}`, process.env.VERCEL_BRANCH_URL && `https://${process.env.VERCEL_BRANCH_URL}`].filter(Boolean));
   if (!allowed.has(origin)) return res.status(403).json({ error: 'Origin not allowed' });
   if (!/^application\/json(?:;|$)/i.test(req.headers['content-type'] || '')) return res.status(415).json({ error: 'JSON required' });
   const body = req.body;
-  if (!body || typeof body.message !== 'string' || !body.message.trim() || body.message.length > 2000 || !['es','en'].includes(body.language) || (body.conversation != null && (typeof body.conversation !== 'string' || body.conversation.length > 180))) return res.status(400).json({ error: 'Invalid message' });
+  if (!body || typeof body.message !== 'string' || !body.message.trim() || body.message.length > 2000 || !['es','en','de','it','fr','pt'].includes(body.language) || (body.conversation != null && (typeof body.conversation !== 'string' || body.conversation.length > 180))) return res.status(400).json({ error: 'Invalid message' });
   if (!process.env.OLIVIA_GATEWAY_KEY) return res.status(503).json({ error: 'Olivia unavailable' });
   try {
     const response = await fetch('https://olivia.o7digitalgroup.com/etapel/chat', {

@@ -28,7 +28,7 @@ test('authenticated gateway selects POWERFUL while preserving legacy FAST reques
     return { ok: true, json: async () => ({ answer: 'Respuesta Etapel', conversation_id: 'a'.repeat(24), routing: upstreamRoutingOverride || body.routing, engine: upstreamEngine, model: models[body.routing] }) };
   };
   async function request(body, authorization = 'Bearer gateway-test-key') {
-    const req = Object.assign(Readable.from([JSON.stringify(body)]), { url: '/chat', method: 'POST', headers: { authorization, 'x-visitor-ip': 'gateway-test' } });
+    const req = Object.assign(Readable.from([JSON.stringify(body)]), { url: '/chat', method: 'POST', headers: { authorization, 'x-visitor-ip': 'gateway-test-'+(body.language || 'es') } });
     const res = { writeHead(status) { this.status = status; }, end(data) { this.data = JSON.parse(data); } };
     await handler(req, res);
     return res;
@@ -59,6 +59,14 @@ test('authenticated gateway selects POWERFUL while preserving legacy FAST reques
       assert.equal(calls.at(-1).routing, 'POWERFUL');
       assert.equal(calls.at(-1).conversation_id, 'a'.repeat(24));
       assert.ok(!JSON.stringify(followup.data).includes('internal-test-token'));
+    });
+    await t.test('requests the selected visitor language from the engine', async () => {
+      for (const [language,name] of [['de','German'],['it','Italian'],['fr','French'],['pt','Brazilian Portuguese']]) {
+        const res=await request({message:'Etapel',language,routing:'POWERFUL'});
+        assert.equal(res.status,200);
+        assert(calls.at(-1).message.includes(`Answer concisely in ${name},`));
+      }
+      assert.equal((await request({message:'Etapel',language:'xx',routing:'POWERFUL'})).status,400);
     });
     await t.test('does not label a weaker upstream response as POWERFUL', async () => {
       upstreamRoutingOverride = 'FAST';

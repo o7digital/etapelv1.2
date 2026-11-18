@@ -113,6 +113,7 @@ const structuredData = [{
 
 <SiteLayout title={`${product.name} | ${en ? 'Etapel Catalog' : 'Catálogo Etapel'}`} description={displaySummary} lang={lang} image={product.image} breadcrumbs={breadcrumbs} structuredData={structuredData}>
   <main data-product-detail>
+    <div hidden data-highlight-slides>{displaySlides.map(slide => <span data-highlight-slide>{slide}</span>)}</div>
     <section class="page-hero">
       <div class="page-hero-inner">
         <div>
@@ -252,8 +253,9 @@ const structuredData = [{
   </main>
 </SiteLayout>
 
-<script define:vars={{ slides: displaySlides }}>
+<script>
   document.querySelectorAll('[data-product-detail]').forEach((detail) => {
+    const slides = Array.from(detail.querySelectorAll('[data-highlight-slide]')).map(node => node.textContent || '');
     const mainImage = detail.querySelector('[data-gallery-main]');
     const thumbs = Array.from(detail.querySelectorAll('[data-gallery-thumb]'));
     let imageIndex = 0;

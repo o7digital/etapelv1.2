@@ -25,7 +25,7 @@ export function processDocument(html, route, overrides = new Map(), { preview = 
     media.set(id, { id, source, title: title || source.split('/').pop(), page: route, file: null, status: 'published', sort: media.size });
   }
   function visit(node, ignored = false, section = 'Contenido de la página') {
-    ignored ||= blocked.has(node.tagName) || attr(node, 'data-product-detail') !== undefined ||
+    ignored ||= blocked.has(node.tagName) || attr(node, 'translate') === 'no' || attr(node, 'data-product-detail') !== undefined ||
       attr(node, 'data-catalog-card') !== undefined || attr(node, 'data-product-catalog') !== undefined ||
       (attr(node, 'class') || '').split(' ').some(name => name.startsWith('olivia-'));
     if (node.tagName === 'section') {

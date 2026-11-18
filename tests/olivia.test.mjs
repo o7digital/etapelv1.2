@@ -33,6 +33,18 @@ test('rejects an older engine or downgraded routing instead of claiming Olivia 3
 
 test('information requests open contact capture without treating greetings or refusals as leads', async () => {
  const { requestsInformation } = await import('../src/lib/oliviaLead.js');
- for (const message of ['Quiero información sobre equipos', '¿Me pueden cotizar una cabina?', 'Can I get more details?', 'Je veux des infos, un devis', 'Me interesa la capacitación', 'Quiero saber más']) assert.equal(requestsInformation(message), true, message);
- for (const message of ['Hola', 'Thank you', 'No quiero que me contacten', "I don't want information"]) assert.equal(requestsInformation(message), false, message);
+ for (const message of ['Quiero información sobre equipos', '¿Me pueden cotizar una cabina?', 'Can I get more details?', 'Je veux des infos, un devis', 'Me interesa la capacitación', 'Quiero saber más', 'Ich möchte ein Angebot', 'Vorrei informazioni e un preventivo', 'Gostaria de informações e um orçamento']) assert.equal(requestsInformation(message), true, message);
+ for (const message of ['Hola', 'Thank you', 'No quiero que me contacten', "I don't want information", 'Non voglio informazioni', 'Não quero contato', 'Ich möchte keine Informationen']) assert.equal(requestsInformation(message), false, message);
+});
+
+test('accepts all visitor languages from both public production domains', async () => {
+ process.env.OLIVIA_GATEWAY_KEY='test-secret';
+ const original=globalThis.fetch;
+ try {
+  for (const origin of ['https://www.etapel.com','https://etapel.com']) for (const language of ['de','it','fr','pt']) {
+   globalThis.fetch=async(url,options)=>{assert.equal(JSON.parse(options.body).language,language);return {ok:true,json:async()=>({answer:'Etapel',conversation:'signed-id',version:'3.6.0',routing:'POWERFUL'})};};
+   const request=req({message:'Etapel',language});request.headers.origin=origin;
+   const res=response();await handler(request,res);assert.equal(res.code,200,origin+' '+language);
+  }
+ } finally {globalThis.fetch=original;delete process.env.OLIVIA_GATEWAY_KEY;}
 });

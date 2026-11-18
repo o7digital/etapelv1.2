@@ -1,4 +1,4 @@
-Olivia on Etapel uses a dedicated Olivia 3.6.0 engine and PostgreSQL database on the VPS, with the existing `etapel` tenant and service account. The shared site layout loads the Spanish/English floating chat on every page.
+Olivia on Etapel uses a dedicated Olivia 3.6.0 engine and PostgreSQL database on the VPS, with the existing `etapel` tenant and service account. The shared site layout loads the floating chat on every page in Spanish, English, German, Italian, French and Brazilian Portuguese. The website and gateway both accept `es`, `en`, `de`, `it`, `fr` and `pt`; the gateway names the requested language explicitly in the engine prompt. The proxy accepts requests from both public Etapel domains and the configured Vercel deployments.
 
 Browser → `/api/olivia` (Vercel function) → authenticated `/etapel/chat` gateway on `https://olivia.o7digitalgroup.com` → private `etapel-olivia36:8093/v1/chat`.
 
@@ -23,3 +23,5 @@ To roll back, first deploy the previous website proxy, then restore the backed-u
 The widget's contact form remains independent of the AI engine. Explicit information, quote and callback requests reveal an inline form with first name, last name, email, phone, preferred contact method and privacy consent. Visitor submissions use the existing Etapel Formspree endpoint. Page, language and recent chat context accompany the request; success appears only after Formspree accepts it. Failed submissions retain the entered fields. Browser conversation state lasts for the current page; contact details are not required to chat. Tool integrations remain subject to the engine's tenant policies and sandbox controls.
 
 Update approved business facts in `knowledge.txt`, copy it to the gateway and recreate only that gateway. Validate with `docker exec etapel-olivia-gateway node -e 'fetch("http://localhost:3096/health").then(r=>r.json()).then(console.log)'`.
+
+For a language-only gateway update, back up `gateway.mjs`, copy the revised file to `/opt/o7/apps/etapel-olivia/gateway.mjs`, then run `docker compose up -d --force-recreate --wait gateway` there. Preserve `.env`, the engine and both databases. Verify gateway health, then deploy the Vercel proxy and check the new languages and a signed conversation follow-up. No migration is needed.

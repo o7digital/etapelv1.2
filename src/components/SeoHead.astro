@@ -1,5 +1,6 @@
 ---
 import { canonicalUrl, jsonLd, languageAlternates, siteOrigin } from '../lib/seo.mjs';
+import { locales } from '../lib/languageRoutes.mjs';
 
 interface Props {
   title: string;
@@ -24,7 +25,7 @@ const graph = [
   },
   {
     '@type': 'WebSite', '@id': `${siteOrigin}/#website`, url: `${siteOrigin}/`, name: 'Etapel',
-    publisher: { '@id': `${siteOrigin}/#organization` }, inLanguage: ['es-MX', 'en'],
+    publisher: { '@id': `${siteOrigin}/#organization` }, inLanguage: locales.map(locale => locale.tag),
   },
   {
     '@type': 'WebPage', '@id': `${canonical}#webpage`, url: canonical, name: title, description,
@@ -52,7 +53,7 @@ const graph = [
 <meta property="og:image" content={imageUrl} />
 <meta property="og:image:alt" content={title} />
 <meta property="og:locale" content={lang === 'es' ? 'es_MX' : 'en_US'} />
-<meta property="og:locale:alternate" content={lang === 'es' ? 'en_US' : 'es_MX'} />
+{locales.filter(locale => locale.code !== lang).map(locale => <meta property="og:locale:alternate" content={locale.og} />)}
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />

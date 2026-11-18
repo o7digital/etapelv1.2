@@ -1,7 +1,7 @@
 ---
 import GoogleTag from '../components/GoogleTag.astro';
 import LanguageNavigation from '../components/LanguageNavigation.astro';
-import { languagePath } from '../lib/languageRoutes.mjs';
+import LanguageSwitcher from '../components/LanguageSwitcher.astro';
 import BackToTop from '../components/BackToTop.astro';
 import OliviaChat from '../components/OliviaChat.astro';
 import SeoHead from '../components/SeoHead.astro';
@@ -19,7 +19,6 @@ interface Props {
 const { title, description, lang = 'es', canonicalPath, image, breadcrumbs, structuredData } = Astro.props as Props;
 const english = lang === 'en';
 const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
-const languageHref = languagePath(currentPath);
 ---
 
 <!doctype html>
@@ -49,7 +48,7 @@ const languageHref = languagePath(currentPath);
           <a href={english ? '/en/about-us' : '/quienes-somos'}>{english ? 'ABOUT US' : 'NOSOTROS'}</a>
           <a href={english ? '/en/contact' : '/contacto'}>{english ? 'CONTACT' : 'CONTACTO'}</a>
         </div>
-        <div class="nav-actions"><a class="lang" href={languageHref} data-language-switch aria-label={english ? 'Switch language to Spanish' : 'Cambiar idioma a inglés'}>{english ? 'ES' : 'EN'}</a><a class="btn orange" href={english ? '/en/contact#contact-form' : '/contacto#formulario-contacto'}>{english ? 'Request information' : 'Solicitar información'}</a></div>
+        <div class="nav-actions"><LanguageSwitcher lang={lang} path={currentPath} /><a class="btn orange" href={english ? '/en/contact#contact-form' : '/contacto#formulario-contacto'}>{english ? 'Request information' : 'Solicitar información'}</a></div>
         <details class="mobile-menu">
           <summary aria-label={english ? 'Open menu' : 'Abrir menú'}><span class="hamburger"></span></summary>
           <div class="mobile-panel">
@@ -59,7 +58,7 @@ const languageHref = languagePath(currentPath);
             <a href={english ? '/en/after-sales' : '/postventa'}>{english ? 'TECHNICAL SUPPORT' : 'SOPORTE TÉCNICO'}</a>
             <a href={english ? '/en/about-us' : '/quienes-somos'}>{english ? 'ABOUT US' : 'NOSOTROS'}</a>
             <a href={english ? '/en/contact' : '/contacto'}>{english ? 'CONTACT' : 'CONTACTO'}</a>
-            <a href={languageHref} data-language-switch>{english ? 'ES' : 'EN'}</a>
+            <LanguageSwitcher lang={lang} path={currentPath} />
             <a class="mobile-cta" href={english ? '/en/contact#contact-form' : '/contacto#formulario-contacto'}>{english ? 'Request information' : 'Solicitar información'}</a>
           </div>
         </details>
@@ -74,7 +73,7 @@ const languageHref = languagePath(currentPath);
           <div><h3>Services</h3><ul><li><a href="/en/training">Training</a></li><li><a href="/en/after-sales">After-Sales</a></li></ul></div>
           <div><h3>Contact</h3><ul><li><a href="mailto:ventas@etapel.com.mx">ventas@etapel.com.mx</a></li><li><a href="tel:+525556895055">55 5689 5055</a></li><li><a href="https://wa.link/oowyzu">WhatsApp</a></li></ul></div>
         </div>
-        <div class="footer-bottom"><span>Copyright © 2026 Etapel. All rights reserved.</span><div><a href="/en/contact">Need help? Contact us</a><a href="/en/privacy-policy">Privacy Policy</a><a href="/en/etapel-policies">Etapel Policies</a><a href={languageHref} data-language-switch>Spanish version</a></div></div>
+        <div class="footer-bottom"><span>Copyright © 2026 Etapel. All rights reserved.</span><div><a href="/en/contact">Need help? Contact us</a><a href="/en/privacy-policy">Privacy Policy</a><a href="/en/etapel-policies">Etapel Policies</a><LanguageSwitcher lang={lang} path={currentPath} /></div></div>
       </footer>
     ) : (
       <footer class="footer footer-full">
@@ -85,7 +84,7 @@ const languageHref = languagePath(currentPath);
           <div><h3>Contacto</h3><ul><li><a href="mailto:ventas@etapel.com.mx">ventas@etapel.com.mx</a></li><li><a href="tel:+525556895055">55 5689 5055</a></li><li><a href="https://wa.link/oowyzu">WhatsApp</a></li></ul></div>
         </div>
         <div class="footer-bottom"><span>Copyright © 2026 Etapel. Todos los derechos reservados.</span><div><a href="/contacto">¿Necesitas ayuda? ¡Contáctanos!</a><a href="/aviso-de-privacidad">Aviso de Privacidad</a>
-          <a href="/politicas-de-etapel">Políticas de Etapel</a><a href={languageHref} data-language-switch>English version</a></div></div>
+          <a href="/politicas-de-etapel">Políticas de Etapel</a><LanguageSwitcher lang={lang} path={currentPath} /></div></div>
       </footer>
     )}
     <LanguageNavigation />
