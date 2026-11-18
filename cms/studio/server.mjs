@@ -131,14 +131,14 @@ export function createStudioServer(options = {}) {
       }
       if (path === '/api/translations/propose' && req.method === 'POST') return writes(async()=>{
         const input=await body(req);
-        if (!input || Object.keys(input).some(key=>!['page','force'].includes(key)) || (input.force!==undefined && typeof input.force!=='boolean')) throw new StudioError(400,'Selecciona la página que quieres traducir.');
+        if (!input || Object.keys(input).some(key=>!['page','force','locale'].includes(key)) || (input.force!==undefined && typeof input.force!=='boolean')) throw new StudioError(400,'Selecciona la página que quieres traducir.');
         const permissions=await api('/permissions/me',s.access);
         if (!['full','partial'].includes(permissions?.etapel_texts?.update?.access)) throw new StudioError(403,'Tu cuenta no tiene permiso para generar traducciones.');
-        const context=pageContext(await all('etapel_texts',s.access),input.page);
+        const context=pageContext(await all('etapel_texts',s.access),input.page,input.locale);
         if (!input.force && context.targets.some(row=>row.translation?.source_hash===context.hash && row.translation?.state==='pending')) return send(res,{records:context.targets,pending:context.targets.filter(row=>row.translation?.state==='pending').length,cached:true});
-        const proposals=await translatePage(context.sources,context.targets,{key:config.translationKey,model:config.translationModel,endpoint:config.translationEndpoint});
-        const current=pageContext(await all('etapel_texts',s.access),input.page);
-        if (current.hash!==context.hash || context.targets.some(row=>current.targets.find(next=>next.id===row.id)?.revision!==row.revision)) throw new StudioError(409,'El contenido cambió durante la traducción. Vuelve a generar el inglés.');
+        const proposals=await translatePage(context.sources,context.targets,{key:config.translationKey,model:config.translationModel,endpoint:config.translationEndpoint,locale:context.locale,elements:context.elements});
+        const current=pageContext(await all('etapel_texts',s.access),input.page,input.locale);
+        if (current.hash!==context.hash || context.targets.some(row=>current.targets.find(next=>next.id===row.id)?.revision!==row.revision)) throw new StudioError(409,'El contenido cambió durante la traducción. Vuelve a generar la traducción.');
         const generated_at=new Date().toISOString();
         const updates=context.targets.flatMap(row=>{
           const proposal=proposals.find(proposal=>proposal.id===row.id);
@@ -150,7 +150,7 @@ export function createStudioServer(options = {}) {
       });
       if (path === '/api/translations/approve' && req.method === 'POST') return writes(async()=>{
         const input=await body(req);
-        if (!input || Object.keys(input).some(key=>!['page','values'].includes(key))) throw new StudioError(400,'Revisa los textos que quieres validar.');
+        if (!input || Object.keys(input).some(key=>!['page','values','locale'].includes(key))) throw new StudioError(400,'Revisa los textos que quieres validar.');
         const updates=approvalWrites(await all('etapel_texts',s.access),input);
         const records=updates.length ? await api('/items/etapel_texts',s.access,'PATCH',updates) : [];
         return send(res,{records,approved:updates.length});
@@ -163,7 +163,7 @@ export function createStudioServer(options = {}) {
         const previous = id ? await api(`/items/${collection}/${id}`, s.access) : null;
         if (previous && input.revision !== previous.revision) throw new StudioError(409, 'Otra persona modificó esta ficha. Recarga el contenido antes de guardar.');
         const valid = validateRecord(collection, input, previous);
-        if (collection==='etapel_texts' && previous?.locale==='en' && previous.translation?.state==='pending' && valid.value!==previous.value) throw new StudioError(400,'Valida el borrador inglés desde el panel de traducción.');
+        if (collection==='etapel_texts' && previous?.locale!=='es' && previous.translation?.state==='pending' && valid.value!==previous.value) throw new StudioError(400,'Valida el borrador desde el panel de traducción.');
         if (collection === 'etapel_products') {
           const families = await all('etapel_families', s.access);
           if (!families.some(r => r.payload.slug === valid.payload.familySlug && r.status === 'published')) throw new StudioError(400, 'Selecciona una familia publicada.');
@@ -218,7 +218,7 @@ export function createStudioServer(options = {}) {
       }
       throw new StudioError(404, 'Ruta no disponible.');
     }
-    const files = { '/': ['index.html', 'text/html'], '/app.js': ['app.js','text/javascript'], '/visual-editor.js': ['visual-editor.js','text/javascript'], '/visual-editor.css': ['visual-editor.css','text/css'], '/style.css': ['style.css','text/css'], '/logo.svg': ['logo.svg','image/svg+xml'], '/workshop.webp': ['workshop.webp','image/webp'], '/fonts/manrope-studio-wght.ttf': ['fonts/manrope-studio-wght.ttf','font/ttf'], '/fonts/italiana.ttf': ['fonts/italiana.ttf','font/ttf'], ...Object.fromEntries(['painting','precision','jet-x'].map(name=>[`/assets/${name}.webp`,[`assets/${name}.webp`,'image/webp']])) };
+    const files = { '/': ['index.html', 'text/html'], '/app.js': ['app.js','text/javascript'], '/language-routes.js': ['language-routes.js','text/javascript'], '/visual-editor.js': ['visual-editor.js','text/javascript'], '/visual-editor.css': ['visual-editor.css','text/css'], '/style.css': ['style.css','text/css'], '/logo.svg': ['logo.svg','image/svg+xml'], '/workshop.webp': ['workshop.webp','image/webp'], '/fonts/manrope-studio-wght.ttf': ['fonts/manrope-studio-wght.ttf','font/ttf'], '/fonts/italiana.ttf': ['fonts/italiana.ttf','font/ttf'], ...Object.fromEntries(['painting','precision','jet-x'].map(name=>[`/assets/${name}.webp`,[`assets/${name}.webp`,'image/webp']])) };
     const staticFile = files[path];
     if (!staticFile || !['GET','HEAD'].includes(req.method)) throw new StudioError(404, 'Página no disponible.');
     const data = await readFile(new URL(`./public/${staticFile[0]}`, import.meta.url)).catch(error => {

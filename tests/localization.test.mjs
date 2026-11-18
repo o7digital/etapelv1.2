@@ -5,6 +5,9 @@ import { extractCopy, localizeDocument } from '../cms/localize.mjs';
 import { languageAlternates } from '../src/lib/seo.mjs';
 import { sataFinderUrl } from '../src/lib/sataParts.mjs';
 import { seoKeywords } from '../src/lib/keywords.mjs';
+import { processDocument, stableId } from '../cms/content.mjs';
+import { finalizeSeo } from '../cms/seo.mjs';
+import { pageContext } from '../cms/translations.mjs';
 
 const nodes = html => { const result = []; const visit = node => { result.push(node); for (const child of node.childNodes || []) visit(child); }; visit(parse(html)); return result; };
 const attr = (node, name) => node?.attrs?.find(item => item.name === name)?.value;
@@ -92,4 +95,30 @@ test('Spanish and English keywords retain page intent and every supported route 
     assert(!seoKeywords(path).some(value => value.includes('pintura automotriz CDMX')), path);
   }
   assert.throws(() => seoKeywords('/', 'unknown'), /Unsupported keyword language/);
+});
+
+test('translated CMS text IDs survive English edits and keep shared navigation and footer in their own language', () => {
+  const source = '<html lang="en"><head><title>About</title><meta name="description" content="Our company"><meta name="keywords" data-seo-keywords translate="no" content="Original keywords"></head><body><header><a>Home</a></header><main><h1>Our company</h1></main><footer><p>Contact us</p><div data-seo-keywords translate="no">Original keywords</div></footer></body></html>';
+  for (const locale of ['de', 'it', 'fr', 'pt']) {
+    const route = {de:'/de/ueber-uns',it:'/it/chi-siamo',fr:'/fr/a-propos',pt:'/pt/sobre-nos'}[locale];
+    const dictionary = Object.fromEntries(extractCopy(source).map(value => [value, `${locale} ${value}`]));
+    const english = processDocument(source, '/en/about-us', new Map(), {preview:true});
+    const initial = processDocument(localizeDocument(english.preview, '/en/about-us', locale, dictionary), route, new Map(), {preview:true,translated:true});
+    const headline = initial.fields.find(row => row.source === `${locale} Our company` && row.label === `${locale} Our company`);
+    assert(headline, locale);
+    const spanish = processDocument('<h1>Empresa</h1>', '/quienes-somos').fields;
+    assert.equal(pageContext([...spanish, ...english.fields, ...initial.fields], '/quienes-somos', locale).elements.get(headline.id), 'h1');
+    assert(initial.fields.some(row => row.page === `${locale}:navigation`), locale);
+    assert(initial.fields.some(row => row.page === `${locale}:footer`), locale);
+    assert(initial.fields.every(row => row.locale === locale), locale);
+    assert(!initial.html.includes('data-etapel-texts'), locale);
+    assert(initial.preview.includes(headline.id), locale);
+    const editedEnglish = processDocument(source, '/en/about-us', new Map([[english.fields.find(row => row.source === 'Our company' && row.label === 'Our company').id, 'Updated English company']]), {preview:true});
+    const overrides = new Map([[headline.id, 'Reviewed localized headline'], [stableId(`${route}:meta:keywords`), 'Reviewed keyword, Other keyword']]);
+    const current = processDocument(localizeDocument(editedEnglish.preview, '/en/about-us', locale, dictionary), route, overrides, {preview:true,translated:true});
+    assert(current.html.includes('Reviewed localized headline'), locale);
+    const finalized = finalizeSeo(current.html, route, overrides).html;
+    assert(finalized.includes('Reviewed keyword · Other keyword'), locale);
+    assert(!finalized.includes('data-etapel-texts'), locale);
+  }
 });

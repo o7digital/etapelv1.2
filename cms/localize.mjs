@@ -5,6 +5,8 @@ import { canonicalUrl, jsonLd, siteOrigin } from '../src/lib/seo.mjs';
 import { finalizeSeo } from './seo.mjs';
 import { sataFinderUrl } from '../src/lib/sataParts.mjs';
 import { seoKeywords } from '../src/lib/keywords.mjs';
+import { processDocument } from './content.mjs';
+import { previewPath } from './studio/preview.mjs';
 
 const attr = (node, name) => node.attrs?.find(item => item.name === name)?.value;
 function setAttr(node, name, value) {
@@ -143,7 +145,7 @@ export function localizeDocument(html, route, localeCode, catalog, { missing = n
   return serialize(document);
 }
 
-export async function generateLocalizedPages(entries) {
+export async function generateLocalizedPages({ overrides = new Map(), fields = new Map(), media = new Map(), mediaPaths = new Map() } = {}) {
   const sources = [];
   async function scan(directory) {
     for (const entry of await readdir(directory, { withFileTypes: true })) {
@@ -159,10 +161,20 @@ export async function generateLocalizedPages(entries) {
   for (const locale of addedLocales) {
     const missing = new Set();
     for (const route of sources) {
-      const html = await readFile(`dist${route}/index.html`, 'utf8');
+      const editable = !route.includes('/products/');
+      const bundle = editable ? JSON.parse(await readFile(`dist${previewPath(route)}`, 'utf8')) : null;
+      const html = bundle?.html || await readFile(`dist${route}/index.html`, 'utf8');
       const path = languagePath(route, locale.code);
-      const translated = localizeDocument(html, route, locale.code, catalogs.get(locale.code), { missing });
-      const seo = finalizeSeo(translated, path);
+      let translated = localizeDocument(html, route, locale.code, catalogs.get(locale.code), { missing });
+      if (editable) {
+        const result = processDocument(translated, path, overrides, { preview: true, translated: true });
+        for (const row of result.fields) if (!fields.has(row.id)) fields.set(row.id, row);
+        for (const row of result.media) if (!media.has(row.id)) media.set(row.id, row);
+        translated = result.html;
+        await writeFile(`dist${previewPath(path)}`, JSON.stringify({ version: 1, route: path, html: finalizeSeo(result.preview, path, overrides).html, mediaPaths: Object.fromEntries(mediaPaths) }));
+      }
+      for (const [source, replacement] of mediaPaths) translated = translated.split(source).join(replacement);
+      const seo = finalizeSeo(translated, path, overrides);
       await mkdir(`dist${path}`, { recursive: true });
       await writeFile(`dist${path}/index.html`, seo.html);
       if (seo.entry) generated.push(seo.entry);

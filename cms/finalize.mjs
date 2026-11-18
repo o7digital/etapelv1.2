@@ -42,7 +42,7 @@ async function walk(directory) {
       for (const row of result.fields) if (!fields.has(row.id)) fields.set(row.id, row);
       for (const row of result.media) if (!media.has(row.id)) media.set(row.id, row);
       html = result.html;
-      await writeFile(`dist${previewPath(route)}`, JSON.stringify({ version:1, route, html:result.preview, mediaPaths:Object.fromEntries(mediaPaths) }));
+      await writeFile(`dist${previewPath(route)}`, JSON.stringify({ version:1, route, html:finalizeSeo(result.preview, route, overrides).html, mediaPaths:Object.fromEntries(mediaPaths) }));
     }
     if (mediaPaths.size) {
       const document = parse(html);
@@ -64,7 +64,7 @@ async function walk(directory) {
   }
 }
 await walk('dist');
-if (process.env.ETAPEL_SKIP_LOCALES !== '1') sitemapEntries.push(...await generateLocalizedPages(sitemapEntries));
+if (process.env.ETAPEL_SKIP_LOCALES !== '1') sitemapEntries.push(...await generateLocalizedPages({ overrides, fields, media, mediaPaths }));
 await writeFile('dist/sitemap.xml', renderSitemap(sitemapEntries));
 await generateKnowledge(sitemapEntries);
 // CSS background photographs must receive the same replacements as <img>.

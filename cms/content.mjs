@@ -1,5 +1,6 @@
 import { parse, serialize } from 'parse5';
 import { createHash } from 'node:crypto';
+import { pathLocale } from './studio/public/language-routes.js';
 
 export const stableId = value => createHash('sha256').update(`etapel:${value}`).digest('hex').slice(0, 40);
 const blocked = new Set(['script', 'style', 'noscript', 'svg', 'option', 'select']);
@@ -7,25 +8,30 @@ const attr = (node, name) => node.attrs?.find(item => item.name === name)?.value
 const clean = value => value.replace(/\s+/g, ' ').trim();
 const sharedScope = (node, route) => {
   for (let parent = node.parentNode; parent; parent = parent.parentNode) {
-    if (parent.tagName === 'header') return `${route.startsWith('/en') ? 'en' : 'es'}:navigation`;
-    if (parent.tagName === 'footer') return `${route.startsWith('/en') ? 'en' : 'es'}:footer`;
+    if (parent.tagName === 'header') return `${pathLocale(route)}:navigation`;
+    if (parent.tagName === 'footer') return `${pathLocale(route)}:footer`;
   }
   return route;
 };
 
 // Keys derive from source text, never the edited text or a fragile DOM offset.
 // Rebuilds always start from Astro's source output, then apply the CMS snapshot.
-export function processDocument(html, route, overrides = new Map(), { preview = false } = {}) {
+export function processDocument(html, route, overrides = new Map(), { preview = false, translated = false } = {}) {
   const document = parse(html), fields = new Map(), media = new Map();
   const annotations = [];
-  const locale = route.startsWith('/en') ? 'en' : 'es';
+  const locale = pathLocale(route);
   function image(source, title = '') {
     if (!/^\/[^?#]+\.(avif|webp|png|jpe?g)$/i.test(source)) return;
     const id = stableId(`image:${source}`);
     media.set(id, { id, source, title: title || source.split('/').pop(), page: route, file: null, status: 'published', sort: media.size });
   }
   function visit(node, ignored = false, section = 'Contenido de la página') {
-    ignored ||= blocked.has(node.tagName) || attr(node, 'translate') === 'no' || attr(node, 'data-product-detail') !== undefined ||
+    if (translated && node.attrs) {
+      node.sourceTexts = JSON.parse(attr(node, 'data-etapel-texts') || '{}');
+      node.attrs = node.attrs.filter(item => !['data-etapel-texts', 'data-etapel-images'].includes(item.name));
+    }
+    const keywordMeta = node.tagName === 'meta' && attr(node, 'name') === 'keywords' && attr(node, 'data-seo-keywords') !== undefined;
+    ignored ||= blocked.has(node.tagName) || (attr(node, 'translate') === 'no' && !keywordMeta) || attr(node, 'data-product-detail') !== undefined ||
       attr(node, 'data-catalog-card') !== undefined || attr(node, 'data-product-catalog') !== undefined ||
       (attr(node, 'class') || '').split(' ').some(name => name.startsWith('olivia-'));
     if (node.tagName === 'section') {
@@ -36,7 +42,8 @@ export function processDocument(html, route, overrides = new Map(), { preview = 
       const source = clean(node.value);
       if (source && /[\p{L}]/u.test(source) && source.length > 1) {
         const page = sharedScope(node, route), tag = node.parentNode.tagName;
-        const id = stableId(`${page}:${tag}:${source}`);
+        const sourceId = node.parentNode.sourceTexts?.[node.parentNode.childNodes.indexOf(node)];
+        const id = translated && sourceId ? stableId(`${page}:translated:${sourceId}`) : stableId(`${page}:${tag}:${source}`);
         fields.set(id, { id, page, locale, section: page.includes(':') ? 'Elementos compartidos' : section, label: source.slice(0, 110), source, value: source, kind: 'text', status: 'published', sort: fields.size });
         if (preview && !['title', 'head'].includes(tag)) annotations.push(() => {
           const parent = node.parentNode;
@@ -48,7 +55,7 @@ export function processDocument(html, route, overrides = new Map(), { preview = 
         if (value !== undefined) node.value = node.value.replace(/\S[\s\S]*\S|\S/, () => value);
       }
     }
-    if (!ignored && node.tagName === 'meta' && ['description', 'og:description', 'og:title'].includes(attr(node, 'name') || attr(node, 'property'))) {
+    if (!ignored && node.tagName === 'meta' && ['description', 'keywords', 'og:description', 'og:title'].includes(attr(node, 'name') || attr(node, 'property'))) {
       const content = node.attrs.find(a => a.name === 'content');
       if (content) {
         const id = stableId(`${route}:meta:${attr(node, 'name') || attr(node, 'property')}`);

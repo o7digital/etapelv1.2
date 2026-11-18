@@ -520,7 +520,7 @@ tbody tr:hover { background: #f6f8ff }
 @media (prefers-reduced-motion: reduce) {
   *, *:before, *:after { animation: none !important; transition: none !important; scroll-behavior: auto !important }
 }
-/* Spanish originals and English proposals are reviewed together. */
+/* Spanish originals and translations are reviewed together. */
 .translation-panel { display:flex; align-items:center; gap:17px; padding:18px 20px; margin:0 0 21px; background:#eaf0ff; border:1px solid #d5e0ff; border-radius:12px }
 .translation-mark { display:flex; align-items:center; gap:7px; flex:none; font-size:12px; font-weight:800; color:#2d51c7; background:white; border:1px solid #d9e3ff; border-radius:9px; padding:11px }
 .translation-mark>span { color:#ff873e }
@@ -541,3 +541,8 @@ tbody tr:hover { background: #f6f8ff }
 .field-heading>small.needs-review { background:#fff0da; color:#a36821 }
 @media(max-width:900px){.translation-panel{align-items:flex-start;flex-wrap:wrap}.translation-panel>div{flex:1;min-width:200px}.translation-panel .button{margin-left:0}}
 @media(max-width:600px){.translation-panel{padding:15px;gap:12px}.translation-mark{font-size:10px;padding:9px}.translation-panel>div{min-width:160px}.translation-panel b{font-size:10px}.translation-panel p{font-size:9px}.translation-panel .button{font-size:9px}.translation-pair{grid-template-columns:minmax(0,1fr);gap:12px}.source-placeholder{display:none}.source-field textarea{font-size:11px}.source-field .field-heading{font-size:9px}}
+
+.language-bar{flex-wrap:wrap}.language-bar>div{flex-wrap:wrap;gap:2px;max-width:100%}
+.translation-target{display:flex;align-items:center;gap:7px;font-size:10px;color:#506489;font-weight:700;flex:none}
+.translation-target select{max-width:150px;padding:8px;border:1px solid #d5dff1;border-radius:6px;background:white;color:#284598;font:inherit}
+@media(max-width:640px){.language-bar>div{width:100%}.language-bar button{flex:1;padding:9px 10px}.translation-target{font-size:11px}}
