@@ -1049,10 +1049,8 @@
     "Hydraulic motorcycle lift for loads up to one tonne, with a 2200 × 800 mm platform.": "Elevador hidráulico para motocicletas para cargas de até uma tonelada, com plataforma de 2200 × 800 mm.",
     "I (Control)": "I (Controle)",
     "I accept the": "Eu aceito os",
-    "I can help you prepare a SATA spare-parts quote request. Use the official finder in a separate tab to identify the part, then complete the form here. You can keep asking me questions while you fill it in.": "Posso ajudar você a preparar uma solicitação de orçamento de peças de reposição SATA. Use o localizador oficial em uma aba separada para identificar a peça e, em seguida, preencha o formulário aqui. Você pode continuar me fazendo perguntas enquanto o preenche.",
     "I couldn’t answer right now. Please try again or contact our team.": "Não consegui responder no momento. Tente novamente ou entre em contato com nossa equipe.",
     "I need advice": "Preciso de orientação",
-    "Identify your part in the official SATA finder, then share the model, reference if known, quantity and your contact details. Etapel will confirm compatibility, price and availability.": "Identifique sua peça no localizador oficial SATA, depois informe o modelo, a referência, se souber, a quantidade e seus dados de contato. Etapel confirmará a compatibilidade, o preço e a disponibilidade.",
     "Image 1": "Imagem 1",
     "Image 2": "Imagem 2",
     "Image 3": "Imagem 3",
@@ -1287,7 +1285,6 @@
     "Olivia is typing…": "Olivia está digitando…",
     "Open finder →": "Abrir localizador →",
     "Open menu": "Abrir menu",
-    "Open the official SATA finder ↗": "Abrir o localizador oficial SATA ↗",
     "Operating manual": "Manual de operação",
     "Opportunities": "Oportunidades",
     "OPTEX Family Brochure": "Folheto da família OPTEX",
@@ -2270,6 +2267,8 @@
     "Zonas de prepracion — USI Italia is part of Etapel’s professional product range. Our team provides product selection guidance, technical advice and quotation support according to your workshop process and application requirements.": "Zonas de preparação — USI Italia faz parte da linha profissional de produtos da Etapel. Nossa equipe oferece orientação na seleção de produtos, aconselhamento técnico e suporte para cotação de acordo com o processo da sua oficina e os requisitos de aplicação.",
     "Zonas de prepracion — USI Italia: professional automotive workshop solution.": "Zonas de preparação — USI Italia: solução profissional para oficina automotiva.",
     "Zoom in": "Ampliar zoom",
-    "Zoom out": "Reduzir zoom"
+    "Zoom out": "Reduzir zoom",
+    "Share the SATA model, part reference if known or a description, quantity and your contact details here. Etapel will confirm compatibility, price and availability.": "Informe aqui o modelo SATA, a referência da peça, se souber, ou uma descrição, a quantidade e seus dados de contato. A Etapel confirmará a compatibilidade, o preço e a disponibilidade.",
+    "I can help you prepare a SATA spare-parts quote request. Complete the form here with the model and the part reference or description. You can keep asking me questions while you fill it in.": "Ajudo você a preparar uma solicitação de orçamento de peças de reposição SATA. Preencha o formulário aqui com o modelo e a referência ou descrição da peça. Você pode continuar me fazendo perguntas enquanto o preenche."
   }
 }

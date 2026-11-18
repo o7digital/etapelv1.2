@@ -1049,10 +1049,8 @@
     "Hydraulic motorcycle lift for loads up to one tonne, with a 2200 × 800 mm platform.": "Élévateur hydraulique pour motos pour charges jusqu’à une tonne, avec une plateforme de 2200 × 800 mm.",
     "I (Control)": "I (Commande)",
     "I accept the": "J’accepte les",
-    "I can help you prepare a SATA spare-parts quote request. Use the official finder in a separate tab to identify the part, then complete the form here. You can keep asking me questions while you fill it in.": "Je peux vous aider à préparer une demande de devis de pièces détachées SATA. Ouvrez l’outil officiel dans un autre onglet pour identifier la pièce, puis remplissez le formulaire ici. Vous pouvez continuer à me poser des questions pendant que vous le complétez.",
     "I couldn’t answer right now. Please try again or contact our team.": "Je ne peux pas répondre pour le moment. Veuillez réessayer ou contacter notre équipe.",
     "I need advice": "J’ai besoin de conseils",
-    "Identify your part in the official SATA finder, then share the model, reference if known, quantity and your contact details. Etapel will confirm compatibility, price and availability.": "Identifiez la pièce dans l’outil officiel de recherche SATA, puis indiquez le modèle, la référence si vous la connaissez, la quantité et vos coordonnées. Etapel confirmera la compatibilité, le prix et la disponibilité.",
     "Image 1": "Image 1",
     "Image 2": "Image 2",
     "Image 3": "Image 3",
@@ -1287,7 +1285,6 @@
     "Olivia is typing…": "Olivia est en train d’écrire…",
     "Open finder →": "Ouvrir le sélecteur →",
     "Open menu": "Ouvrir le menu",
-    "Open the official SATA finder ↗": "Ouvrir le localisateur officiel SATA ↗",
     "Operating manual": "Manuel d’utilisation",
     "Opportunities": "Opportunités",
     "OPTEX Family Brochure": "Brochure de la famille OPTEX",
@@ -2271,6 +2268,7 @@
     "Zonas de prepracion — USI Italia: professional automotive workshop solution.": "Zones de préparation — USI Italia : solution professionnelle pour atelier automobile.",
     "Zoom in": "Agrandir le zoom",
     "Zoom out": "Réduire le zoom",
-    "Open the official SATA finder": "Ouvrir la recherche officielle de pièces SATA"
+    "Share the SATA model, part reference if known or a description, quantity and your contact details here. Etapel will confirm compatibility, price and availability.": "Indiquez ici le modèle SATA, la référence si vous la connaissez ou une description de la pièce, la quantité et vos coordonnées. Etapel confirmera la compatibilité, le prix et la disponibilité.",
+    "I can help you prepare a SATA spare-parts quote request. Complete the form here with the model and the part reference or description. You can keep asking me questions while you fill it in.": "Je vous aide à préparer une demande de devis pour des pièces détachées SATA. Remplissez ici le formulaire avec le modèle et la référence ou la description de la pièce. Vous pouvez continuer à me poser des questions pendant que vous le remplissez."
   }
 }

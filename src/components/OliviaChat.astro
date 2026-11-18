@@ -1,5 +1,4 @@
 ---
-import { sataFinderUrl } from '../lib/sataParts.mjs';
 const { lang = 'es' } = Astro.props;
 const en = lang === 'en';
 const lead = en ? {
@@ -13,13 +12,13 @@ const copy = en ? {
   open: 'Habla con Olivia', close: 'Cerrar chat', status: 'Asistente Etapel', welcome: '¡Hola! Soy Olivia, tu asistente Etapel. ¿Cómo puedo ayudarte con equipos, capacitación o soporte técnico?', placeholder: 'Escribe tu pregunta…', send: 'Enviar', thinking: 'Olivia está escribiendo…', error: 'No pude responder en este momento. Intenta de nuevo o contacta a nuestro equipo.', consent: 'Al enviar un mensaje, aceptas nuestro', privacy: 'Aviso de Privacidad', contact: 'Contactar a un asesor', prompts: ['Conocer equipos', 'Capacitación CEDETEC', 'Soporte técnico'], retry: 'Reintentar',
 };
 const sata = en ? {
-  title: 'Request a SATA spare-parts quote', intro: 'Identify your part in the official SATA finder, then share the model, reference if known, quantity and your contact details. Etapel will confirm compatibility, price and availability.',
-  finder: 'Open the official SATA finder', model: 'SATA model *', reference: 'Part reference, if known', serial: 'Serial number, if available', quantity: 'Quantity *', details: 'Describe the part or your request',
-  greeting: 'I can help you prepare a SATA spare-parts quote request. Use the official finder in a separate tab to identify the part, then complete the form here. You can keep asking me questions while you fill it in.', submit: 'Send my SATA quote request', sources: 'Website sources', help: 'Enter a part reference or describe the part you need.',
+  title: 'Request a SATA spare-parts quote', intro: 'Share the SATA model, part reference if known or a description, quantity and your contact details here. Etapel will confirm compatibility, price and availability.',
+  model: 'SATA model *', reference: 'Part reference, if known', serial: 'Serial number, if available', quantity: 'Quantity *', details: 'Describe the part or your request',
+  greeting: 'I can help you prepare a SATA spare-parts quote request. Complete the form here with the model and the part reference or description. You can keep asking me questions while you fill it in.', submit: 'Send my SATA quote request', sources: 'Website sources', help: 'Enter a part reference or describe the part you need.',
 } : {
-  title: 'Cotiza tus refacciones SATA', intro: 'Identifica la pieza en el buscador oficial SATA y comparte el modelo, la referencia si la conoces, la cantidad y tus datos. Etapel confirmará la compatibilidad, el precio y la disponibilidad.',
-  finder: 'Abrir el buscador oficial SATA', model: 'Modelo SATA *', reference: 'Referencia de la pieza, si la conoces', serial: 'Número de serie, si lo tienes', quantity: 'Cantidad *', details: 'Describe la pieza o tu solicitud',
-  greeting: 'Te ayudo a preparar una solicitud de cotización de refacciones SATA. Usa el buscador oficial en otra pestaña para identificar la pieza y completa el formulario aquí. Puedes seguir preguntándome mientras lo llenas.', submit: 'Enviar mi solicitud de refacciones SATA', sources: 'Fuentes del sitio', help: 'Indica una referencia o describe la pieza que necesitas.',
+  title: 'Cotiza tus refacciones SATA', intro: 'Comparte aquí el modelo SATA, la referencia si la conoces o una descripción de la pieza, la cantidad y tus datos. Etapel confirmará la compatibilidad, el precio y la disponibilidad.',
+  model: 'Modelo SATA *', reference: 'Referencia de la pieza, si la conoces', serial: 'Número de serie, si lo tienes', quantity: 'Cantidad *', details: 'Describe la pieza o tu solicitud',
+  greeting: 'Te ayudo a preparar una solicitud de cotización de refacciones SATA. Completa aquí el formulario con el modelo y la referencia o descripción de la pieza. Puedes seguir preguntándome mientras lo llenas.', submit: 'Enviar mi solicitud de refacciones SATA', sources: 'Fuentes del sitio', help: 'Indica una referencia o describe la pieza que necesitas.',
 };
 ---
 <div class="olivia-chat" data-lang={lang} data-error={copy.error} data-thinking={copy.thinking} data-retry={copy.retry} data-lead-sending={lead.sending} data-lead-success={lead.success} data-lead-error={lead.error}>
@@ -35,7 +34,6 @@ const sata = en ? {
         <strong id="olivia-lead-title">{lead.title}</strong><p class="olivia-lead-intro">{lead.intro}</p>
         <fieldset class="olivia-sata-fields" hidden disabled>
           <legend>SATA</legend>
-          <a class="olivia-sata-finder" data-sata-finder-link href={sataFinderUrl(lang)} target="_blank" rel="noopener noreferrer">{sata.finder} ↗</a>
           <div class="olivia-lead-grid">
             <label class="olivia-lead-wide" for="olivia-sata-model">{sata.model}<input id="olivia-sata-model" name="modelo_sata" maxlength="160" required /></label>
             <label for="olivia-sata-reference">{sata.reference}<input id="olivia-sata-reference" name="referencia_sata" maxlength="160" /></label>
@@ -137,7 +135,7 @@ const sata = en ? {
     leadFeedback.hidden = true;
     const payload = Object.fromEntries(new FormData(leadForm));
     Object.assign(payload, { origen: intent === 'sata-parts' ? 'Buscador de refacciones SATA — Olivia AI Etapel' : 'Olivia AI Etapel', idioma: root.dataset.lang!, pagina: window.location.href, mensaje: requestMessage || 'Solicitud de contacto desde Olivia AI', conversacion: transcript.slice(-8).join('\n') });
-    if (intent === 'sata-parts') Object.assign(payload, { _subject: leadTitle.textContent, buscador_sata: root.querySelector<HTMLAnchorElement>('[data-sata-finder-link]')!.href });
+    if (intent === 'sata-parts') payload._subject = leadTitle.textContent || '';
     try {
       const response = await fetch(leadForm.action, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(payload), signal: AbortSignal.timeout(20000) });
       if (!response.ok) throw new Error('Lead delivery failed');
@@ -203,7 +201,7 @@ const sata = en ? {
   prompts.querySelectorAll('button').forEach(button => button.addEventListener('click', () => { void send(button.firstChild!.textContent!.trim()); }));
 </script>
 <style is:global>
-.olivia-sata-help{margin:10px 0 0;font-size:11px;color:#b9c3df}.olivia-sata-fields{margin:0 0 18px;padding:0 0 18px;min-width:0;border:0;border-bottom:1px solid #ffffff26}.olivia-sata-fields legend{padding:0;font-weight:800;color:#fba555;font-size:12px}.olivia-sata-finder{display:block;margin:10px 0 16px;padding:11px;border:1px solid #f5822070;border-radius:9px;color:#ffbf87!important;font-weight:700;font-size:12px}.olivia-lead-grid textarea{box-sizing:border-box;width:100%;min-width:0;padding:10px;border:1px solid #ffffff26;border-radius:9px;background:#0c122b;color:#fff;font:inherit;font-size:14px;resize:vertical}.olivia-sources{display:grid;gap:6px;margin-top:12px;padding-top:10px;border-top:1px solid #ffffff20;white-space:normal}.olivia-sources a{color:#ffbd85;font-size:11px;line-height:1.5;text-decoration:underline;overflow-wrap:anywhere}
+.olivia-sata-help{margin:10px 0 0;font-size:11px;color:#b9c3df}.olivia-sata-fields{margin:0 0 18px;padding:0 0 18px;min-width:0;border:0;border-bottom:1px solid #ffffff26}.olivia-sata-fields legend{padding:0;font-weight:800;color:#fba555;font-size:12px}.olivia-lead-grid textarea{box-sizing:border-box;width:100%;min-width:0;padding:10px;border:1px solid #ffffff26;border-radius:9px;background:#0c122b;color:#fff;font:inherit;font-size:14px;resize:vertical}.olivia-sources{display:grid;gap:6px;margin-top:12px;padding-top:10px;border-top:1px solid #ffffff20;white-space:normal}.olivia-sources a{color:#ffbd85;font-size:11px;line-height:1.5;text-decoration:underline;overflow-wrap:anywhere}
 @media(max-width:767px),(max-width:1024px) and (hover:none) and (pointer:coarse){
   .olivia-chat .olivia-toggle{width:52px;height:52px;padding:0;justify-content:center;animation:none}
   .olivia-chat .olivia-toggle>.olivia-avatar{width:46px;height:46px}
