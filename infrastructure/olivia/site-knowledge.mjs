@@ -39,10 +39,11 @@ function excerpt(text, terms, maxLength = 7000) {
   return merged.map(window => text.slice(window.start, window.end)).join('\n[…]\n').slice(0, maxLength);
 }
 
-export function searchKnowledge(index, message, { language = 'es', page, previousKeys = [], maxContextChars = 16000 } = {}) {
+export function searchKnowledge(index, message, { language = 'es', page, previousKeys = [], intent, maxContextChars = 16000 } = {}) {
   const terms = searchTerms(message), ranked = [];
   const current = page ? index.byPath.get(page.replace(/\/+$/, '') || '/') : undefined;
   for (const document of index.documents) {
+    if (intent === 'sata-parts' && document.key.includes('/productos/') && !document.terms.has('sata')) continue;
     let score = 0;
     for (const term of terms) {
       const weight = document.terms.get(term);
@@ -51,6 +52,7 @@ export function searchKnowledge(index, message, { language = 'es', page, previou
     const titleHits = document.titleTerms.filter(term => terms.includes(term)).length;
     if (document.titleTerms.length && titleHits === document.titleTerms.length) score += 30;
     if (document.key === current?.key) score += 7;
+    if (intent === 'sata-parts' && document.key === '/linea-de-producto/pintura-y-aplicacion') score += 100;
     if (previousKeys.includes(document.key)) score += 4;
     if (document.locale === language) score += 0.1;
     if (score > 0.1) ranked.push({ document, score });

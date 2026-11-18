@@ -52,6 +52,17 @@ test('retrieval bounds the complete serialized context, including long source UR
   }
 });
 
+test('SATA quote assistance prioritizes its parts policy and excludes unrelated products with similar generic names', () => {
+  const rows=[...documents,
+    {path:'/linea-de-producto/pintura-y-aplicacion',key:'/linea-de-producto/pintura-y-aplicacion',locale:'es',title:'Pintura y Aplicación',text:'Refacciones SATA para pistolas con menos de siete años de antigüedad.'},
+    {path:'/linea-de-producto/productos/air-caulking-gun',key:'/linea-de-producto/productos/air-caulking-gun',locale:'fr',title:'Pistolet pneumatique',text:'Pistolet de calfeutrage pneumatique.'},
+  ];
+  const result=searchKnowledge(createSearchIndex(payload(rows)),'Mon pistolet SATA a huit ans. Pouvez-vous garantir les pièces ?',{language:'es',intent:'sata-parts'});
+  assert.equal(result.keys[0],'/linea-de-producto/pintura-y-aplicacion');
+  assert(result.sources.every(source=>!source.url.includes('air-caulking-gun')));
+  assert.match(result.context,/moins|menos de siete/);
+});
+
 test('the knowledge loader coalesces requests, refreshes published content and keeps the last validated index on a transient outage', async () => {
   let time = 0, calls = 0, outage = false;
   const data = payload(documents);
