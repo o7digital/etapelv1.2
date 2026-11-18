@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { parse } from 'parse5';
 import { extractCopy, localizeDocument } from '../cms/localize.mjs';
 import { languageAlternates } from '../src/lib/seo.mjs';
+import { sataFinderUrl } from '../src/lib/sataParts.mjs';
 
 const nodes = html => { const result = []; const visit = node => { result.push(node); for (const child of node.childNodes || []) visit(child); }; visit(parse(html)); return result; };
 const attr = (node, name) => node?.attrs?.find(item => item.name === name)?.value;
@@ -46,4 +47,14 @@ test('missing translations are reported and translated text remains escaped HTML
   assert(missing.has('Spray gun'));
   assert.match(html, /&lt;script&gt;unsafe&lt;\/script&gt;/);
   assert.equal(nodes(html).filter(node => node.tagName === 'script').length, 2);
+});
+
+test('SATA assistance links keep the official finder in the selected language, with an English fallback for Brazil', () => {
+  const input = '<html lang="en"><body><a data-olivia-sata="true" href="https://www.sata.com/en/service/spare-parts-finder/">SATA</a><a data-sata-finder-link href="https://www.sata.com/en/service/spare-parts-finder/" target="_blank" rel="noopener noreferrer">SATA</a></body></html>';
+  for (const locale of ['de','it','fr','pt']) {
+    const all=nodes(localizeDocument(input, '/en', locale, { SATA:'SATA', 'Proudly Mexican 🇲🇽':'Etapel', 'Choose language':'Language' }));
+    assert(all.filter(node=>node.tagName==='a').every(node=>attr(node,'href')===sataFinderUrl(locale)));
+    assert.equal(attr(all.find(node=>attr(node,'data-sata-finder-link')!==undefined),'target'),'_blank');
+  }
+  assert.equal(sataFinderUrl('pt'),sataFinderUrl('en'));
 });

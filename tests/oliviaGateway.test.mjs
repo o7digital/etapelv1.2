@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import http from 'node:http';
 import { Readable } from 'node:stream';
+import { createHash } from 'node:crypto';
 
 // Exercise the actual gateway handler without binding a port or calling a model.
 test('authenticated gateway selects POWERFUL while preserving legacy FAST requests', async t => {
@@ -18,6 +19,10 @@ test('authenticated gateway selects POWERFUL while preserving legacy FAST reques
   let upstreamEngine = 'openai';
   const models = { FAST: 'fast-test', POWERFUL: 'powerful-test' };
   globalThis.fetch = async (url, options = {}) => {
+    if (url === 'https://www.etapel.com/.well-known/etapel-knowledge.json') {
+      const documents = [{ path: '/', key: '/', locale: 'es', title: 'Etapel', text: 'Capacitación, soporte técnico y catálogo completo.' }];
+      return { ok: true, headers: new Headers(), text: async () => JSON.stringify({ version: 1, origin: 'https://www.etapel.com', hash: createHash('sha256').update(JSON.stringify(documents)).digest('hex'), documents }) };
+    }
     assert.ok(url.startsWith('http://etapel-olivia36:8093/'));
     if (url.endsWith('/health')) return { ok: true, json: async () => ({ status: 'ok', version: upstreamVersion, chat_models: models }) };
     const body = JSON.parse(options.body);
@@ -64,9 +69,13 @@ test('authenticated gateway selects POWERFUL while preserving legacy FAST reques
       for (const [language,name] of [['de','German'],['it','Italian'],['fr','French'],['pt','Brazilian Portuguese']]) {
         const res=await request({message:'Etapel',language,routing:'POWERFUL'});
         assert.equal(res.status,200);
-        assert(calls.at(-1).message.includes(`Answer concisely in ${name},`));
+        assert(calls.at(-1).message.includes(`The interface language is ${name};`));
+        assert(calls.at(-1).message.includes("Reply in the language of the visitor's latest message"));
+        assert.equal(res.data.knowledge.pages, 1);
+        assert.equal(res.data.sources[0].url, 'https://www.etapel.com/');
       }
       assert.equal((await request({message:'Etapel',language:'xx',routing:'POWERFUL'})).status,400);
+      assert.equal((await request({message:'Etapel',language:'it',page:'https://private.example',routing:'POWERFUL'})).status,400);
     });
     await t.test('does not label a weaker upstream response as POWERFUL', async () => {
       upstreamRoutingOverride = 'FAST';

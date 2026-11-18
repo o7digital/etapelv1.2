@@ -48,3 +48,15 @@ test('accepts all visitor languages from both public production domains', async 
   }
  } finally {globalThis.fetch=original;delete process.env.OLIVIA_GATEWAY_KEY;}
 });
+
+test('forwards a bounded internal page and SATA intent without accepting arbitrary URLs or visitor context', async () => {
+ process.env.OLIVIA_GATEWAY_KEY='test-secret';const original=globalThis.fetch;
+ globalThis.fetch=async(url,options)=>{
+  const body=JSON.parse(options.body);assert.equal(body.page,'/fr/gammes-de-produits');assert.equal(body.intent,'sata-parts');assert.equal(body.context,undefined);
+  return {ok:true,json:async()=>({answer:'Etapel',conversation:'signed-id',version:'3.6.0',routing:'POWERFUL'})};
+ };
+ try {
+  const res=response();await handler(req({message:'SATA',language:'fr',page:'/fr/gammes-de-produits',intent:'sata-parts',context:'untrusted'}),res);assert.equal(res.code,200);
+  for(const page of ['https://other.example','//other.example','/../secret','/contacto?email=private@example.com']){const rejected=response();await handler(req({message:'Hi',language:'en',page}),rejected);assert.equal(rejected.code,400);}
+ } finally {globalThis.fetch=original;delete process.env.OLIVIA_GATEWAY_KEY;}
+});

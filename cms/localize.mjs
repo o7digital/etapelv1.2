@@ -3,6 +3,7 @@ import { mkdir, readFile, writeFile, readdir } from 'node:fs/promises';
 import { languagePath, languageHash, locales, addedLocales } from '../src/lib/languageRoutes.mjs';
 import { canonicalUrl, jsonLd, siteOrigin } from '../src/lib/seo.mjs';
 import { finalizeSeo } from './seo.mjs';
+import { sataFinderUrl } from '../src/lib/sataParts.mjs';
 
 const attr = (node, name) => node.attrs?.find(item => item.name === name)?.value;
 function setAttr(node, name, value) {
@@ -112,6 +113,7 @@ export function localizeDocument(html, route, localeCode, catalog, { missing = n
         if (node.tagName === 'input' && item.name === 'value' && ['lang', 'language', 'idioma', '_language'].includes(attr(node, 'name'))) item.value = locale.code;
       }
     }
+    if (attr(node, 'data-olivia-sata') === 'true' || attr(node, 'data-sata-finder-link') !== undefined) setAttr(node, 'href', sataFinderUrl(locale.code));
     if (node.tagName === 'meta') {
       const property = attr(node, 'property');
       if (property === 'og:locale') setAttr(node, 'content', locale.og);

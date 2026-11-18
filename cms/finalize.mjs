@@ -8,6 +8,7 @@ import { parse, serialize } from 'parse5';
 import { previewPath } from './studio/preview.mjs';
 import { finalizeSeo, renderSitemap } from './seo.mjs';
 import { generateLocalizedPages } from './localize.mjs';
+import { generateKnowledge } from './knowledge.mjs';
 const snapshot = existsSync('.cms/content.json') ? JSON.parse(await readFile('.cms/content.json', 'utf8')) : null;
 const overrides = new Map((snapshot?.etapel_texts || []).filter(row => row.status === 'published').map(row => [row.id, row.value]));
 const mediaPaths = new Map();
@@ -65,6 +66,7 @@ async function walk(directory) {
 await walk('dist');
 if (process.env.ETAPEL_SKIP_LOCALES !== '1') sitemapEntries.push(...await generateLocalizedPages(sitemapEntries));
 await writeFile('dist/sitemap.xml', renderSitemap(sitemapEntries));
+await generateKnowledge(sitemapEntries);
 // CSS background photographs must receive the same replacements as <img>.
 for (const entry of await readdir('dist/_astro', { withFileTypes: true })) {
   if (!entry.name.endsWith('.css')) continue;
