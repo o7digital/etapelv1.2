@@ -181,7 +181,7 @@ const sata = en ? {
     if (busy || !message.trim()) return;
     busy = true; pending = message; input.value = ''; submit.disabled = true; input.disabled = true; prompts.hidden = true;
     if (!retry) add('user', message);
-    if (requestsInformation(message)) { requestMessage = message; showLead(); }
+    if (requestsInformation(message)) requestMessage = message;
     feedback.hidden = false; feedback.textContent = root.dataset.thinking!;
     try {
       const response = await fetch('/api/olivia', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, language: root.dataset.lang, conversation, page: window.location.pathname, intent }), signal: AbortSignal.timeout(60000) });
@@ -189,6 +189,10 @@ const sata = en ? {
       const data = await response.json();
       if (typeof data.answer !== 'string' || typeof data.conversation !== 'string') throw new Error('Invalid response');
       conversation = data.conversation; add('assistant', data.answer, data.sources); pending = ''; feedback.hidden = true;
+      if (!leadSent && !leadBusy && leadForm.hidden) {
+        requestMessage ||= message;
+        showLead();
+      }
     } catch {
       feedback.textContent = root.dataset.error!;
       const retryButton = document.createElement('button'); retryButton.type = 'button'; retryButton.textContent = root.dataset.retry!;

@@ -31,7 +31,7 @@ test('rejects an older engine or downgraded routing instead of claiming Olivia 3
  }finally{globalThis.fetch=original;delete process.env.OLIVIA_GATEWAY_KEY;}
 });
 
-test('information requests open contact capture without treating greetings or refusals as leads', async () => {
+test('recognizes commercial request text for the contact request context', async () => {
  const { requestsInformation } = await import('../src/lib/oliviaLead.js');
  for (const message of ['Quiero información sobre equipos', '¿Me pueden cotizar una cabina?', 'Can I get more details?', 'Je veux des infos, un devis', 'Me interesa la capacitación', 'Quiero saber más', 'Ich möchte ein Angebot', 'Vorrei informazioni e un preventivo', 'Gostaria de informações e um orçamento']) assert.equal(requestsInformation(message), true, message);
  for (const message of ['Hola', 'Thank you', 'No quiero que me contacten', "I don't want information", 'Non voglio informazioni', 'Não quero contato', 'Ich möchte keine Informationen']) assert.equal(requestsInformation(message), false, message);
