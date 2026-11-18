@@ -39,7 +39,7 @@ function excerpt(text, terms, maxLength = 7000) {
   return merged.map(window => text.slice(window.start, window.end)).join('\n[…]\n').slice(0, maxLength);
 }
 
-export function searchKnowledge(index, message, { language = 'es', page, previousKeys = [] } = {}) {
+export function searchKnowledge(index, message, { language = 'es', page, previousKeys = [], maxContextChars = 16000 } = {}) {
   const terms = searchTerms(message), ranked = [];
   const current = page ? index.byPath.get(page.replace(/\/+$/, '') || '/') : undefined;
   for (const document of index.documents) {
@@ -71,15 +71,28 @@ export function searchKnowledge(index, message, { language = 'es', page, previou
     const original = index.byPath.get(document.key);
     if (original && original.path !== document.path) documents.push(original);
   }
-  let remaining = 26000;
+  let remaining = Math.max(0, maxContextChars);
   const sources = [], context = [];
   for (const document of documents) {
     if (remaining < 600) break;
-    const text = excerpt(document.text, terms, Math.min(7000, remaining));
     const url = origin + (document.path === '/' ? '/' : document.path);
+    const relevance = link => searchTerms(link.title + ' ' + link.url).filter(term => terms.includes(term)).length;
+    const links = [...(document.links || [])].sort((a, b) => relevance(b) - relevance(a)).slice(0, 6);
+    const record = { source: url, language: document.locale, title: document.title, description: excerpt(document.description || '', terms, 600), content: excerpt(document.text, terms, Math.min(6500, remaining)), links };
+    const minimumCopy = Math.min(400, Math.floor(remaining / 2));
+    while (record.links.length && JSON.stringify({ ...record, content: '' }).length > remaining - minimumCopy) record.links.pop();
+    if (JSON.stringify({ ...record, content: '' }).length > remaining - minimumCopy) record.description = '';
+    let encoded = JSON.stringify(record);
+    // The engine limits the whole message, including JSON escaping, links and
+    // metadata. Bound the serialized record rather than only its visible copy.
+    while (encoded.length > remaining && record.content.length) {
+      record.content = record.content.slice(0, Math.max(0, record.content.length - (encoded.length - remaining) - 1));
+      encoded = JSON.stringify(record);
+    }
+    if (encoded.length > remaining || !record.content) continue;
     sources.push({ title: document.title, url });
-    context.push(JSON.stringify({ source: url, language: document.locale, title: document.title, description: document.description, content: text, links: document.links || [] }));
-    remaining -= text.length;
+    context.push(encoded);
+    remaining -= encoded.length + 1;
   }
   return { context: context.join('\n'), sources, keys: chosen.map(document => document.key), hash: index.hash, pages: index.documents.length, languages: index.languages };
 }

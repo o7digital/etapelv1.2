@@ -41,6 +41,17 @@ test('legal information and conversation context remain searchable beyond the op
   assert.throws(() => createSearchIndex(payload([{ path: '/admin', locale: 'es', title: 'Private', text: 'Hidden' }])), /Invalid public knowledge/);
 });
 
+test('retrieval bounds the complete serialized context, including long source URLs and escaped text', () => {
+  const large = Array.from({length:6},(_,i)=>({path:'/product-'+i,key:'/product-'+i,locale:'es',title:'SATA product '+i,description:'SATA specifications',text:'SATA specifications "quoted" and technical details. '.repeat(400),links:Array.from({length:10},(_,j)=>({title:'SATA manual '+j,url:'https://www.etapel.com/'+'manual-'.repeat(30)+j}))}));
+  const index=createSearchIndex(payload(large));
+  for(const limit of [1000,8000,16000]) {
+    const result=searchKnowledge(index,'SATA specifications',{maxContextChars:limit});
+    assert(result.context.length<=limit,`${result.context.length} exceeds ${limit}`);
+    assert(result.sources.length>0);
+    for(const record of result.context.split('\n')) assert(JSON.parse(record).content);
+  }
+});
+
 test('the knowledge loader coalesces requests, refreshes published content and keeps the last validated index on a transient outage', async () => {
   let time = 0, calls = 0, outage = false;
   const data = payload(documents);

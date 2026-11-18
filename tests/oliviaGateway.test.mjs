@@ -30,6 +30,7 @@ test('authenticated gateway selects POWERFUL while preserving legacy FAST reques
     assert.equal(options.headers['X-Tenant-ID'], 'etapel');
     assert.equal(options.headers.Authorization, 'Bearer internal-test-token');
     calls.push(body);
+    assert(body.message.length<=20000,'Olivia 3.6 ChatIn.message maxLength is 20000');
     return { ok: true, json: async () => ({ answer: 'Respuesta Etapel', conversation_id: 'a'.repeat(24), routing: upstreamRoutingOverride || body.routing, engine: upstreamEngine, model: models[body.routing] }) };
   };
   async function request(body, authorization = 'Bearer gateway-test-key') {
