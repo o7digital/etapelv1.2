@@ -1,0 +1,78 @@
+/* Keep the same navigation scale in every language and page template. */
+header.site-header .nav {
+  position: relative;
+  max-width: 1440px;
+  gap: 24px;
+}
+
+header.site-header .nav .brand {
+  flex: 0 0 auto;
+  min-width: 0;
+}
+
+header.site-header .nav .brand img {
+  width: 168px;
+}
+
+header.site-header .nav .menu {
+  flex: 0 0 auto;
+  gap: 26px;
+  font-size: 14px;
+  letter-spacing: normal;
+}
+
+header.site-header .nav .nav-actions {
+  flex: 0 0 auto;
+}
+
+header.site-header .nav .nav-actions > .btn {
+  max-width: 190px;
+}
+
+/* Long translations must wrap inside their columns, without widening the page. */
+main :is(h1, h2, h3, .hero-chip) {
+  overflow-wrap: anywhere;
+}
+
+html[lang="de"] main :is(h1, h2, h3, .hero-chip) {
+  hyphens: auto;
+  hyphenate-limit-chars: 12 5 5;
+}
+
+main .hero-title span {
+  white-space: normal;
+}
+
+main :is(.page-hero-inner, .hero-panel-grid, .detail-grid, .grid-families,
+  .family-tile, .catalog-grid, .about-hero, .contact-hero, .contact-parity-hero,
+  .certification, .support-en-intro, .coverage-en) > * {
+  min-width: 0;
+}
+
+/* Leave room for the longest menu at the original, readable font size. */
+@media (max-width: 1340px) {
+  header.site-header .nav .menu,
+  header.site-header .nav .nav-actions {
+    display: none;
+  }
+
+  header.site-header .nav .mobile-menu {
+    display: block;
+  }
+}
+
+@media (max-width: 640px) {
+  header.site-header .nav .brand img {
+    width: 140px;
+  }
+
+  main .about-copy h1,
+  main .training-copy h1 {
+    font-size: 38px;
+  }
+
+  main .contact-copy h1,
+  main .contact-parity-copy h1 {
+    font-size: 40px;
+  }
+}
