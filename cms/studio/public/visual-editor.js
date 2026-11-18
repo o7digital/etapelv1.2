@@ -21,7 +21,7 @@ export function mountVisualEditor(root, options) {
   const inspector = root.querySelector('.inspector-content'), library = root.querySelector('.visual-library');
   const byId = new Map(rows.map(row=>[row.id,row])), bySource = new Map(media.map(row=>[row.source,row]));
   const targets = new Map(), pictures = new Map(), backgrounds = [];
-  let doc, selected, destroyed=false, observer, resizeTimer, mode='edit', device=prefs.device || 'desktop';
+  let doc, activatedDocument, selected, destroyed=false, observer, resizeTimer, mode='edit', device=prefs.device || 'desktop';
   const valueOf = row => drafts[row.id] ?? (row.translation?.state==='pending' ? row.translation.value : row.value);
   const mediaValue = row => ({...row,...mediaDrafts[row.id]});
   const photoUrl = row => absolute(imageUrl(mediaValue(row)));
@@ -153,6 +153,11 @@ export function mountVisualEditor(root, options) {
       root.querySelector('.visual-loading').innerHTML=`<b>La página no está disponible.</b><p>${esc(message)}</p><button class="button quiet" data-preview-retry>Volver a intentar</button>`;
       root.querySelector('[data-preview-retry]').onclick=()=>{frame.src=`/api/preview?page=${encodeURIComponent(route)}&retry=${Date.now()}`;};return;
     }
+    // Browsers may notify load again when preview resources finish. Mount each
+    // document once; wrapping its whitespace a second time duplicates the copy.
+    if(activatedDocument===doc)return;
+    activatedDocument=doc;
+    targets.clear();pictures.clear();backgrounds.length=0;selected=null;
     for(const parent of doc.querySelectorAll('[data-etapel-texts]')) {
       const nodes=[...parent.childNodes];
       for(const [index,id] of Object.entries(JSON.parse(parent.dataset.etapelTexts))) {
@@ -211,5 +216,5 @@ export function mountVisualEditor(root, options) {
   observer=new ResizeObserver(()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>setDevice(device),50);});observer.observe(viewport);
   frame.src=`/api/preview?page=${encodeURIComponent(route)}`;
   setDevice(device);
-  return {destroy(){destroyed=true;observer.disconnect();clearTimeout(resizeTimer);document.body.classList.remove('visual-fullscreen');}};
+  return {destroy(){destroyed=true;frame.removeEventListener('load',activate);observer.disconnect();clearTimeout(resizeTimer);document.body.classList.remove('visual-fullscreen');}};
 }
