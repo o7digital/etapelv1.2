@@ -6,6 +6,7 @@ import LanguageSwitcher from '../components/LanguageSwitcher.astro';
 import BackToTop from '../components/BackToTop.astro';
 import OliviaChat from '../components/OliviaChat.astro';
 import SeoHead from '../components/SeoHead.astro';
+import SeoKeywords from '../components/SeoKeywords.astro';
 
 interface Props {
   title: string;
@@ -74,6 +75,7 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
           <div><h3>Contact</h3><ul><li><a href="mailto:ventas@etapel.com.mx">ventas@etapel.com.mx</a></li><li><a href="tel:+525556895055">55 5689 5055</a></li><li><a href="https://wa.link/oowyzu">WhatsApp</a></li></ul></div>
         </div>
         <div class="footer-bottom"><span>Copyright © 2026 Etapel. All rights reserved.</span><div><a href="/en/contact">Need help? Contact us</a><a href="/en/privacy-policy">Privacy Policy</a><a href="/en/etapel-policies">Etapel Policies</a><LanguageSwitcher lang={lang} path={currentPath} /></div></div>
+        <SeoKeywords path={canonicalPath ?? currentPath} lang={lang} />
       </footer>
     ) : (
       <footer class="footer footer-full">
@@ -85,6 +87,7 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
         </div>
         <div class="footer-bottom"><span>Copyright © 2026 Etapel. Todos los derechos reservados.</span><div><a href="/contacto">¿Necesitas ayuda? ¡Contáctanos!</a><a href="/aviso-de-privacidad">Aviso de Privacidad</a>
           <a href="/politicas-de-etapel">Políticas de Etapel</a><LanguageSwitcher lang={lang} path={currentPath} /></div></div>
+        <SeoKeywords path={canonicalPath ?? currentPath} lang={lang} />
       </footer>
     )}
     <LanguageNavigation />

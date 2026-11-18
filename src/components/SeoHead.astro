@@ -1,6 +1,7 @@
 ---
 import { canonicalUrl, jsonLd, languageAlternates, siteOrigin } from '../lib/seo.mjs';
 import { locales } from '../lib/languageRoutes.mjs';
+import { seoKeywords } from '../lib/keywords.mjs';
 
 interface Props {
   title: string;
@@ -43,6 +44,7 @@ const graph = [
 ---
 <title>{title}</title>
 <meta name="description" content={description} />
+<meta name="keywords" content={seoKeywords(path, lang).join(', ')} data-seo-keywords translate="no" />
 <link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48 64x64" href="/favicon.ico" />
 <link rel="icon" type="image/png" sizes="256x256" href="/favicon.png" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />

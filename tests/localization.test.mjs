@@ -4,6 +4,7 @@ import { parse } from 'parse5';
 import { extractCopy, localizeDocument } from '../cms/localize.mjs';
 import { languageAlternates } from '../src/lib/seo.mjs';
 import { sataFinderUrl } from '../src/lib/sataParts.mjs';
+import { seoKeywords } from '../src/lib/keywords.mjs';
 
 const nodes = html => { const result = []; const visit = node => { result.push(node); for (const child of node.childNodes || []) visit(child); }; visit(parse(html)); return result; };
 const attr = (node, name) => node?.attrs?.find(item => item.name === name)?.value;
@@ -57,4 +58,38 @@ test('SATA assistance links keep the official finder in the selected language, w
     assert.equal(attr(all.find(node=>attr(node,'data-sata-finder-link')!==undefined),'target'),'_blank');
   }
   assert.equal(sataFinderUrl('pt'),sataFinderUrl('en'));
+});
+
+test('generated languages render their own keywords in source metadata and the visible footer without dictionary fallbacks', () => {
+  const source = '<html lang="en"><head><meta name="keywords" data-seo-keywords translate="no" content="automotive paint Mexico City"></head><body><footer><div class="footer-keywords" data-seo-keywords translate="no">automotive paint Mexico City</div></footer></body></html>';
+  const paint = { de: 'Autolack Mexiko-Stadt', it: 'vernici per auto Città del Messico', fr: 'peinture automobile Mexico', pt: 'pintura automotiva Cidade do México' };
+  for (const [locale, expected] of Object.entries(paint)) {
+    const missing = new Set();
+    const dictionary = { 'Proudly Mexican 🇲🇽': 'Etapel', 'Choose language': 'Language' };
+    const all = nodes(localizeDocument(source, '/en', locale, dictionary, { missing }));
+    const metadata = attr(all.find(node => node.tagName === 'meta' && attr(node, 'name') === 'keywords'), 'content');
+    const footer = all.find(node => node.tagName === 'div' && attr(node, 'data-seo-keywords') !== undefined);
+    assert.equal(missing.size, 0, locale);
+    assert(metadata.includes(expected), locale);
+    assert.deepEqual(metadata.split(', '), footer.childNodes[0].value.split(' · '), locale);
+    assert.equal(metadata.split(', ').length, 18, locale);
+    assert(!metadata.includes('automotive paint Mexico City'), locale);
+    const service = nodes(localizeDocument(source, '/en/after-sales', locale, dictionary));
+    const serviceMetadata = attr(service.find(node => attr(node, 'name') === 'keywords'), 'content');
+    assert.equal(serviceMetadata.split(', ').length, 6, locale);
+    assert.notEqual(serviceMetadata, metadata, locale);
+  }
+});
+
+test('Spanish and English keywords retain page intent and every supported route has localized terms', () => {
+  assert.equal(seoKeywords('/')[0], 'pintura automotriz CDMX');
+  assert.equal(seoKeywords('/en')[0], 'automotive paint Mexico City');
+  assert.equal(seoKeywords('/capacitacion')[0], 'capacitación automotriz CDMX');
+  assert.equal(seoKeywords('/en/training')[0], 'automotive training Mexico City');
+  assert.equal(seoKeywords('/fr/formation')[0], 'formation automobile Mexico');
+  for (const path of ['/de/produktlinien/pintura', '/it/linee-di-prodotto/prodotti/sata-jet-x', '/pt/contato', '/fr/politique-etapel']) {
+    assert(seoKeywords(path).every(value => value.trim().length > 0), path);
+    assert(!seoKeywords(path).some(value => value.includes('pintura automotriz CDMX')), path);
+  }
+  assert.throws(() => seoKeywords('/', 'unknown'), /Unsupported keyword language/);
 });

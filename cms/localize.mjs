@@ -4,6 +4,7 @@ import { languagePath, languageHash, locales, addedLocales } from '../src/lib/la
 import { canonicalUrl, jsonLd, siteOrigin } from '../src/lib/seo.mjs';
 import { finalizeSeo } from './seo.mjs';
 import { sataFinderUrl } from '../src/lib/sataParts.mjs';
+import { seoKeywords } from '../src/lib/keywords.mjs';
 
 const attr = (node, name) => node.attrs?.find(item => item.name === name)?.value;
 function setAttr(node, name, value) {
@@ -95,6 +96,11 @@ export function localizeDocument(html, route, localeCode, catalog, { missing = n
   visitCopy(document, translate);
   function walk(node, languagePicker = false) {
     languagePicker ||= attr(node, 'data-language-picker') !== undefined;
+    if (attr(node, 'data-seo-keywords') !== undefined) {
+      const keywords = seoKeywords(languagePath(route, locale.code), locale.code);
+      if (node.tagName === 'meta') setAttr(node, 'content', keywords.join(', '));
+      else node.childNodes = [{ nodeName: '#text', value: keywords.join(' · '), parentNode: node }];
+    }
     if (node.tagName === 'html') {
       setAttr(node, 'lang', locale.tag);
       setAttr(node, 'style', `--etapel-origin-label:${JSON.stringify(translate(originLabel))}`);
