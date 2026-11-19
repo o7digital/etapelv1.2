@@ -2269,6 +2269,8 @@
     "Zoom in": "Agrandir le zoom",
     "Zoom out": "Réduire le zoom",
     "Share the SATA model, part reference if known or a description, quantity and your contact details here. Etapel will confirm compatibility, price and availability.": "Indiquez ici le modèle SATA, la référence si vous la connaissez ou une description de la pièce, la quantité et vos coordonnées. Etapel confirmera la compatibilité, le prix et la disponibilité.",
-    "I can help you prepare a SATA spare-parts quote request. Complete the form here with the model and the part reference or description. You can keep asking me questions while you fill it in.": "Je vous aide à préparer une demande de devis pour des pièces détachées SATA. Remplissez ici le formulaire avec le modèle et la référence ou la description de la pièce. Vous pouvez continuer à me poser des questions pendant que vous le remplissez."
+    "I can help you prepare a SATA spare-parts quote request. Complete the form here with the model and the part reference or description. You can keep asking me questions while you fill it in.": "Je vous aide à préparer une demande de devis pour des pièces détachées SATA. Remplissez ici le formulaire avec le modèle et la référence ou la description de la pièce. Vous pouvez continuer à me poser des questions pendant que vous le remplissez.",
+    "Manufacturer approvals": "Homologations",
+    "Pause or resume carousel": "Mettre le carrousel en pause ou le relancer"
   }
 }
