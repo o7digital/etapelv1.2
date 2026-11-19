@@ -3,19 +3,14 @@ import { carOLinerHomologations } from '../data/homologations';
 interface Props { lang?: 'es' | 'en'; }
 const english = Astro.props.lang === 'en';
 const label = english ? 'Manufacturer approvals' : 'Homologaciones';
-const pauseLabel = english ? 'Pause or resume carousel' : 'Pausar o reanudar carrusel';
 const base = '/images/homologations/car-o-liner';
 ---
 
-<div class="homologation-marquee" role="region" aria-label={label} data-approvals-carousel data-paused="false">
+<div class="homologation-marquee" role="region" aria-label={label} data-approvals-carousel>
   <div class="homologation-inner">
     <div class="homologation-label">
       <span class="homologation-dot" aria-hidden="true"></span>
       <div><p>{label}</p><img class="homologation-supplier" src={`${base}/car-o-liner.webp`} alt="CAR-O-LINER" width="140" height="24" loading="lazy" translate="no" /></div>
-      <button class="homologation-pause" type="button" aria-label={pauseLabel} aria-pressed="false">
-        <svg data-pause-icon width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 2h3v12H4zM9 2h3v12H9z" /></svg>
-        <svg data-play-icon width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" hidden><path d="m4 2 10 6-10 6z" /></svg>
-      </button>
     </div>
     <div class="homologation-window" tabindex="0">
       <div class="homologation-track">
@@ -30,19 +25,6 @@ const base = '/images/homologations/car-o-liner';
   </div>
 </div>
 
-<script>
-  document.querySelectorAll<HTMLElement>('[data-approvals-carousel]').forEach(carousel => {
-    const button = carousel.querySelector<HTMLButtonElement>('button')!;
-    button.addEventListener('click', () => {
-      const paused = carousel.dataset.paused !== 'true';
-      carousel.dataset.paused = String(paused);
-      button.setAttribute('aria-pressed', String(paused));
-      carousel.querySelector<SVGElement>('[data-pause-icon]')!.toggleAttribute('hidden', paused);
-      carousel.querySelector<SVGElement>('[data-play-icon]')!.toggleAttribute('hidden', !paused);
-    });
-  });
-</script>
-
 <style>
   .homologation-marquee{overflow:hidden;background:#f7f9fc;border-bottom:1px solid var(--line)}
   .homologation-inner{max-width:var(--max);margin:0 auto;padding:20px 28px;display:grid;grid-template-columns:165px minmax(0,1fr);gap:28px;align-items:center}
@@ -50,26 +32,22 @@ const base = '/images/homologations/car-o-liner';
   .homologation-dot{width:9px;height:9px;flex:none;background:var(--orange);box-shadow:0 0 0 5px #f582201f}
   .homologation-label p{margin:0 0 9px;font-size:11px;line-height:1.25;font-weight:950;letter-spacing:.1em;text-transform:uppercase}
   .homologation-supplier{display:block;width:126px;height:22px;object-fit:contain;object-position:left center}
-  .homologation-pause{position:absolute;left:20px;top:calc(100% + 7px);display:grid;place-items:center;width:25px;height:25px;border:1px solid #d6dfe9;border-radius:50%;background:white;color:#69768b;cursor:pointer}
-  .homologation-pause:hover,.homologation-pause:focus-visible{color:var(--navy);border-color:var(--orange);outline-offset:3px}
-  .homologation-pause svg[hidden]{display:none}
   .homologation-window{min-width:0;overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}
   .homologation-track{display:flex;width:max-content;animation:homologation-scroll 105s linear infinite}
   .homologation-group{display:flex;align-items:center;gap:12px;margin:0;padding:2px 12px 2px 0;list-style:none;flex:none}
   .homologation-group li{width:142px;height:78px;padding:12px 19px;display:grid;place-items:center;flex:none;background:white;border:1px solid #e3e8f0;box-shadow:0 2px 0 #dce2eb}
   .homologation-group img{width:100%;height:100%;min-height:0;object-fit:contain}
-  .homologation-window:hover .homologation-track,.homologation-window:focus-within .homologation-track,[data-paused="true"] .homologation-track{animation-play-state:paused}
+  .homologation-window:hover .homologation-track,.homologation-window:focus-within .homologation-track{animation-play-state:paused}
   @keyframes homologation-scroll{to{transform:translate3d(-50%,0,0)}}
   @media(max-width:700px){
     .homologation-inner{padding:18px 0;grid-template-columns:1fr;gap:14px}
     .homologation-label{padding:0 20px;gap:11px}
     .homologation-label>div{display:flex;align-items:center;gap:17px;min-width:0;flex-wrap:wrap}
     .homologation-label p{margin:0}.homologation-supplier{width:114px;height:20px}
-    .homologation-pause{position:static;margin-left:auto;flex:none}
     .homologation-group{gap:10px;padding-right:10px}.homologation-group li{width:128px;height:70px;padding:11px 17px}
   }
   @media(prefers-reduced-motion:reduce){
     .homologation-window{overflow-x:auto;mask-image:none;scrollbar-width:thin}
-    .homologation-track{animation:none}.homologation-group[aria-hidden="true"],.homologation-pause{display:none}
+    .homologation-track{animation:none}.homologation-group[aria-hidden="true"]{display:none}
   }
 </style>
