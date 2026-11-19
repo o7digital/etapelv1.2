@@ -22,7 +22,7 @@ const sata = en ? {
 };
 ---
 <div class="olivia-chat" data-lang={lang} data-error={copy.error} data-thinking={copy.thinking} data-retry={copy.retry} data-lead-sending={lead.sending} data-lead-success={lead.success} data-lead-error={lead.error}>
-  <div hidden class="olivia-intent-copy"><span data-sata-title>{sata.title}</span><span data-sata-intro>{sata.intro}</span><span data-sata-greeting>{sata.greeting}</span><span data-sata-submit>{sata.submit}</span><span data-source-label>{sata.sources}</span></div>
+  <div hidden class="olivia-intent-copy"><span data-sata-title>{sata.title}</span><span data-sata-intro>{sata.intro}</span><span data-sata-greeting>{sata.greeting}</span><span data-sata-submit>{sata.submit}</span><span data-source-label>{sata.sources}</span><span data-human-waiting>{en ? "An Etapel advisor is handling your conversation. You can continue writing here." : "Un asesor de Etapel está atendiendo tu conversación. Puedes seguir escribiendo aquí."}</span></div>
   <div class="olivia-panel" id="olivia-panel" role="dialog" aria-labelledby="olivia-title" hidden>
     <div class="olivia-header">
       <div class="olivia-avatar" aria-hidden="true">O<span></span></div>
@@ -122,14 +122,14 @@ const sata = en ? {
   });
   leadForm.addEventListener('submit', async (event) => {
     event.preventDefault();
-    if (leadBusy || leadSent || !leadForm.reportValidity()) return;
+    if (busy || leadBusy || leadSent || !leadForm.reportValidity()) return;
     // Reject whitespace-only names as well as empty fields.
     for (const field of leadForm.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input:not([type="checkbox"]):not([type="hidden"]),textarea')) {
       field.value = field.value.trim();
     }
     requirePart();
     if (!leadForm.reportValidity()) return;
-    leadBusy = true; leadSubmit.disabled = true;
+    leadBusy = true; leadSubmit.disabled = true; input.disabled = true; submit.disabled = true;
     const label = leadSubmit.textContent;
     leadSubmit.textContent = root.dataset.leadSending!;
     leadFeedback.hidden = true;
@@ -137,18 +137,28 @@ const sata = en ? {
     Object.assign(payload, { origen: intent === 'sata-parts' ? 'Buscador de refacciones SATA — Olivia AI Etapel' : 'Olivia AI Etapel', idioma: root.dataset.lang!, pagina: window.location.href, mensaje: requestMessage || 'Solicitud de contacto desde Olivia AI', conversacion: transcript.slice(-8).join('\n') });
     if (intent === 'sata-parts') payload._subject = leadTitle.textContent || '';
     try {
+      const need = [requestMessage || transcript.filter(line => line.startsWith('user: ')).at(-1)?.slice(6) || 'Solicitud de contacto desde Olivia AI', ...['modelo_sata','referencia_sata','cantidad','numero_de_serie_sata','detalles_refaccion'].filter(key => payload[key]).map(key => `${key}: ${payload[key]}`)].join('\n').slice(0, 4000);
+      const receipt = await fetch('/api/olivia', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'contact', language: root.dataset.lang, conversation, page: window.location.pathname, intent, requestId: contactRequestId, contact: { name: `${payload.nombre} ${payload.apellidos}`.trim(), email: payload.email, phone: payload.telefono, need, method: payload.medio_de_contacto, consent: payload.consentimiento === 'Aceptado' } }), signal: AbortSignal.timeout(20000) });
+      const saved = await receipt.json();
+      if (typeof saved.conversation === 'string') conversation = saved.conversation;
+      if (!receipt.ok || saved.saved !== true) throw new Error('Contact intake unavailable');
       const response = await fetch(leadForm.action, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(payload), signal: AbortSignal.timeout(20000) });
       if (!response.ok) throw new Error('Lead delivery failed');
-      leadSent = true; leadForm.hidden = true; leadForm.reset(); add('assistant', root.dataset.leadSuccess!);
+      leadSent = true; contactRequestId = crypto.randomUUID(); leadForm.hidden = true; leadForm.reset(); add('assistant', root.dataset.leadSuccess!);
     } catch {
       leadFeedback.textContent = root.dataset.leadError!; leadFeedback.hidden = false;
       leadFeedback.scrollIntoView({ block: 'nearest' });
-    } finally { leadBusy = false; leadSubmit.disabled = false; leadSubmit.textContent = label; }
+    } finally { leadBusy = false; leadSubmit.disabled = busy; input.disabled = busy; submit.disabled = busy; leadSubmit.textContent = label; }
   });
   let conversation: string | undefined;
+  let contactRequestId = crypto.randomUUID();
+  let pendingRequestId = '';
+  let humanStatus = false;
+  let polling = false;
+  const operatorMessages = new Set<string>();
   let busy = false;
   let pending = '';
-  function open(value: boolean) { panel.hidden = !value; toggle.setAttribute('aria-expanded', String(value)); if (value) input.focus(); else toggle.focus(); }
+  function open(value: boolean) { panel.hidden = !value; toggle.setAttribute('aria-expanded', String(value)); if (value) { input.focus(); void poll(); } else toggle.focus(); }
   toggle.addEventListener('click', () => open(panel.hidden));
   root.querySelector('.olivia-close')!.addEventListener('click', () => open(false));
   root.addEventListener('keydown', (event) => {
@@ -176,27 +186,46 @@ const sata = en ? {
     }
   }
   async function send(message: string, retry = false) {
-    if (busy || !message.trim()) return;
-    busy = true; pending = message; input.value = ''; submit.disabled = true; input.disabled = true; prompts.hidden = true;
-    if (!retry) add('user', message);
+    if (busy || leadBusy || !message.trim()) return;
+    busy = true; leadSubmit.disabled = true; pending = message; input.value = ''; submit.disabled = true; input.disabled = true; prompts.hidden = true;
+    if (!retry) { pendingRequestId = crypto.randomUUID(); add('user', message); }
     if (requestsInformation(message)) requestMessage = message;
     feedback.hidden = false; feedback.textContent = root.dataset.thinking!;
     try {
-      const response = await fetch('/api/olivia', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, language: root.dataset.lang, conversation, page: window.location.pathname, intent }), signal: AbortSignal.timeout(60000) });
-      if (!response.ok) throw new Error('Unavailable');
+      const response = await fetch('/api/olivia', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, requestId: pendingRequestId, language: root.dataset.lang, conversation, page: window.location.pathname, intent }), signal: AbortSignal.timeout(60000) });
       const data = await response.json();
+      if (typeof data.conversation === 'string') conversation = data.conversation;
+      if (!response.ok) throw new Error('Unavailable');
       if (typeof data.answer !== 'string' || typeof data.conversation !== 'string') throw new Error('Invalid response');
-      conversation = data.conversation; add('assistant', data.answer, data.sources); pending = ''; feedback.hidden = true;
-      if (!leadSent && !leadBusy && leadForm.hidden) {
-        requestMessage ||= message;
-        showLead();
-      }
+      conversation = data.conversation; if (data.answer) add('assistant', data.answer, data.sources); pending = '';
+      humanStatus = data.status === 'manual'; showHumanStatus();
     } catch {
       feedback.textContent = root.dataset.error!;
       const retryButton = document.createElement('button'); retryButton.type = 'button'; retryButton.textContent = root.dataset.retry!;
       retryButton.addEventListener('click', () => send(pending, true)); feedback.append(retryButton);
-    } finally { busy = false; submit.disabled = false; input.disabled = false; if (!panel.hidden && leadForm.hidden) input.focus(); }
+    } finally { busy = false; leadSubmit.disabled = leadBusy; submit.disabled = leadBusy; input.disabled = leadBusy; if (!panel.hidden && leadForm.hidden) input.focus(); }
   }
+  function showHumanStatus() {
+    feedback.hidden = !humanStatus;
+    feedback.textContent = humanStatus ? intentCopy('human-waiting') : '';
+  }
+  async function poll() {
+    if (!conversation || panel.hidden || document.hidden || busy || polling) return;
+    polling = true;
+    try {
+      const response = await fetch(`/api/olivia?conversation=${encodeURIComponent(conversation)}`, { cache: 'no-store', signal: AbortSignal.timeout(12000) });
+      if (!response.ok) return;
+      const data = await response.json();
+      for (const message of Array.isArray(data.messages) ? data.messages : []) {
+        if (typeof message.id !== 'string' || typeof message.content !== 'string' || operatorMessages.has(message.id)) continue;
+        operatorMessages.add(message.id); add('assistant', `Etapel: ${message.content}`);
+      }
+      humanStatus = data.status === 'manual';
+      if (!busy && !pending) showHumanStatus();
+    } catch { /* Keep the conversation visible and retry on the next poll. */ }
+    finally { polling = false; }
+  }
+  window.setInterval(() => { void poll(); }, 3000);
   form.addEventListener('submit', (event) => { event.preventDefault(); void send(input.value.trim()); });
   prompts.querySelectorAll('button').forEach(button => button.addEventListener('click', () => { void send(button.firstChild!.textContent!.trim()); }));
 </script>
