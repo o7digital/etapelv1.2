@@ -7,6 +7,8 @@ import { contentHash } from './model.mjs';
 import { parse, serialize } from 'parse5';
 import { previewPath } from './studio/preview.mjs';
 import { finalizeSeo, renderSitemap } from './seo.mjs';
+import { generateLocalizedPages } from './localize.mjs';
+import { generateKnowledge } from './knowledge.mjs';
 const snapshot = existsSync('.cms/content.json') ? JSON.parse(await readFile('.cms/content.json', 'utf8')) : null;
 const overrides = new Map((snapshot?.etapel_texts || []).filter(row => row.status === 'published').map(row => [row.id, row.value]));
 const mediaPaths = new Map();
@@ -40,7 +42,7 @@ async function walk(directory) {
       for (const row of result.fields) if (!fields.has(row.id)) fields.set(row.id, row);
       for (const row of result.media) if (!media.has(row.id)) media.set(row.id, row);
       html = result.html;
-      await writeFile(`dist${previewPath(route)}`, JSON.stringify({ version:1, route, html:result.preview, mediaPaths:Object.fromEntries(mediaPaths) }));
+      await writeFile(`dist${previewPath(route)}`, JSON.stringify({ version:1, route, html:finalizeSeo(result.preview, route, overrides).html, mediaPaths:Object.fromEntries(mediaPaths) }));
     }
     if (mediaPaths.size) {
       const document = parse(html);
@@ -62,7 +64,9 @@ async function walk(directory) {
   }
 }
 await walk('dist');
+if (process.env.ETAPEL_SKIP_LOCALES !== '1') sitemapEntries.push(...await generateLocalizedPages({ overrides, fields, media, mediaPaths }));
 await writeFile('dist/sitemap.xml', renderSitemap(sitemapEntries));
+await generateKnowledge(sitemapEntries);
 // CSS background photographs must receive the same replacements as <img>.
 for (const entry of await readdir('dist/_astro', { withFileTypes: true })) {
   if (!entry.name.endsWith('.css')) continue;

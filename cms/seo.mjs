@@ -16,6 +16,16 @@ export function finalizeSeo(html, route, overrides = new Map()) {
   const meta = key => nodes.find(node => node.tagName === 'meta' && (attr(node, 'name') || attr(node, 'property')) === key);
   const title = textOf(nodes.find(node => node.tagName === 'title') || {}).trim();
   const description = attr(meta('description'), 'content') || '';
+  const keywords = attr(meta('keywords'), 'content');
+  if (keywords !== undefined) {
+    const syncFooter = node => {
+      if (node.tagName !== 'meta' && attr(node, 'data-seo-keywords') !== undefined) {
+        node.childNodes = [{ nodeName: '#text', value: keywords.split(/\s*[,·]\s*/).filter(Boolean).join(' · '), parentNode: node }];
+      }
+      for (const child of node.childNodes || []) syncFooter(child);
+    };
+    syncFooter(document);
+  }
   const setMeta = (key, value) => {
     const node = meta(key);
     if (node) node.attrs.find(item => item.name === 'content').value = value;

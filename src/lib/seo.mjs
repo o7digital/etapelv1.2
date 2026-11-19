@@ -1,4 +1,4 @@
-import { languagePath } from './languageRoutes.mjs';
+import { languagePath, hasLanguageRoute, locales } from './languageRoutes.mjs';
 
 export const siteOrigin = 'https://www.etapel.com';
 export const canonicalUrl = path => new URL((path.split(/[?#]/)[0].replace(/\/+$/, '') || '/'), siteOrigin).href;
@@ -6,14 +6,10 @@ export const jsonLd = value => JSON.stringify(value).replaceAll('<', '\\u003c');
 
 export function languageAlternates(path) {
   const current = new URL(canonicalUrl(path)).pathname;
-  const other = languagePath(current);
-  if (other === current) return [];
-  const english = current === '/en' || current.startsWith('/en/');
-  const es = canonicalUrl(english ? other : current);
-  const en = canonicalUrl(english ? current : other);
+  if (!hasLanguageRoute(current)) return [];
+  const es = canonicalUrl(languagePath(current, 'es'));
   return [
-    { lang: 'es-MX', href: es },
-    { lang: 'en', href: en },
+    ...locales.map(locale => ({ lang: locale.tag, href: canonicalUrl(languagePath(current, locale.code)) })),
     { lang: 'x-default', href: es },
   ];
 }

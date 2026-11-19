@@ -11,8 +11,18 @@ const copy = en ? {
 } : {
   open: 'Habla con Olivia', close: 'Cerrar chat', status: 'Asistente Etapel', welcome: '¡Hola! Soy Olivia, tu asistente Etapel. ¿Cómo puedo ayudarte con equipos, capacitación o soporte técnico?', placeholder: 'Escribe tu pregunta…', send: 'Enviar', thinking: 'Olivia está escribiendo…', error: 'No pude responder en este momento. Intenta de nuevo o contacta a nuestro equipo.', consent: 'Al enviar un mensaje, aceptas nuestro', privacy: 'Aviso de Privacidad', contact: 'Contactar a un asesor', prompts: ['Conocer equipos', 'Capacitación CEDETEC', 'Soporte técnico'], retry: 'Reintentar',
 };
+const sata = en ? {
+  title: 'Request a SATA spare-parts quote', intro: 'Share the SATA model, part reference if known or a description, quantity and your contact details here. Etapel will confirm compatibility, price and availability.',
+  model: 'SATA model *', reference: 'Part reference, if known', serial: 'Serial number, if available', quantity: 'Quantity *', details: 'Describe the part or your request',
+  greeting: 'I can help you prepare a SATA spare-parts quote request. Complete the form here with the model and the part reference or description. You can keep asking me questions while you fill it in.', submit: 'Send my SATA quote request', sources: 'Website sources', help: 'Enter a part reference or describe the part you need.',
+} : {
+  title: 'Cotiza tus refacciones SATA', intro: 'Comparte aquí el modelo SATA, la referencia si la conoces o una descripción de la pieza, la cantidad y tus datos. Etapel confirmará la compatibilidad, el precio y la disponibilidad.',
+  model: 'Modelo SATA *', reference: 'Referencia de la pieza, si la conoces', serial: 'Número de serie, si lo tienes', quantity: 'Cantidad *', details: 'Describe la pieza o tu solicitud',
+  greeting: 'Te ayudo a preparar una solicitud de cotización de refacciones SATA. Completa aquí el formulario con el modelo y la referencia o descripción de la pieza. Puedes seguir preguntándome mientras lo llenas.', submit: 'Enviar mi solicitud de refacciones SATA', sources: 'Fuentes del sitio', help: 'Indica una referencia o describe la pieza que necesitas.',
+};
 ---
 <div class="olivia-chat" data-lang={lang} data-error={copy.error} data-thinking={copy.thinking} data-retry={copy.retry} data-lead-sending={lead.sending} data-lead-success={lead.success} data-lead-error={lead.error}>
+  <div hidden class="olivia-intent-copy"><span data-sata-title>{sata.title}</span><span data-sata-intro>{sata.intro}</span><span data-sata-greeting>{sata.greeting}</span><span data-sata-submit>{sata.submit}</span><span data-source-label>{sata.sources}</span></div>
   <div class="olivia-panel" id="olivia-panel" role="dialog" aria-labelledby="olivia-title" hidden>
     <div class="olivia-header">
       <div class="olivia-avatar" aria-hidden="true">O<span></span></div>
@@ -21,7 +31,18 @@ const copy = en ? {
     </div>
     <div class="olivia-messages" role="log" aria-live="polite" aria-relevant="additions" tabindex="0"><div class="olivia-message assistant">{copy.welcome}</div>
       <form class="olivia-lead" action="https://formspree.io/f/xeewlkng" method="POST" aria-labelledby="olivia-lead-title" hidden>
-        <strong id="olivia-lead-title">{lead.title}</strong><p>{lead.intro}</p>
+        <strong id="olivia-lead-title">{lead.title}</strong><p class="olivia-lead-intro">{lead.intro}</p>
+        <fieldset class="olivia-sata-fields" hidden disabled>
+          <legend>SATA</legend>
+          <div class="olivia-lead-grid">
+            <label class="olivia-lead-wide" for="olivia-sata-model">{sata.model}<input id="olivia-sata-model" name="modelo_sata" maxlength="160" required /></label>
+            <label for="olivia-sata-reference">{sata.reference}<input id="olivia-sata-reference" name="referencia_sata" maxlength="160" /></label>
+            <label for="olivia-sata-quantity">{sata.quantity}<input id="olivia-sata-quantity" name="cantidad" type="number" min="1" max="9999" step="1" value="1" required /></label>
+            <label class="olivia-lead-wide" for="olivia-sata-serial">{sata.serial}<input id="olivia-sata-serial" name="numero_de_serie_sata" maxlength="160" /></label>
+            <label class="olivia-lead-wide" for="olivia-sata-details">{sata.details}<textarea id="olivia-sata-details" name="detalles_refaccion" rows="3" maxlength="2000"></textarea></label>
+          </div>
+          <p class="olivia-sata-help">{sata.help}</p>
+        </fieldset>
         <div class="olivia-lead-grid">
           <label for="olivia-first-name">{lead.firstName}<input id="olivia-first-name" name="nombre" autocomplete="given-name" maxlength="80" required /></label>
           <label for="olivia-last-name">{lead.lastName}<input id="olivia-last-name" name="apellidos" autocomplete="family-name" maxlength="100" required /></label>
@@ -58,10 +79,20 @@ const copy = en ? {
   const leadForm = root.querySelector<HTMLFormElement>('.olivia-lead')!;
   const leadFeedback = root.querySelector<HTMLElement>('.olivia-lead-feedback')!;
   const leadSubmit = root.querySelector<HTMLButtonElement>('.olivia-lead-submit')!;
+  const sataFields = root.querySelector<HTMLFieldSetElement>('.olivia-sata-fields')!;
+  const leadTitle = root.querySelector<HTMLElement>('#olivia-lead-title')!;
+  const leadIntro = root.querySelector<HTMLElement>('.olivia-lead-intro')!;
+  const intentCopy = (name: string) => root.querySelector<HTMLElement>(`[data-${name}]`)!.textContent!;
   const transcript: string[] = [];
   let leadSent = false;
   let leadBusy = false;
   let requestMessage = '';
+  let intent: 'sata-parts' | undefined;
+  let sataIntroduced = false;
+  const sataReference = root.querySelector<HTMLInputElement>('#olivia-sata-reference')!;
+  const sataDetails = root.querySelector<HTMLTextAreaElement>('#olivia-sata-details')!;
+  const requirePart = () => { sataDetails.required = intent === 'sata-parts' && !sataReference.value.trim(); };
+  sataReference.addEventListener('input', requirePart);
   function showLead() {
     prompts.hidden = true;
     if (!leadSent) { leadForm.hidden = false; messages.append(leadForm); }
@@ -70,23 +101,41 @@ const copy = en ? {
   }
   root.querySelector('.olivia-contact')!.addEventListener('click', () => {
     showLead();
-    if (!leadSent) leadForm.querySelector<HTMLInputElement>('input')!.focus();
+    if (!leadSent) leadForm.querySelector<HTMLInputElement>('input:not(:disabled):not([type="hidden"])')!.focus();
   });
   root.querySelector('.olivia-lead-dismiss')!.addEventListener('click', () => { leadForm.hidden = true; input.focus(); });
+  document.addEventListener('click', (event) => {
+    const finder = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>('a[data-olivia-sata="true"]') : null;
+    if (!finder || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    open(true);
+    if (leadBusy) return;
+    if (leadSent) { leadSent = false; sataIntroduced = false; leadForm.reset(); }
+    intent = 'sata-parts';
+    sataFields.hidden = false; sataFields.disabled = false;
+    requirePart();
+    leadTitle.textContent = intentCopy('sata-title'); leadIntro.textContent = intentCopy('sata-intro'); leadSubmit.textContent = intentCopy('sata-submit');
+    requestMessage = intentCopy('sata-title');
+    if (!sataIntroduced) { add('assistant', intentCopy('sata-greeting')); sataIntroduced = true; }
+    showLead();
+    root.querySelector<HTMLInputElement>('#olivia-sata-model')!.focus({ preventScroll: true });
+  });
   leadForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     if (leadBusy || leadSent || !leadForm.reportValidity()) return;
     // Reject whitespace-only names as well as empty fields.
-    for (const field of leadForm.querySelectorAll<HTMLInputElement>('input:not([type="checkbox"]):not([type="hidden"])')) {
+    for (const field of leadForm.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input:not([type="checkbox"]):not([type="hidden"]),textarea')) {
       field.value = field.value.trim();
     }
+    requirePart();
     if (!leadForm.reportValidity()) return;
     leadBusy = true; leadSubmit.disabled = true;
     const label = leadSubmit.textContent;
     leadSubmit.textContent = root.dataset.leadSending!;
     leadFeedback.hidden = true;
     const payload = Object.fromEntries(new FormData(leadForm));
-    Object.assign(payload, { origen: 'Olivia AI Etapel', idioma: root.dataset.lang!, pagina: window.location.href, mensaje: requestMessage || 'Solicitud de contacto desde Olivia AI', conversacion: transcript.slice(-8).join('\n') });
+    Object.assign(payload, { origen: intent === 'sata-parts' ? 'Buscador de refacciones SATA — Olivia AI Etapel' : 'Olivia AI Etapel', idioma: root.dataset.lang!, pagina: window.location.href, mensaje: requestMessage || 'Solicitud de contacto desde Olivia AI', conversacion: transcript.slice(-8).join('\n') });
+    if (intent === 'sata-parts') payload._subject = leadTitle.textContent || '';
     try {
       const response = await fetch(leadForm.action, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(payload), signal: AbortSignal.timeout(20000) });
       if (!response.ok) throw new Error('Lead delivery failed');
@@ -105,13 +154,24 @@ const copy = en ? {
   root.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && !panel.hidden) open(false);
   });
-  function add(role: string, text: string) {
+  function add(role: string, text: string, sources: { title: string; url: string }[] = []) {
     const el = document.createElement('div'); el.className = `olivia-message ${role}`; el.textContent = text;
+    if (role === 'assistant' && Array.isArray(sources)) {
+      const links = document.createElement('div'); links.className = 'olivia-sources'; links.setAttribute('aria-label', intentCopy('source-label'));
+      for (const source of sources.slice(0, 4)) {
+        try {
+          const url = new URL(source.url);
+          if (url.origin !== 'https://www.etapel.com' || typeof source.title !== 'string') continue;
+          const link = document.createElement('a'); link.href = url.href; link.textContent = source.title; link.target = '_blank'; link.rel = 'noopener noreferrer'; links.append(link);
+        } catch { /* Invalid source links cannot become interactive. */ }
+      }
+      if (links.children.length) el.append(links);
+    }
     const editingLead = leadForm.contains(document.activeElement);
     if (!leadForm.hidden) messages.insertBefore(el, leadForm); else messages.append(el);
     transcript.push(`${role}: ${text}`);
     if (!editingLead) {
-      if (!leadForm.hidden) leadForm.scrollIntoView({ block: 'start' });
+      if (!leadForm.hidden) el.scrollIntoView({ block: 'nearest' });
       else messages.scrollTop = messages.scrollHeight;
     }
   }
@@ -119,14 +179,18 @@ const copy = en ? {
     if (busy || !message.trim()) return;
     busy = true; pending = message; input.value = ''; submit.disabled = true; input.disabled = true; prompts.hidden = true;
     if (!retry) add('user', message);
-    if (requestsInformation(message)) { requestMessage = message; showLead(); }
+    if (requestsInformation(message)) requestMessage = message;
     feedback.hidden = false; feedback.textContent = root.dataset.thinking!;
     try {
-      const response = await fetch('/api/olivia', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, language: root.dataset.lang, conversation }), signal: AbortSignal.timeout(60000) });
+      const response = await fetch('/api/olivia', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message, language: root.dataset.lang, conversation, page: window.location.pathname, intent }), signal: AbortSignal.timeout(60000) });
       if (!response.ok) throw new Error('Unavailable');
       const data = await response.json();
       if (typeof data.answer !== 'string' || typeof data.conversation !== 'string') throw new Error('Invalid response');
-      conversation = data.conversation; add('assistant', data.answer); pending = ''; feedback.hidden = true;
+      conversation = data.conversation; add('assistant', data.answer, data.sources); pending = ''; feedback.hidden = true;
+      if (!leadSent && !leadBusy && leadForm.hidden) {
+        requestMessage ||= message;
+        showLead();
+      }
     } catch {
       feedback.textContent = root.dataset.error!;
       const retryButton = document.createElement('button'); retryButton.type = 'button'; retryButton.textContent = root.dataset.retry!;
@@ -137,6 +201,7 @@ const copy = en ? {
   prompts.querySelectorAll('button').forEach(button => button.addEventListener('click', () => { void send(button.firstChild!.textContent!.trim()); }));
 </script>
 <style is:global>
+.olivia-sata-help{margin:10px 0 0;font-size:11px;color:#b9c3df}.olivia-sata-fields{margin:0 0 18px;padding:0 0 18px;min-width:0;border:0;border-bottom:1px solid #ffffff26}.olivia-sata-fields legend{padding:0;font-weight:800;color:#fba555;font-size:12px}.olivia-lead-grid textarea{box-sizing:border-box;width:100%;min-width:0;padding:10px;border:1px solid #ffffff26;border-radius:9px;background:#0c122b;color:#fff;font:inherit;font-size:14px;resize:vertical}.olivia-sources{display:grid;gap:6px;margin-top:12px;padding-top:10px;border-top:1px solid #ffffff20;white-space:normal}.olivia-sources a{color:#ffbd85;font-size:11px;line-height:1.5;text-decoration:underline;overflow-wrap:anywhere}
 @media(max-width:767px),(max-width:1024px) and (hover:none) and (pointer:coarse){
   .olivia-chat .olivia-toggle{width:52px;height:52px;padding:0;justify-content:center;animation:none}
   .olivia-chat .olivia-toggle>.olivia-avatar{width:46px;height:46px}

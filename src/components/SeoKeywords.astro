@@ -1,0 +1,11 @@
+---
+import { seoKeywords } from '../lib/keywords.mjs';
+
+interface Props { path?: string; lang?: 'es' | 'en'; }
+const { path = Astro.url.pathname, lang } = Astro.props;
+---
+<div class="footer-keywords" data-seo-keywords translate="no">{seoKeywords(path, lang).join(' · ')}</div>
+
+<style>
+  .footer-keywords{max-width:var(--max,1180px);margin:18px auto 0;padding:18px 0 72px;border-top:1px solid rgba(255,255,255,.12);font-size:13px;line-height:1.8;color:#aeb8cf;text-align:center;overflow-wrap:anywhere}
+</style>

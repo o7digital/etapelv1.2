@@ -3,16 +3,18 @@ export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
   if (req.method !== 'POST') { res.setHeader('Allow', 'POST'); return res.status(405).json({ error: 'Method not allowed' }); }
   const origin = req.headers.origin;
-  const allowed = new Set(['https://etapelv1-2.vercel.app', process.env.VERCEL_URL && `https://${process.env.VERCEL_URL}`, process.env.VERCEL_BRANCH_URL && `https://${process.env.VERCEL_BRANCH_URL}`].filter(Boolean));
+  const allowed = new Set(['https://www.etapel.com', 'https://etapel.com', 'https://etapelv1-2.vercel.app', process.env.VERCEL_URL && `https://${process.env.VERCEL_URL}`, process.env.VERCEL_BRANCH_URL && `https://${process.env.VERCEL_BRANCH_URL}`].filter(Boolean));
   if (!allowed.has(origin)) return res.status(403).json({ error: 'Origin not allowed' });
   if (!/^application\/json(?:;|$)/i.test(req.headers['content-type'] || '')) return res.status(415).json({ error: 'JSON required' });
   const body = req.body;
-  if (!body || typeof body.message !== 'string' || !body.message.trim() || body.message.length > 2000 || !['es','en'].includes(body.language) || (body.conversation != null && (typeof body.conversation !== 'string' || body.conversation.length > 180))) return res.status(400).json({ error: 'Invalid message' });
+  if (!body || typeof body.message !== 'string' || !body.message.trim() || body.message.length > 2000 || !['es','en','de','it','fr','pt'].includes(body.language) || (body.conversation != null && (typeof body.conversation !== 'string' || body.conversation.length > 180))) return res.status(400).json({ error: 'Invalid message' });
+  if (body.page != null && (typeof body.page !== 'string' || body.page.length > 400 || !/^\/(?:[a-z0-9-]+(?:\/[a-z0-9-]+)*\/?)?$/.test(body.page))) return res.status(400).json({ error: 'Invalid page' });
+  if (body.intent != null && body.intent !== 'sata-parts') return res.status(400).json({ error: 'Invalid intent' });
   if (!process.env.OLIVIA_GATEWAY_KEY) return res.status(503).json({ error: 'Olivia unavailable' });
   try {
     const response = await fetch('https://olivia.o7digitalgroup.com/etapel/chat', {
       method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${process.env.OLIVIA_GATEWAY_KEY}`, 'X-Visitor-IP': req.headers['x-vercel-forwarded-for'] || req.headers['x-forwarded-for']?.split(',')[0] || 'unknown' },
-      body: JSON.stringify({ message: body.message.trim(), language: body.language, conversation: body.conversation, routing: 'POWERFUL' }), signal: AbortSignal.timeout(57000),
+      body: JSON.stringify({ message: body.message.trim(), language: body.language, conversation: body.conversation, ...(body.page ? { page: body.page } : {}), ...(body.intent ? { intent: body.intent } : {}), routing: 'POWERFUL' }), signal: AbortSignal.timeout(57000),
     });
     const data = await response.json();
     if (!response.ok) return res.status(response.status === 429 ? 429 : 503).json({ error: 'Olivia unavailable' });
