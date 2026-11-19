@@ -2271,6 +2271,9 @@
     "Share the SATA model, part reference if known or a description, quantity and your contact details here. Etapel will confirm compatibility, price and availability.": "Indica qui il modello SATA, il codice del ricambio se lo conosci o una descrizione, la quantità e i tuoi recapiti. Etapel confermerà compatibilità, prezzo e disponibilità.",
     "I can help you prepare a SATA spare-parts quote request. Complete the form here with the model and the part reference or description. You can keep asking me questions while you fill it in.": "Ti aiuto a preparare una richiesta di preventivo per ricambi SATA. Compila qui il modulo con il modello e il codice o la descrizione del ricambio. Puoi continuare a farmi domande mentre lo compili.",
     "Manufacturer approvals": "Omologazioni",
-    "Pause or resume carousel": "Metti in pausa o riprendi il carosello"
+    "Pause or resume carousel": "Metti in pausa o riprendi il carosello",
+    "Manufacturer approvals CAR-O-LINER": "Omologazioni CAR-O-LINER",
+    "Manufacturer approvals GYS": "Omologazioni GYS",
+    "Manufacturer approvals JOSAM": "Omologazioni JOSAM"
   }
 }

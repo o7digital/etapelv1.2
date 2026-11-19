@@ -229,3 +229,143 @@ export const carOLinerHomologations = [
     "slug": "zeekr"
   }
 ] as const;
+
+// Supplied client artwork: GYS2.ai, manufacturer logos on artboard 2.
+export const gysHomologations = [
+  {
+    "name": "BMW",
+    "slug": "bmw"
+  },
+  {
+    "name": "MINI",
+    "slug": "mini"
+  },
+  {
+    "name": "Toyota",
+    "slug": "toyota"
+  },
+  {
+    "name": "Renault",
+    "slug": "renault"
+  },
+  {
+    "name": "Kia",
+    "slug": "kia"
+  },
+  {
+    "name": "Volkswagen",
+    "slug": "volkswagen"
+  },
+  {
+    "name": "Mercedes-Benz",
+    "slug": "mercedes-benz"
+  },
+  {
+    "name": "Nissan",
+    "slug": "nissan"
+  },
+  {
+    "name": "Tesla",
+    "slug": "tesla"
+  },
+  {
+    "name": "Volvo",
+    "slug": "volvo"
+  },
+  {
+    "name": "General Motors",
+    "slug": "general-motors"
+  },
+  {
+    "name": "Porsche",
+    "slug": "porsche"
+  },
+  {
+    "name": "Citroën",
+    "slug": "citroen"
+  },
+  {
+    "name": "DS Automobiles",
+    "slug": "ds-automobiles"
+  },
+  {
+    "name": "Eicher",
+    "slug": "eicher"
+  },
+  {
+    "name": "Hyundai",
+    "slug": "hyundai"
+  },
+  {
+    "name": "Opel",
+    "slug": "opel"
+  },
+  {
+    "name": "Jaguar",
+    "slug": "jaguar"
+  },
+  {
+    "name": "Land Rover",
+    "slug": "land-rover"
+  },
+  {
+    "name": "Ford",
+    "slug": "ford"
+  },
+  {
+    "name": "FIAT",
+    "slug": "fiat"
+  },
+  {
+    "name": "Alfa Romeo",
+    "slug": "alfa-romeo"
+  },
+  {
+    "name": "Suzuki",
+    "slug": "suzuki"
+  },
+  {
+    "name": "Lancia",
+    "slug": "lancia"
+  },
+  {
+    "name": "Honda",
+    "slug": "honda"
+  },
+  {
+    "name": "Mahindra",
+    "slug": "mahindra"
+  }
+] as const;
+
+// Supplied client artwork: Josam.ai, manufacturer logos on artboard 2.
+export const josamHomologations = [
+  {
+    "name": "Volvo",
+    "slug": "volvo"
+  },
+  {
+    "name": "Renault Trucks",
+    "slug": "renault-trucks"
+  },
+  {
+    "name": "Mercedes-Benz",
+    "slug": "mercedes-benz"
+  },
+  {
+    "name": "DAF",
+    "slug": "daf"
+  },
+  {
+    "name": "MAN",
+    "slug": "man"
+  },
+  {
+    "name": "IVECO",
+    "slug": "iveco"
+  },
+  {
+    "name": "Scania",
+    "slug": "scania"
+  }
+] as const;
