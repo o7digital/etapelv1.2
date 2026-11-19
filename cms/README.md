@@ -80,6 +80,8 @@ Références API : [authentification Directus](https://directus.com/docs/api/aut
 
 Le choix d’une photographie reste dans le formulaire : vérifier son aperçu puis enregistrer la fiche pour conserver le remplacement.
 
+Les fiches produit et famille proposent **Subir foto de portada** directement dans le formulaire. Les produits disposent aussi de **Subir fotos a la galería** : plusieurs fichiers peuvent être importés en une fois, avec leurs aperçus et leur sélection conservée jusqu’à **Guardar cambios**. Les autres champs saisis restent en place. La **Biblioteca de imágenes** accepte la sélection multiple et le glisser-déposer ; elle indique les fichiers réussis et les erreurs sans perdre les imports déjà terminés. Formats : JPG, PNG, WebP et AVIF, jusqu’à 25 Mo par photo. Les nouveaux fichiers sont disponibles dans la bibliothèque ; leur affectation à une fiche demande un enregistrement, puis **Publicar sitio** met les changements en ligne.
+
 Au premier montage du volume de médias Railway, son répertoire doit appartenir à l’utilisateur Directus `node` (UID/GID 1000). L’instance Etapel a été configurée ainsi ; conserver cette propriété lors d’une restauration. Le service Directus continue de fonctionner sans droits root.
 
 ## Traduction des pages et validation

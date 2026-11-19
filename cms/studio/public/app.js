@@ -3,7 +3,7 @@ import { locales, languagePath } from './language-routes.js';
 const $ = selector => document.querySelector(selector);
 const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[char]));
 const state = { content: {}, config: {}, locale: 'es', translationLocale: 'en', query: '', status: '', family: '', page: 1, editing: null, editorDirty: false, dirty: false, publishing: false, liveHash: null, version: 0, translating: false, translationHashes: {} };
-Object.assign(state, { editorMode:'visual', visualDrafts:{}, visualMediaDrafts:{}, visualPrefs:{device:'desktop'}, saving:false });
+Object.assign(state, { editorMode:'visual', visualDrafts:{}, visualMediaDrafts:{}, visualPrefs:{device:'desktop'}, saving:false, uploading:false });
 let visualEditor;
 const pages = [
   ['home','Inicio','/','/en','01'], ['about','Nosotros','/quienes-somos','/en/about-us','02'],
@@ -34,7 +34,7 @@ const paths = {
 };
 const icon = name => `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${paths[name] || paths.page}"/></svg>`;
 const number = value => new Intl.NumberFormat('es-MX').format(value);
-const hasUnsaved = () => state.dirty || state.editorDirty || state.translating || state.saving;
+const hasUnsaved = () => state.dirty || state.editorDirty || state.translating || state.saving || state.uploading;
 const textValue = row => state.visualDrafts[row.id] ?? (row.translation?.state==='pending' ? row.translation.value : row.value);
 function clearPageDrafts() { state.visualDrafts={};state.visualMediaDrafts={};state.dirty=false; }
 function setTextDraft(row,value) {
@@ -150,7 +150,7 @@ function renderCollection(view) {
 function renderMedia() {
   const filtered = collection('media').filter(row => `${row.title} ${row.page} ${row.source}`.toLowerCase().includes(state.query.toLowerCase()));
   const page = paginate(filtered);
-  return `${heading(titles.media,'Sustituye una fotografía en todos los lugares donde se utiliza.',button('＋ Subir fotografía','upload-media','button orange'))}<div class="list-toolbar"><span>${filtered.length} imágenes</span><label class="search"><span>Buscar</span><input id="collection-search" type="search" placeholder="Imagen, producto o página…" value="${escapeHtml(state.query)}"></label></div><div class="media-grid">${page.rows.map(row => `<article class="media-card"><div class="media-image"><img src="${escapeHtml(imageUrl(row))}" alt="${escapeHtml(row.title)}" loading="lazy">${row.file ? '<span class="badge published">Actualizada</span>' : ''}</div><div><b>${escapeHtml(row.title)}</b><small>${escapeHtml(row.page === '/' ? 'Inicio' : row.page)}</small><button class="edit-button" data-edit="${row.id}" data-collection="media">Cambiar imagen ↗</button></div></article>`).join('')}</div>${!filtered.length ? '<div class="empty">No se encontraron imágenes.</div>' : ''}${page.footer}`;
+  return `${heading(titles.media,'Sube tus fotografías y elígelas para las páginas, productos y familias.',button('↑ Subir fotos','upload-media','button orange'))}<div class="media-upload-zone" data-photo-dropzone><span class="upload-symbol" aria-hidden="true">↑</span><div><h2>Sube tus fotografías</h2><p>Elige varias fotos de tu equipo o arrástralas aquí.</p><small>JPG, PNG, WebP o AVIF · Hasta 25 MB por foto.</small></div>${button('Elegir fotos','upload-media','button orange')}</div><p id="media-upload-status" class="photo-upload-status" role="status" aria-live="polite"></p><div class="list-toolbar"><span>${filtered.length} imágenes</span><label class="search"><span>Buscar</span><input id="collection-search" type="search" placeholder="Imagen, producto o página…" value="${escapeHtml(state.query)}"></label></div><div class="media-grid">${page.rows.map(row => `<article class="media-card"><div class="media-image"><img src="${escapeHtml(imageUrl(row))}" alt="${escapeHtml(row.title)}" loading="lazy">${row.file ? '<span class="badge published">Actualizada</span>' : ''}</div><div><b>${escapeHtml(row.title)}</b><small>${escapeHtml(row.page === '/' ? 'Inicio' : row.page)}</small><button class="edit-button" data-edit="${row.id}" data-collection="media">Cambiar imagen ↗</button></div></article>`).join('')}</div>${!filtered.length ? '<div class="empty">No se encontraron imágenes.</div>' : ''}${page.footer}`;
 }
 function render() {
   visualEditor?.destroy();visualEditor=null;
@@ -194,13 +194,15 @@ async function enter() {
 function field(label, name, value, { type = 'text', rows, required = false, disabled = false, help = '' } = {}) {
   return `<label class="editable-field"><span class="field-heading">${label}<small>EDITABLE</small></span>${rows ? `<textarea name="${name}" rows="${rows}" ${required ? 'required' : ''}>${escapeHtml(value)}</textarea>` : `<input name="${name}" type="${type}" value="${escapeHtml(value)}" ${required ? 'required' : ''} ${disabled ? 'readonly' : ''}>`}${help ? `<small class="field-help">${help}</small>` : ''}</label>`;
 }
-function mediaSelector(path) { return `<label class="editable-field"><span class="field-heading">Fotografía de portada<small>EDITABLE</small></span><select name="image">${collection('media').map(row => `<option value="${escapeHtml(row.source)}" ${path === row.source ? 'selected' : ''}>${escapeHtml(row.title)}</option>`).join('')}</select><img class="editor-preview" id="editor-image-preview" src="${escapeHtml(imageFor(path))}" alt="Vista previa de la fotografía"><small class="field-help">Sube nuevas fotografías desde la biblioteca antes de elegirlas aquí.</small></label>`; }
+function mediaSelector(path) { return `<section class="photo-selector"><label class="editable-field"><span class="field-heading">Fotografía de portada<small>EDITABLE</small></span><select name="image">${path && !collection('media').some(row=>row.source===path) ? `<option value="${escapeHtml(path)}" selected>Fotografía actual</option>` : ''}${collection('media').map(row => `<option value="${escapeHtml(row.source)}" ${path === row.source ? 'selected' : ''}>${escapeHtml(row.title)}</option>`).join('')}</select></label><img class="editor-preview" id="editor-image-preview" src="${escapeHtml(imageFor(path))}" alt="Vista previa de la fotografía">${button('↑ Subir foto de portada','upload-cover','button orange')}<small class="field-help">Elige una imagen de tu equipo o de la biblioteca. JPG, PNG, WebP o AVIF · Hasta 25 MB por foto.</small></section>`; }
+function galleryOption(row, checked = false) { return `<label><input type="checkbox" name="gallery" value="${escapeHtml(row.source)}" ${checked ? 'checked' : ''}><img src="${escapeHtml(imageUrl(row))}" alt="" loading="lazy"><span>${escapeHtml(row.title)}</span></label>`; }
 function pairs(name, values, labels) {
   return `<section class="pair-section" data-pairs="${name}"><h3>${labels[0]}</h3><div class="pair-rows">${values.map(row => pairRow(row,labels)).join('')}</div><button class="button quiet" type="button" data-add-pair="${name}">＋ Añadir fila</button></section>`;
 }
 function pairRow(row = {}, labels) { return `<div class="pair-row"><input aria-label="${labels[1]}" placeholder="${labels[1]}" data-pair-key value="${escapeHtml(Object.values(row)[0] || '')}"><textarea aria-label="${labels[2]}" placeholder="${labels[2]}" data-pair-value rows="2">${escapeHtml(Object.values(row)[1] || '')}</textarea><button type="button" class="icon-button" data-remove-pair aria-label="Quitar fila">×</button></div>`; }
 const pairLabels = { specs:['Ficha técnica','Característica','Valor'], variants:['Variantes','Nombre','Detalle'], detailBlocks:['Bloques de detalle','Título','Descripción'], downloads:['Documentos y descargas','Título del documento','Enlace HTTPS'] };
 function edit(name, id = null) {
+  if(state.uploading){notify('Espera a que terminen de subir las fotografías.');return;}
   const row = id ? collection(name).find(r => r.id === id) : null;
   const family = collection('families').find(r => r.status === 'published')?.payload.slug;
   const defaults = name === 'products' ? { slug:'',name:'',brand:'ETAPEL',familySlug:family,category:'',technology:'',application:'',summary:'',description:'',summaryEn:'',descriptionEn:'',image:collection('media')[0]?.source,gallery:[],badges:[],specs:[],variants:[],highlights:[],detailBlocks:[],downloads:[] } : name === 'families' ? { slug:'',title:'',shortTitle:'',href:'',menuDescription:'',pageDescription:'',image:collection('media')[0]?.source,accent:'',items:[] } : { name:'',slug:'',note:'' };
@@ -211,13 +213,13 @@ function edit(name, id = null) {
   let html = '';
   if (name === 'media') html = `<img class="editor-preview large" src="${escapeHtml(imageUrl(row))}" alt="${escapeHtml(row.title)}">${field('Descripción de la imagen','title',row.title,{ required:true })}<p class="notice">Esta fotografía se utiliza en el sitio. Al cambiarla se actualizarán todos sus usos después de publicar.</p>${button('Elegir una nueva imagen','replace-image','button orange')}<p class="field-help">JPG, PNG, WebP o AVIF · Máximo 25 MB.</p><input name="file" type="hidden" value="${row.file || ''}">`;
   else if (name === 'products') {
-    html = `<div class="editor-grid">${field('Nombre del producto','name',p.name,{required:true})}${field('Marca','brand',p.brand,{required:true})}${field('Dirección del producto','slug',p.slug,{required:true,disabled:!!row,help:row ? 'Conservamos el enlace actual del producto.' : 'Minúsculas y guiones, por ejemplo: nueva-pistola-sata.'})}<label class="editable-field"><span class="field-heading">Familia<small>EDITABLE</small></span><select name="familySlug">${collection('families').filter(r=>r.status === 'published').map(r=>`<option value="${r.payload.slug}" ${r.payload.slug === p.familySlug ? 'selected' : ''}>${escapeHtml(r.payload.title)}</option>`).join('')}</select></label></div>${field('Resumen · Español','summary',p.summary,{rows:3,required:true})}${field('Descripción · Español','description',p.description,{rows:5,required:true})}<details class="editor-details"><summary>Versión inglesa</summary>${field('Summary · English','summaryEn',p.summaryEn || '',{rows:3})}${field('Description · English','descriptionEn',p.descriptionEn || '',{rows:5})}</details>${mediaSelector(p.image)}<details class="editor-details"><summary>Galería de fotografías</summary><p class="field-help">La portada se añade automáticamente como primera fotografía.</p><div class="gallery-options">${collection('media').map(r=>`<label><input type="checkbox" name="gallery" value="${escapeHtml(r.source)}" ${p.gallery.includes(r.source) ? 'checked' : ''}>${escapeHtml(r.title)}</label>`).join('')}</div></details><div class="editor-grid">${field('Categoría','category',p.category)}${field('Línea de catálogo','catalogLine',p.catalogLine || '')}${field('Tecnología','technology',p.technology)}${field('Aplicación','application',p.application)}</div><details class="editor-details"><summary>Organización y detalles del catálogo</summary><div class="editor-grid">${field('Sección','catalogSection',p.catalogSection || '')}${field('Sublínea','catalogSubline',p.catalogSubline || '')}${field('Orden en catálogo','catalogOrder',p.catalogOrder ?? 0,{type:'number'})}${field('Patrón de aplicación','sprayPattern',p.sprayPattern || '')}${field('Tecnología de boquilla','nozzleTechnology',p.nozzleTechnology || '')}${field('Interés','interest',p.interest || '')}</div>${field('Etiquetas · una por línea','badges',(p.badges || []).join('\n'),{rows:3})}${field('Refacciones · una por línea','spareParts',(p.spareParts || []).join('\n'),{rows:3})}${field('Mensajes de galería · uno por línea','highlightSlides',(p.highlightSlides || []).join('\n'),{rows:3})}${field('Página del fabricante','sourceUrl',p.sourceUrl || '',{type:'url'})}</details>${field('Puntos destacados · uno por línea','highlights',p.highlights.join('\n'),{rows:4})}${pairs('specs',p.specs,pairLabels.specs)}${pairs('variants',p.variants,pairLabels.variants)}${pairs('detailBlocks',p.detailBlocks,pairLabels.detailBlocks)}${pairs('downloads',(p.downloads||[]).filter(d=>typeof d !== 'string').map(d=>({label:d.label,url:d.url})),pairLabels.downloads)}`;
+    html = `<div class="editor-grid">${field('Nombre del producto','name',p.name,{required:true})}${field('Marca','brand',p.brand,{required:true})}${field('Dirección del producto','slug',p.slug,{required:true,disabled:!!row,help:row ? 'Conservamos el enlace actual del producto.' : 'Minúsculas y guiones, por ejemplo: nueva-pistola-sata.'})}<label class="editable-field"><span class="field-heading">Familia<small>EDITABLE</small></span><select name="familySlug">${collection('families').filter(r=>r.status === 'published').map(r=>`<option value="${r.payload.slug}" ${r.payload.slug === p.familySlug ? 'selected' : ''}>${escapeHtml(r.payload.title)}</option>`).join('')}</select></label></div>${field('Resumen · Español','summary',p.summary,{rows:3,required:true})}${field('Descripción · Español','description',p.description,{rows:5,required:true})}<details class="editor-details"><summary>Versión inglesa</summary>${field('Summary · English','summaryEn',p.summaryEn || '',{rows:3})}${field('Description · English','descriptionEn',p.descriptionEn || '',{rows:5})}</details>${mediaSelector(p.image)}<details class="editor-details" data-photo-gallery open><summary>Galería de fotografías</summary>${button('↑ Subir fotos a la galería','upload-gallery','button orange')}<p class="field-help">Puedes subir varias fotos a la vez. La portada se añade como primera fotografía. Guarda la ficha para conservar la selección.</p><div class="gallery-options">${collection('media').map(row=>galleryOption(row,p.gallery.includes(row.source))).join('')}</div></details><div class="editor-grid">${field('Categoría','category',p.category)}${field('Línea de catálogo','catalogLine',p.catalogLine || '')}${field('Tecnología','technology',p.technology)}${field('Aplicación','application',p.application)}</div><details class="editor-details"><summary>Organización y detalles del catálogo</summary><div class="editor-grid">${field('Sección','catalogSection',p.catalogSection || '')}${field('Sublínea','catalogSubline',p.catalogSubline || '')}${field('Orden en catálogo','catalogOrder',p.catalogOrder ?? 0,{type:'number'})}${field('Patrón de aplicación','sprayPattern',p.sprayPattern || '')}${field('Tecnología de boquilla','nozzleTechnology',p.nozzleTechnology || '')}${field('Interés','interest',p.interest || '')}</div>${field('Etiquetas · una por línea','badges',(p.badges || []).join('\n'),{rows:3})}${field('Refacciones · una por línea','spareParts',(p.spareParts || []).join('\n'),{rows:3})}${field('Mensajes de galería · uno por línea','highlightSlides',(p.highlightSlides || []).join('\n'),{rows:3})}${field('Página del fabricante','sourceUrl',p.sourceUrl || '',{type:'url'})}</details>${field('Puntos destacados · uno por línea','highlights',p.highlights.join('\n'),{rows:4})}${pairs('specs',p.specs,pairLabels.specs)}${pairs('variants',p.variants,pairLabels.variants)}${pairs('detailBlocks',p.detailBlocks,pairLabels.detailBlocks)}${pairs('downloads',(p.downloads||[]).filter(d=>typeof d !== 'string').map(d=>({label:d.label,url:d.url})),pairLabels.downloads)}`;
   } else if (name === 'families') html = `${field('Nombre de la familia','title',p.title,{required:true})}${field('Nombre corto','shortTitle',p.shortTitle,{required:true})}${field('Dirección de la familia','slug',p.slug,{required:true,disabled:!!row})}${field('Descripción en el menú','menuDescription',p.menuDescription,{rows:3})}${field('Descripción de la página','pageDescription',p.pageDescription,{rows:4})}${mediaSelector(p.image)}${field('Especialidades · una por línea','items',p.items.join('\n'),{rows:5})}`;
   else html = `${field('Nombre de la marca','name',p.name,{required:true})}${field('Identificador','slug',p.slug,{required:true,disabled:!!row})}${field('Texto complementario','note',p.note || '')}`;
   if (name !== 'media') html += `<div class="editor-grid"><label class="editable-field"><span class="field-heading">Estado<small>EDITABLE</small></span><select name="status">${[['draft','Borrador'],['published','Publicado'],['archived','Archivado']].map(([v,l])=>`<option value="${v}" ${(row?.status || 'draft') === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label>${field('Orden de aparición','sort',row?.sort ?? collection(name).length,{type:'number'})}</div><p class="notice">Guardar conserva tu ficha en el Studio. «Publicar sitio» actualiza la web. Las fichas en borrador o archivadas no se incluyen.</p>`;
-  $('#editor-fields').innerHTML = html; $('#editor-error').textContent = ''; $('#editor').showModal();
+  $('#editor-fields').innerHTML = html; $('#editor-error').textContent = ''; $('#editor-photo-status').textContent = ''; $('#editor').showModal();
 }
-function closeEditor(force = false) { if (!force && state.editorDirty && !confirm('Tienes cambios sin guardar. ¿Quieres cerrar la ficha?')) return; $('#editor').close(); state.editing = null; state.editorDirty = false; }
+function closeEditor(force = false) { if(state.uploading){notify('Espera a que terminen de subir las fotografías.');return;} if (!force && state.editorDirty && !confirm('Tienes cambios sin guardar. ¿Quieres cerrar la ficha?')) return; $('#editor').close(); state.editing = null; state.editorDirty = false; }
 function lines(value) { return String(value || '').split('\n').map(v=>v.trim()).filter(Boolean); }
 async function saveRecord(name,row,values) {
   const saved = await request(`/api/records/etapel_${name}${row ? '/' + row.id : ''}`, { method:row ? 'PATCH' : 'POST', body:JSON.stringify({ ...values, revision:row?.revision || 0 }) });
@@ -231,9 +233,9 @@ $('#login-form').addEventListener('submit', async event => {
   try { const form = new FormData(formElement); await request('/api/login',{method:'POST',body:JSON.stringify(Object.fromEntries(form))}); formElement.reset(); await enter(); }
   catch(error) { $('#login-error').textContent = error.message; } finally { submit.disabled = false; }
 });
-$('#logout').addEventListener('click',async()=>{if(hasUnsaved() && !confirm('Tienes cambios sin guardar. ¿Quieres salir?'))return;await request('/api/logout',{method:'POST',body:'{}'});state.content={};clearPageDrafts();visualEditor?.destroy();clearInterval(publicationTimer);$('#studio-view').hidden=true;$('#login-view').hidden=false;});
+$('#logout').addEventListener('click',async()=>{if(state.uploading){notify('Espera a que terminen de subir las fotografías.');return;}if(hasUnsaved() && !confirm('Tienes cambios sin guardar. ¿Quieres salir?'))return;await request('/api/logout',{method:'POST',body:'{}'});state.content={};clearPageDrafts();visualEditor?.destroy();clearInterval(publicationTimer);$('#studio-view').hidden=true;$('#login-view').hidden=false;});
 window.addEventListener('beforeunload',event=>{if(hasUnsaved()){event.preventDefault();event.returnValue='';}});
-window.addEventListener('hashchange',()=>{if(state.translating || state.saving){history.replaceState(null,'','#'+state.lastView);notify('La traducción sigue en curso. Espera a que termine.');return;}if(state.dirty && !confirm('Hay textos sin guardar. ¿Quieres cambiar de sección?')){history.replaceState(null,'','#'+state.lastView);return;}clearPageDrafts();state.translationError='';state.query='';state.status='';state.family='';state.page=1;state.lastView=currentView();setNav(false);render();});
+window.addEventListener('hashchange',()=>{if(state.translating || state.saving || state.uploading){history.replaceState(null,'','#'+state.lastView);notify(state.uploading ? 'Espera a que terminen de subir las fotografías.' : 'La traducción sigue en curso. Espera a que termine.');return;}if(state.dirty && !confirm('Hay textos sin guardar. ¿Quieres cambiar de sección?')){history.replaceState(null,'','#'+state.lastView);return;}clearPageDrafts();state.translationError='';state.query='';state.status='';state.family='';state.page=1;state.lastView=currentView();setNav(false);render();});
 function setNav(open) { $('#sidebar').classList.toggle('open',open); $('#nav-backdrop').hidden=!open; $('#mobile-menu').setAttribute('aria-expanded',String(open)); }
 $('#mobile-menu').onclick=()=>setNav(true);
 $('#nav-backdrop').onclick=()=>setNav(false);
@@ -246,7 +248,7 @@ $('#main').addEventListener('click',event=>{
   if(action==='publish-site'){if(!$('#publish').disabled)$('#publish').click();return;}
   if(action==='previous' || action==='next'){state.page+=action==='next'?1:-1;render();$('#main').focus({preventScroll:true});window.scrollTo({top:0,behavior:'instant'});return;}
   if(action==='new')return edit(({catalog:'products',families:'families',brands:'brands'})[currentView()]);
-  if(action==='upload-media'){state.uploadTarget=null;$('#image-upload').click();}
+  if(action==='upload-media')choosePhotos('library');
   const locale=event.target.closest('[data-locale]')?.dataset.locale;
   if(locale){if(state.translating){notify('Espera a que termine la traducción.');return;}if(state.dirty && !confirm('¿Cambiar de idioma sin guardar?'))return;if(!locales.some(item=>item.code===locale))return;if(currentView()==='catalog-pages')state.catalogPage=languagePath(state.catalogPage,locale);state.locale=locale;if(locale!=='es')state.translationLocale=locale;clearPageDrafts();render();}
 });
@@ -295,11 +297,14 @@ $('#editor').addEventListener('cancel',event=>{event.preventDefault();closeEdito
 $('#editor-fields').addEventListener('click',event=>{
   const add=event.target.closest('[data-add-pair]');if(add){state.editorDirty=true;const name=add.dataset.addPair;add.closest('[data-pairs]').querySelector('.pair-rows').insertAdjacentHTML('beforeend',pairRow({},pairLabels[name]));}
   if(event.target.closest('[data-remove-pair]')){state.editorDirty=true;event.target.closest('.pair-row').remove();}
-  if(event.target.closest('[data-action="replace-image"]')){state.uploadTarget=state.editing.row;$('#image-upload').click();}
+  const photoAction=event.target.closest('[data-action]')?.dataset.action;
+  if(photoAction==='replace-image')choosePhotos('replace');
+  if(photoAction==='upload-cover')choosePhotos('cover');
+  if(photoAction==='upload-gallery')choosePhotos('gallery');
 });
 $('#editor-fields').addEventListener('change',event=>{if(event.target.name==='image')$('#editor-image-preview').src=imageFor(event.target.value);});
 $('#editor-form').addEventListener('submit',async event=>{
-  event.preventDefault();const submit=event.target.querySelector('[type=submit]');submit.disabled=true;$('#editor-error').textContent='';
+  event.preventDefault();if(state.uploading){notify('Espera a que terminen de subir las fotografías.');return;}const submit=event.target.querySelector('[type=submit]');submit.disabled=true;$('#editor-error').textContent='';
   try{
     const {name,row,payload}=state.editing,form=new FormData(event.target),p=structuredClone(payload);let values;
     if(name==='media')values={title:form.get('title'),file:form.get('file')||null,status:'published'};
@@ -321,16 +326,85 @@ $('#editor-form').addEventListener('submit',async event=>{
   }catch(error){$('#editor-error').textContent=error.message;}finally{submit.disabled=false;}
 });
 $('#close-editor').onclick=()=>closeEditor();$('#cancel-editor').onclick=()=>closeEditor();
-$('#image-upload').addEventListener('change',async event=>{
-  const file=event.target.files[0];if(!file)return;
-  if(file.size>25*1024*1024){notify('El máximo es 25 MB por fotografía.');event.target.value='';return;}
-  notify('Subiendo fotografía…');
+function choosePhotos(kind) {
+  if(state.uploading){notify('Espera a que terminen de subir las fotografías.');return;}
+  if(kind!=='library' && (!state.editing || $('#editor-form [type=submit]').disabled))return;
+  state.uploadTarget={kind,editor:state.editing};
+  $('#image-upload').multiple=['library','gallery'].includes(kind);
+  $('#image-upload').click();
+}
+function photoStatus(message) {
+  const element=$('#editor').open ? $('#editor-photo-status') : $('#media-upload-status');
+  if(element)element.textContent=message;
+}
+function photoUploadBusy(active) {
+  state.uploading=active;
+  $('#editor').setAttribute('aria-busy',String(active));
+  document.querySelectorAll('[data-action="upload-media"],[data-action="upload-cover"],[data-action="upload-gallery"],[data-action="replace-image"],#editor-form [type=submit],#close-editor,#cancel-editor').forEach(button=>button.disabled=active);
+  $('#image-upload').disabled=active;
+}
+async function uploadSelection(selection,target) {
+  if(state.uploading || !selection.length)return;
+  if(target.kind!=='library' && (!target.editor || target.editor!==state.editing || !$('#editor').open))return;
+  const files=['cover','replace'].includes(target.kind) ? [...selection].slice(0,1) : [...selection];
+  if(target.kind==='gallery' || (target.kind==='cover' && state.editing?.name==='products')){
+    const form=new FormData($('#editor-form'));
+    const gallery=form.getAll('gallery'),selected=new Set([form.get('image'),...gallery].filter(Boolean));
+    const added=target.kind==='gallery' ? files.length : Number(gallery.includes(form.get('image')));
+    if(selected.size+added>100){const message='La galería admite hasta 100 fotos, incluida la portada. Quita alguna selección antes de subir más.';photoStatus(message);notify(message);return;}
+  }
+  photoUploadBusy(true);
+  let uploaded=0;
+  const errors=[];
   try{
-    const {id}=await request('/api/upload',{method:'POST',headers:{'Content-Type':file.type},body:file});
-    if(state.uploadTarget){state.editorDirty=true;$('#editor-form [name=file]').value=id;$('#editor-fields .editor-preview').src='/api/files/'+id;}
-    else{state.pending=true;state.version++;const saved=await request('/api/records/etapel_media',{method:'POST',body:JSON.stringify({title:file.name,file:id,status:'published',revision:0})});collection('media').push(saved);render();}
-    notify(state.uploadTarget?'Fotografía subida. Guarda la ficha para conservar el cambio.':'Fotografía añadida a la biblioteca.');
-  }catch(error){notify(error.message);}finally{event.target.value='';}
+    for(const [index,file]of files.entries()){
+      photoStatus(`Subiendo foto ${index+1} de ${files.length}: ${file.name}`);
+      try{
+        if(!['image/jpeg','image/png','image/webp','image/avif'].includes(file.type))throw new Error('Utiliza JPG, PNG, WebP o AVIF.');
+        if(!file.size || file.size>25*1024*1024)throw new Error(file.size ? 'El máximo es 25 MB por fotografía.' : 'El archivo está vacío.');
+        const {id}=await request('/api/upload',{method:'POST',headers:{'Content-Type':file.type},body:file});
+        if(target.kind==='replace'){
+          $('#editor-form [name=file]').value=id;
+          $('#editor-fields .editor-preview').src='/api/files/'+id;
+          state.editorDirty=true;
+        }else{
+          const saved=await saveRecord('media',null,{title:file.name.slice(0,500),file:id,status:'published'});
+          if(target.kind==='library'){
+            const rows=collection('media');rows.splice(rows.findIndex(row=>row.id===saved.id),1);rows.unshift(saved);
+          }else{
+            const select=$('#editor-form [name=image]');
+            select.add(new Option(saved.title,saved.source));
+            if(target.kind==='cover'){select.value=saved.source;$('#editor-image-preview').src=imageUrl(saved);}
+            const gallery=$('#editor-fields .gallery-options');
+            if(gallery){gallery.insertAdjacentHTML('beforeend',galleryOption(saved,target.kind==='gallery'));gallery.scrollTop=gallery.scrollHeight;}
+            state.editorDirty=true;
+          }
+        }
+        uploaded++;
+      }catch(error){errors.push(`${file.name}: ${error.message}`);}
+    }
+  }finally{photoUploadBusy(false);}
+  if(target.kind==='library'){state.query='';state.page=1;render();}
+  const summary=uploaded ? `${uploaded} foto${uploaded===1 ? '' : 's'} subida${uploaded===1 ? '' : 's'}. ${target.kind==='library' ? 'Ya puedes elegirlas desde las páginas y fichas.' : 'Guarda la ficha para conservar la selección.'}` : 'No se pudo subir ninguna fotografía.';
+  photoStatus([summary,...errors].join('\n'));
+  notify(errors.length ? `${summary} ${errors.length} archivo${errors.length===1 ? '' : 's'} sin subir. Revisa el detalle.` : summary);
+}
+$('#image-upload').addEventListener('change',event=>{
+  const files=[...event.target.files],target=state.uploadTarget || {kind:'library'};
+  event.target.value='';
+  uploadSelection(files,target);
+});
+$('#main').addEventListener('dragover',event=>{
+  const zone=event.target.closest('[data-photo-dropzone]');if(!zone)return;
+  event.preventDefault();event.dataTransfer.dropEffect='copy';zone.classList.add('dragging');
+});
+$('#main').addEventListener('dragleave',event=>{
+  const zone=event.target.closest('[data-photo-dropzone]');if(zone && !zone.contains(event.relatedTarget))zone.classList.remove('dragging');
+});
+$('#main').addEventListener('drop',event=>{
+  const zone=event.target.closest('[data-photo-dropzone]');if(!zone)return;
+  event.preventDefault();zone.classList.remove('dragging');
+  uploadSelection([...event.dataTransfer.files],{kind:'library'});
 });
 function setPublishing(active) {
   state.publishing=active;
