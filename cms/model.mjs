@@ -27,10 +27,11 @@ export function validateRecord(collection, input, previous) {
     if (collection === 'etapel_products') {
       if (!slug(p.slug) || !slug(p.familySlug)) throw new StudioError(400, 'La dirección o la familia del producto no es válida.');
       if (previous && p.slug !== previous.payload.slug) throw new StudioError(400, 'La dirección de un producto existente se conserva para mantener sus enlaces.');
-      const strings = ['slug','brand','familySlug','category','technology','application','name','summary','summaryEn','descriptionEn','description','image','catalogSection','catalogLine','catalogSubline','sprayPattern','nozzleTechnology','interest','sourceUrl'];
+      const strings = ['slug','brand','familySlug','category','technology','application','name','summary','summaryEn','descriptionEn','description','image','catalogSection','catalogLine','catalogSubline','catalogParentSlug','sprayPattern','nozzleTechnology','interest','sourceUrl'];
       const arrays = ['gallery','badges','specs','variants','optionGroups','highlights','highlightSlides','detailBlocks','downloads','spareParts'];
       if (Object.keys(p).some(key => ![...strings, ...arrays, 'catalogOrder', 'catalogVisible'].includes(key))) throw new StudioError(400, 'Campo de producto no permitido.');
       if (p.catalogVisible !== undefined && typeof p.catalogVisible !== 'boolean') throw new StudioError(400, 'Selecciona una visibilidad de catálogo válida.');
+      if (p.catalogParentSlug && (!slug(p.catalogParentSlug) || p.catalogParentSlug === p.slug)) throw new StudioError(400, 'Selecciona una colección de modelos válida.');
       for (const key of strings) if (p[key] !== undefined && !string(p[key])) throw new StudioError(400, `Revisa ${key}.`);
       for (const key of arrays) if (p[key] !== undefined && (!Array.isArray(p[key]) || p[key].length > 100)) throw new StudioError(400, `Revisa ${key}.`);
       for (const key of ['badges','highlights','highlightSlides','spareParts','gallery']) if (p[key]?.some(value => !string(value, 4000))) throw new StudioError(400, `Revisa ${key}.`);
@@ -53,4 +54,20 @@ export function validateRecord(collection, input, previous) {
     }
   }
   return { ...input, revision: (previous?.revision || 0) + 1 };
+}
+
+export function validateProductGrouping(payload, status, products) {
+  const line = product => product.catalogLine || product.category;
+  if (payload.catalogParentSlug && status === 'published') {
+    const parent = products.find(row => row.payload.slug === payload.catalogParentSlug);
+    if (!parent || parent.status !== 'published' || parent.payload.catalogVisible === false || parent.payload.catalogParentSlug ||
+      parent.payload.slug === payload.slug || parent.payload.familySlug !== payload.familySlug || line(parent.payload) !== line(payload)) {
+      throw new StudioError(400, 'Selecciona una colección publicada de la misma familia y línea. Una colección no puede estar dentro de otra.');
+    }
+  }
+  const children = products.filter(row => row.status === 'published' && row.payload.catalogParentSlug === payload.slug);
+  if (children.length && (status !== 'published' || payload.catalogVisible === false || payload.catalogParentSlug ||
+    children.some(row => row.payload.familySlug !== payload.familySlug || line(row.payload) !== line(payload)))) {
+    throw new StudioError(400, 'Esta colección contiene modelos publicados. Reasígnalos antes de ocultarla, archivarla o cambiar su familia y línea.');
+  }
 }

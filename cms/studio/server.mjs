@@ -2,7 +2,7 @@ import http from 'node:http';
 import { createCipheriv, createDecipheriv, createHash, randomBytes } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
-import { collections, contentHash, validateRecord, StudioError } from '../model.mjs';
+import { collections, contentHash, validateRecord, validateProductGrouping, StudioError } from '../model.mjs';
 import { pageContext, translationHash, translatePage, approvalWrites } from '../translations.mjs';
 import { previewPath, previewDocument } from './preview.mjs';
 
@@ -167,6 +167,7 @@ export function createStudioServer(options = {}) {
         if (collection === 'etapel_products') {
           const families = await all('etapel_families', s.access);
           if (!families.some(r => r.payload.slug === valid.payload.familySlug && r.status === 'published')) throw new StudioError(400, 'Selecciona una familia publicada.');
+          validateProductGrouping(valid.payload, valid.status, await all('etapel_products', s.access));
         }
         if (!id && collection === 'etapel_media') {
           if (!valid.file) throw new StudioError(400, 'Sube una fotografía primero.');
