@@ -99,7 +99,8 @@ export function localizeDocument(html, route, localeCode, catalog, { missing = n
   function walk(node, languagePicker = false) {
     languagePicker ||= attr(node, 'data-language-picker') !== undefined;
     if (attr(node, 'data-seo-keywords') !== undefined) {
-      const keywords = seoKeywords(languagePath(route, locale.code), locale.code);
+      const product = attr(node, 'data-seo-product');
+      const keywords = seoKeywords(languagePath(route, locale.code), locale.code, product ? JSON.parse(product) : undefined);
       if (node.tagName === 'meta') setAttr(node, 'content', keywords.join(', '));
       else node.childNodes = [{ nodeName: '#text', value: keywords.join(' · '), parentNode: node }];
     }

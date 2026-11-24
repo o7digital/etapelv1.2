@@ -1,11 +1,28 @@
 import { parse, serialize } from 'parse5';
 import { createHash } from 'node:crypto';
 import { pathLocale } from './studio/public/language-routes.js';
+import { isLegacySeoKeywords } from '../src/lib/keywords.mjs';
 
 export const stableId = value => createHash('sha256').update(`etapel:${value}`).digest('hex').slice(0, 40);
 const blocked = new Set(['script', 'style', 'noscript', 'svg', 'option', 'select']);
 const attr = (node, name) => node.attrs?.find(item => item.name === name)?.value;
 const clean = value => value.replace(/\s+/g, ' ').trim();
+// Retire only the exact seeded defaults on these two general pages. Keep
+// deliberate editorial overrides and all painting/product page titles intact.
+const retiredSeoDefaults = {
+  '/': {
+    title: 'Etapel | Tecnología para automotriz, industria y transporte',
+    description: 'Etapel ofrece soluciones integrales para talleres automotrices, centros de colisión, industria y transporte pesado: equipamiento, capacitación y servicio técnico.',
+  },
+  '/linea-de-producto': {
+    title: 'Línea de Producto para taller automotriz CDMX | Etapel',
+    description: 'Explora líneas de producto Etapel para taller automotriz: pintura, cabinas y preparación, soldadura, mecánica y productos SATA con asesoría especializada.',
+  },
+};
+const isRetiredSeoDefault = (route, key, value) => {
+  const previous = retiredSeoDefaults[route]?.[key.replace(/^og:/, '')];
+  return previous !== undefined && value === previous;
+};
 const sharedScope = (node, route) => {
   for (let parent = node.parentNode; parent; parent = parent.parentNode) {
     if (parent.tagName === 'header') return `${pathLocale(route)}:navigation`;
@@ -60,13 +77,15 @@ export function processDocument(html, route, overrides = new Map(), { preview = 
       if (content) {
         const id = stableId(`${route}:meta:${attr(node, 'name') || attr(node, 'property')}`);
         fields.set(id, { id, page: route, locale, section: 'SEO', label: attr(node, 'name') || attr(node, 'property'), source: content.value, value: content.value, kind: 'text', status: 'published', sort: fields.size });
-        if (overrides.has(id)) content.value = overrides.get(id);
+        const key = attr(node, 'name') || attr(node, 'property');
+        const value = overrides.get(id);
+        if (value !== undefined && !(keywordMeta && isLegacySeoKeywords(value, route)) && !isRetiredSeoDefault(route, key, value)) content.value = value;
       }
     }
     if (!ignored && node.tagName === 'title') {
       const source = textOf(node), id = stableId(`${route}:meta:title`);
       fields.set(id, { id, page:route, locale, section:'SEO', label:'Título en buscadores', source, value:source, kind:'text', status:'published', sort:fields.size });
-      if (overrides.has(id)) node.childNodes = [{ nodeName:'#text', value:overrides.get(id), parentNode:node }];
+      if (overrides.has(id) && !isRetiredSeoDefault(route, 'title', overrides.get(id))) node.childNodes = [{ nodeName:'#text', value:overrides.get(id), parentNode:node }];
     }
     // All local content images, including product galleries, share one media entry.
     for (const a of node.attrs || []) {

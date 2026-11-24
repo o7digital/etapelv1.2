@@ -59,3 +59,5 @@ export interface CatalogProduct {
   spareParts?: string[];
   sourceUrl?: string;
 }
+
+export type SeoKeywordProduct = Pick<CatalogProduct, 'name' | 'brand' | 'familySlug' | 'catalogLine' | 'catalogSubline'>;
