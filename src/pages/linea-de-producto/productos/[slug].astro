@@ -89,6 +89,7 @@ const relatedProducts = catalogProducts
   .sort((a, b) => Number(b.catalogLine === product.catalogLine) - Number(a.catalogLine === product.catalogLine))
   .slice(0, isOverview ? 12 : 4);
 const productDownloads = product.downloads || ['Ficha técnica', 'Manual de operación'];
+const keywordProduct = { name: product.name, brand: product.brand, familySlug: product.familySlug, catalogLine: product.catalogLine, catalogSubline: product.catalogSubline };
 const getDownloadLabel = (download: string | ProductDownload) => typeof download === 'string' ? download : download.label;
 const getDownloadHref = (download: string | ProductDownload) => typeof download === 'string' ? '/contacto' : download.url;
 const isLinkedDownload = (download: string | ProductDownload) => typeof download !== 'string';
@@ -111,7 +112,7 @@ const structuredData = [{
 }];
 ---
 
-<SiteLayout title={`${product.name} | ${en ? 'Etapel Catalog' : 'Catálogo Etapel'}`} description={displaySummary} lang={lang} image={product.image} breadcrumbs={breadcrumbs} structuredData={structuredData}>
+<SiteLayout title={`${product.name} | ${en ? 'Etapel Catalog' : 'Catálogo Etapel'}`} description={displaySummary} lang={lang} image={product.image} breadcrumbs={breadcrumbs} structuredData={structuredData} keywordProduct={keywordProduct}>
   <main data-product-detail>
     <div hidden data-highlight-slides>{displaySlides.map(slide => <span data-highlight-slide>{slide}</span>)}</div>
     <section class="page-hero">

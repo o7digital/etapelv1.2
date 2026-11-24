@@ -75,11 +75,11 @@ test('generated languages render their own keywords in source metadata and the v
     assert.equal(missing.size, 0, locale);
     assert(metadata.includes(expected), locale);
     assert.deepEqual(metadata.split(', '), footer.childNodes[0].value.split(' · '), locale);
-    assert.equal(metadata.split(', ').length, 18, locale);
+    assert.deepEqual(metadata.split(', '), seoKeywords('/en', locale), locale);
     assert(!metadata.includes('automotive paint Mexico City'), locale);
     const service = nodes(localizeDocument(source, '/en/after-sales', locale, dictionary));
     const serviceMetadata = attr(service.find(node => attr(node, 'name') === 'keywords'), 'content');
-    assert.equal(serviceMetadata.split(', ').length, 6, locale);
+    assert.deepEqual(serviceMetadata.split(', '), seoKeywords('/en/after-sales', locale), locale);
     assert.notEqual(serviceMetadata, metadata, locale);
   }
 });
@@ -87,9 +87,9 @@ test('generated languages render their own keywords in source metadata and the v
 test('Spanish and English keywords retain page intent and every supported route has localized terms', () => {
   assert.equal(seoKeywords('/')[0], 'pintura automotriz CDMX');
   assert.equal(seoKeywords('/en')[0], 'automotive paint Mexico City');
-  assert.equal(seoKeywords('/capacitacion')[0], 'capacitación automotriz CDMX');
-  assert.equal(seoKeywords('/en/training')[0], 'automotive training Mexico City');
-  assert.equal(seoKeywords('/fr/formation')[0], 'formation automobile Mexico');
+  assert.equal(seoKeywords('/capacitacion')[0], 'capacitación en pintura CDMX');
+  assert.equal(seoKeywords('/en/training')[0], 'paint training Mexico City');
+  assert.equal(seoKeywords('/fr/formation')[0], 'formation en peinture Mexico');
   for (const path of ['/de/produktlinien/pintura', '/it/linee-di-prodotto/prodotti/sata-jet-x', '/pt/contato', '/fr/politique-etapel']) {
     assert(seoKeywords(path).every(value => value.trim().length > 0), path);
     assert(!seoKeywords(path).some(value => value.includes('pintura automotriz CDMX')), path);
