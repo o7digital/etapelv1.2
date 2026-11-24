@@ -10,5 +10,4 @@ export const familyEnglish: Record<string, { short: string; title: string; descr
   'consumibles-de-hojalateria': { short: 'Bodywork consumables', title: 'Bodywork consumables', description: 'Fillers, sealants and tool consumables.' },
   'herramientas-de-hojalateria': { short: 'Bodywork tools', title: 'Bodywork tools', description: 'Pneumatic, hydraulic and manual tools.' },
   detallado: { short: 'Detailing', title: 'Detailing', description: 'Professional polishers and pads.' },
-  'lavadora-de-pistolas': { short: 'Spray-gun cleaners', title: 'Spray-gun cleaners', description: 'Professional spray-gun cleaning systems for waterborne and solvent-based paint.' },
 };

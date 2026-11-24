@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { localCatalogProducts } from '../src/data/products.ts';
-import { localProductFamilies } from '../src/data/productLines.ts';
+import { legacyFamilyRoutes, localProductFamilies } from '../src/data/productLines.ts';
 import { catalogLinesForFamily } from '../src/data/catalogHierarchy.ts';
 import { validateRecord } from '../cms/model.mjs';
 import { workbookAdditionalProducts, workbookProductPatches } from '../src/data/workbookProducts.ts';
@@ -37,21 +37,27 @@ test('starter navigation leads to products and ADAS uses the workbook brand', ()
   assert.ok(adas.downloads.some(d => typeof d === 'object' && d.url.includes('36537-EZ-ADAS')));
 });
 
-test('Drester cleaners belong to their dedicated published family and keep their technical resources', () => {
+test('Drester cleaners have a separate line within Paint & application and keep their technical resources', () => {
   const slugs = ['catalogo-drester-classic-1050', 'catalogo-drester-classic-3600'];
-  const family = localProductFamilies.find(family => family.slug === 'lavadora-de-pistolas');
-  assert.equal(family?.title, 'Lavadora de pistolas');
-  assert.equal(family?.href, '/linea-de-producto/lavadora-de-pistolas');
+  const family = localProductFamilies.find(family => family.slug === 'pintura-y-aplicacion');
+  assert.equal(family?.title, 'Pintura y Aplicación');
+  assert.ok(family?.items.includes('Lavadora de pistolas'));
+  assert.ok(!localProductFamilies.some(family => family.slug === 'lavadora-de-pistolas'));
+  assert.equal(legacyFamilyRoutes['lavadora-de-pistolas'], family.slug);
   assert.doesNotThrow(() => validateRecord('etapel_families', { payload: family, status: 'published' }, null));
   const lines = catalogLinesForFamily(family.slug);
-  assert.equal(lines.length, 1);
-  assert.deepEqual(lines[0].sublines.map(row => row.name), ['Drester Classic 1050', 'Drester Classic 3600']);
-  assert.deepEqual(localCatalogProducts.filter(product => product.familySlug === family.slug).map(product => product.slug), slugs);
+  const line = lines.find(line => line.name === 'Lavadora de pistolas');
+  assert.ok(line);
+  assert.equal(lines.indexOf(line), lines.findIndex(line => line.name === 'Accesorios pistolas') + 1);
+  assert.deepEqual(line.sublines.map(row => row.name), ['Drester Classic 1050', 'Drester Classic 3600']);
+  assert.deepEqual(localCatalogProducts.filter(product => product.familySlug === family.slug && product.catalogLine === line.name).map(product => product.slug), slugs);
   for (const slug of slugs) {
     const product = localCatalogProducts.find(p => p.slug === slug);
     assert.ok(product, `${slug}: technical page remains available`);
     assert.ok(product.gallery.length && product.downloads?.length);
     assert.equal(product.catalogVisible, true);
+    assert.equal(product.familySlug, family.slug);
+    assert.equal(product.catalogSection, family.title);
     assert.equal(product.catalogLine, 'Lavadora de pistolas');
     assert.equal(product.catalogSubline, product.name);
     for (const catalogVisible of [false, true]) {

@@ -52,6 +52,7 @@ export const catalogHierarchy: CatalogLineDefinition[] = [
   { familySlug: 'pintura', section: 'Pintura y Aplicación', sectionEn: 'Paint & application', name: 'Pistolas para pintar', nameEn: 'Paint spray guns', sublines: children(['Pistolas de gravedad', 'Gravity-feed spray guns'], ['Pistolas de olla de presión', 'Pressure-feed spray guns'], ['Pistolas aerográficas', 'Airbrush spray guns'], ['Pistolas de vaso inferior', 'Siphon-feed spray guns'], ['Pistolas para robot', 'Automatic spray guns']) },
   { familySlug: 'pintura', section: 'Pintura y Aplicación', sectionEn: 'Paint & application', name: 'Buscador de refacciones SATA', nameEn: 'SATA spare-parts finder', sublines: [], externalHref: 'https://www.sata.com/es/servicio/buscador-de-recambios/' },
   { familySlug: 'pintura', section: 'Pintura y Aplicación', sectionEn: 'Paint & application', name: 'Accesorios pistolas', nameEn: 'Spray gun accessories', sublines: children(['Adam', 'Adam'], ['Sistemas de depósito', 'Cup systems']) },
+  { familySlug: 'pintura', section: 'Pintura y Aplicación', sectionEn: 'Paint & application', name: 'Lavadora de pistolas', nameEn: 'Spray-gun cleaners', sublines: children(['Drester Classic 1050', 'Drester Classic 1050'], ['Drester Classic 3600', 'Drester Classic 3600']) },
   { familySlug: 'pintura', section: 'Pintura y Aplicación', sectionEn: 'Paint & application', name: 'Protección respiratoria', nameEn: 'Respiratory protection', sublines: children(['SATA air vision 5000', 'SATA air vision 5000'], ['Air star F 2.0', 'Air star F 2.0'], ['Air star C', 'Air star C'], ['Air star F', 'Air star F']) },
   { familySlug: 'pintura', section: 'Pintura y Aplicación', sectionEn: 'Paint & application', name: 'Tecnología de filtros y aire comprimido', nameEn: 'Filtration and compressed air', sublines: children(['Filtros SATA', 'SATA filters'], ['Filtros para cabina', 'Spray-booth filters'], ['Prevost', 'Prevost']) },
   { familySlug: 'pintura', section: 'Pintura', sectionEn: 'Paint', name: 'PPG automotriz', nameEn: 'PPG automotive coatings', sublines: children(['Deltron', 'Deltron'], ['Autolux', 'Autolux'], ['Envirobase', 'Envirobase']) },
@@ -67,7 +68,6 @@ export const catalogHierarchy: CatalogLineDefinition[] = [
   { familySlug: 'consumibles', section: 'Consumibles de hojalatería', sectionEn: 'Bodywork consumables', name: 'Masillas y rellenadores', nameEn: 'Putties and fillers', sublines: children(['Poly-Flex', 'Poly-Flex'], ['RAGE OPTEX Gallon', 'RAGE OPTEX Gallon'], ['Lite Weight Optex Gallon', 'Lite Weight Optex Gallon'], ['Z-Grip Optex Gallon', 'Z-Grip Optex Gallon'], ['Spot-Lite', 'Spot-Lite'], ['Everglaze, tubo rojo de 1 lb', 'Everglaze, 1 lb red tube']) },
   { familySlug: 'consumibles', section: 'Consumibles de hojalatería', sectionEn: 'Bodywork consumables', name: 'Antipiedras y selladores', nameEn: 'Undercoatings and sealants', sublines: children(['Undercoating M80 repintable', 'Repaintable M80 undercoating'], ['Sellador autoadherible antirruido', 'Self-adhesive sound-deadening pad'], ['Masilla para carrocería (sellador gris)', 'Body sealant (gray)']) },
   { familySlug: 'consumibles', section: 'Consumibles de hojalatería', sectionEn: 'Bodywork consumables', name: 'Consumibles herramientas', nameEn: 'Tool consumables', sublines: children(['Arandelas 8 × 16 mm', '8 × 16 mm washers'], ['Lápiz de carbón', 'Carbon rod'], ['Alambre ondulado', 'Corrugated wire'], ['Anillos de tiro retorcidos', 'Twisted pulling rings'], ['Anillos de tiro rectos', 'Straight pulling rings'], ['Estrellas tiraclavos', 'Dent-pulling stars'], ['Microalambre de acero 0.6 mm', '0.6 mm steel welding wire'], ['Broca de 8 mm', '8 mm drill bit'], ['Segueta de 24 dientes', '24-tooth saw blade']) },
-  { familySlug: 'lavadora-de-pistolas', section: 'Lavadora de pistolas', sectionEn: 'Spray-gun cleaners', name: 'Lavadora de pistolas', nameEn: 'Spray-gun cleaners', sublines: children(['Drester Classic 1050', 'Drester Classic 1050'], ['Drester Classic 3600', 'Drester Classic 3600']) },
 ];
 
 const normalize = (value: string) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().replace(/\s+/g, ' ').toLowerCase();
@@ -89,7 +89,6 @@ const familySlugForSection = (section: string) => ({
   [normalize('Consumibles de hojalatería')]: 'consumibles-de-hojalateria',
   [normalize('Herramientas de hojalatería')]: 'herramientas-de-hojalateria',
   [normalize('Detallado')]: 'detallado',
-  [normalize('Lavadora de pistolas')]: 'lavadora-de-pistolas',
 }[normalize(section)] || 'pintura-y-aplicacion');
 
 const aliases: Record<string, string> = {
@@ -194,7 +193,7 @@ export const catalogPlacementFor = (product: CatalogProduct) => {
 };
 
 const workbookLineOrder: Record<string, string[]> = {
-  'pintura-y-aplicacion': ['Pistolas para pintar', 'Buscador de refacciones SATA', 'Accesorios pistolas', 'Cabinas de pintura', 'Zonas de preparación', 'Protección respiratoria', 'Tecnología de filtros y aire comprimido', 'Lámparas infrarrojas'],
+  'pintura-y-aplicacion': ['Pistolas para pintar', 'Buscador de refacciones SATA', 'Accesorios pistolas', 'Lavadora de pistolas', 'Cabinas de pintura', 'Zonas de preparación', 'Protección respiratoria', 'Tecnología de filtros y aire comprimido', 'Lámparas infrarrojas'],
   'preparacion-y-acabado': ['Sistemas de lijado', 'Sistema de pulido'],
   'enderezado-de-carroceria': ['Bancos de enderezado autos y SUV', 'Equipos de medición', 'Accesorios Car-O-Liner', 'Alineación y enderezado de vehículos pesados'],
   'desabollado-de-carroceria': ['Desabollo de carrocería auto y SUV', 'Desabollo de carrocería de vehículos pesados', 'Reparación de plásticos'],
@@ -205,7 +204,6 @@ const workbookLineOrder: Record<string, string[]> = {
   'consumibles-de-hojalateria': ['Masillas y rellenadores', 'Antipiedras y selladores', 'Consumibles herramientas'],
   'herramientas-de-hojalateria': ['Neumáticas', 'Herramientas manuales'],
   detallado: ['Pulidoras'],
-  'lavadora-de-pistolas': ['Lavadora de pistolas']
 };
 
 export const catalogLinesForFamily = (familySlug: string) => {

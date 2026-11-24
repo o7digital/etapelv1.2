@@ -25,7 +25,7 @@ const family = (slug: string, title: string, description: string, image: string,
 
 /** Familias dans l'ordre exact de la colonne B du fichier client. */
 export const localProductFamilies: ProductFamily[] = [
-  family('pintura-y-aplicacion', 'Pintura y Aplicación', 'Equipos, sistemas y accesorios para la aplicación profesional de pintura.', '/images/products/sata/jet-x/1200394-main.webp', ['Pistolas para pintar', 'Cabinas de pintura', 'Zonas de preparación', 'Protección respiratoria', 'Filtros y aire comprimido']),
+  family('pintura-y-aplicacion', 'Pintura y Aplicación', 'Equipos, sistemas y accesorios para la aplicación profesional de pintura.', '/images/products/sata/jet-x/1200394-main.webp', ['Pistolas para pintar', 'Lavadora de pistolas', 'Cabinas de pintura', 'Zonas de preparación', 'Protección respiratoria', 'Filtros y aire comprimido']),
   family('preparacion-y-acabado', 'Preparación y acabado', 'Sistemas profesionales de lijado, aspiración, pulido y acabado.', '/images/products/client-catalog/lijadora-neumatica-de-palma-orbital-aleatoria-con-plato-de-12-mm-y-orbita-de-3mm-skorpioiii.webp', ['Sistemas de lijado', 'Sistema de pulido']),
   family('enderezado-de-carroceria', 'Enderezado de carrocería', 'Equipos de enderezado, medición y alineación para automóviles y vehículos pesados.', '/images/products/client-catalog/benchracktm-versa.webp', ['Bancos de enderezado', 'Equipos de medición', 'Accesorios Car-O-Liner', 'Vehículos pesados']),
   family('desabollado-de-carroceria', 'Desabollo de carrocería', 'Soluciones de desabollo, soldadura, tracción y reparación de plásticos.', '/images/products/client-catalog/gyspot-3902.webp', ['Automóviles y SUV', 'Vehículos pesados', 'Reparación de plásticos']),
@@ -35,13 +35,13 @@ export const localProductFamilies: ProductFamily[] = [
   family('consumibles-de-pintura', 'Consumibles de pintura', 'Abrasivos, enmascarado, pulimento, protección personal y consumibles de aplicación.', '/images/products/client-catalog/cinta-de-enmascarar-premium.webp', ['Lijas', 'Enmascarado', 'Pulimento', 'Seguridad personal', 'Otros']),
   family('consumibles-de-hojalateria', 'Consumibles de hojalatería', 'Masillas, selladores y consumibles para herramientas de reparación de carrocería.', '/images/products/client-catalog/undercoating-m80-repaintable.webp', ['Masillas y rellenadores', 'Antipiedras y selladores', 'Consumibles herramientas']),
   family('herramientas-de-hojalateria', 'Herramientas de hojalatería', 'Herramientas neumáticas, hidráulicas y manuales para trabajos de carrocería.', '/images/products/client-catalog/33500-1-air-spot-drill-with-hook.webp', ['Neumáticas', 'Herramientas manuales']),
-  family('detallado', 'Detallado', 'Pulidoras y borlas profesionales para corrección y acabado de superficies.', '/images/products/verified/catalogo-orbital-polisher-eb350-5-9-shinemate-global.webp', ['Pulidoras', 'Borlas']),
-  family('lavadora-de-pistolas', 'Lavadora de pistolas', 'Lavadoras profesionales de pistolas para pinturas base agua y base solvente.', '/images/products/client-catalog/drester-classic-1050.webp', ['Drester Classic 1050', 'Drester Classic 3600'])
+  family('detallado', 'Detallado', 'Pulidoras y borlas profesionales para corrección y acabado de superficies.', '/images/products/verified/catalogo-orbital-polisher-eb350-5-9-shinemate-global.webp', ['Pulidoras', 'Borlas'])
 ];
 
 export const productFamilies: ProductFamily[] = cmsCollection('etapel_families', localProductFamilies);
 
 export const legacyFamilyRoutes: Record<string, string> = {
+  'lavadora-de-pistolas': 'pintura-y-aplicacion',
   'equipo-mayor': 'enderezado-de-carroceria',
   'equipo-menor': 'desabollado-de-carroceria',
   consumibles: 'consumibles-de-pintura',
