@@ -70,8 +70,24 @@ test('Drester cleaners have a separate line within Paint & application and keep 
     assert.throws(() => validateRecord('etapel_products', { payload: { ...product, catalogVisible: 'false' }, status: 'published' }, null));
   }
   const accessories = localCatalogProducts.filter(p => p.catalogLine === 'Accesorios pistolas');
-  assert.equal(accessories.length, 10);
+  assert.equal(accessories.length, 13);
   assert.ok(accessories.every(product => !slugs.includes(product.slug)));
+});
+
+test('the three SATA ADAM devices have distinct photos and belong to spray-gun accessories', () => {
+  const slugs = ['sata-adam-2', 'sata-adam-x', 'sata-adam-x-pro'];
+  const products = slugs.map(slug => localCatalogProducts.find(product => product.slug === slug));
+  assert.ok(products.every(Boolean));
+  assert.equal(new Set(products.map(product => product.image)).size, 3);
+  for (const product of products) {
+    assert.equal(product.familySlug, 'pintura-y-aplicacion');
+    assert.equal(product.catalogLine, 'Accesorios pistolas');
+    assert.equal(product.catalogSubline, 'Adam');
+    assert.ok(product.downloads.some(download => typeof download === 'object' && download.url.includes('.PDF')));
+    assert.doesNotThrow(() => validateRecord('etapel_products', { payload: product, status: 'published', sort: 0 }, null));
+  }
+  const adam = localCatalogProducts.filter(product => product.catalogSubline === 'Adam');
+  assert.deepEqual(adam.map(product => product.slug), slugs);
 });
 
 test('booth filters include ceiling media without supplier branding and CMS records remain valid', () => {

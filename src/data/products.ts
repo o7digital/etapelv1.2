@@ -1,5 +1,6 @@
 import { cmsCollection } from '../lib/cms.mjs';
 import { sataImportedProducts } from './sataImportedProducts.ts';
+import { sataAdamProducts } from './sataAdamProducts.ts';
 import { clientCatalogProducts } from './clientCatalogProducts.ts';
 import { catalogPlacementFor } from './catalogHierarchy.ts';
 import { workbookAdditionalProducts, applyWorkbookProductPatch } from './workbookProducts.ts';
@@ -645,6 +646,7 @@ const sourceCatalogProducts: CatalogProduct[] = [
       sourceUrl: product.sourceUrl
     };
   }),
+  ...sataAdamProducts,
   ...nonSataProducts,
   ...clientCatalogProducts,
   ...workbookAdditionalProducts
