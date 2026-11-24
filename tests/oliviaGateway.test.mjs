@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import http from 'node:http';
 import { Readable } from 'node:stream';
+import { createHash } from 'node:crypto';
 
 // Exercise the actual gateway handler without binding a port or calling a model.
 test('authenticated gateway selects POWERFUL while preserving legacy FAST requests', async t => {
@@ -18,6 +19,10 @@ test('authenticated gateway selects POWERFUL while preserving legacy FAST reques
   let upstreamEngine = 'openai';
   const models = { FAST: 'fast-test', POWERFUL: 'powerful-test' };
   globalThis.fetch = async (url, options = {}) => {
+    if (url === 'https://www.etapel.com/.well-known/etapel-knowledge.json') {
+      const documents = [{ path: '/', key: '/', locale: 'es', title: 'Etapel', text: 'Capacitación, soporte técnico y catálogo completo.' }];
+      return { ok: true, headers: new Headers(), text: async () => JSON.stringify({ version: 1, origin: 'https://www.etapel.com', hash: createHash('sha256').update(JSON.stringify(documents)).digest('hex'), documents }) };
+    }
     assert.ok(url.startsWith('http://etapel-olivia36:8093/'));
     if (url.endsWith('/health')) return { ok: true, json: async () => ({ status: 'ok', version: upstreamVersion, chat_models: models }) };
     const body = JSON.parse(options.body);
@@ -25,10 +30,11 @@ test('authenticated gateway selects POWERFUL while preserving legacy FAST reques
     assert.equal(options.headers['X-Tenant-ID'], 'etapel');
     assert.equal(options.headers.Authorization, 'Bearer internal-test-token');
     calls.push(body);
+    assert(body.message.length<=20000,'Olivia 3.6 ChatIn.message maxLength is 20000');
     return { ok: true, json: async () => ({ answer: 'Respuesta Etapel', conversation_id: 'a'.repeat(24), routing: upstreamRoutingOverride || body.routing, engine: upstreamEngine, model: models[body.routing] }) };
   };
   async function request(body, authorization = 'Bearer gateway-test-key') {
-    const req = Object.assign(Readable.from([JSON.stringify(body)]), { url: '/chat', method: 'POST', headers: { authorization, 'x-visitor-ip': 'gateway-test' } });
+    const req = Object.assign(Readable.from([JSON.stringify(body)]), { url: '/chat', method: 'POST', headers: { authorization, 'x-visitor-ip': 'gateway-test-'+(body.language || 'es') } });
     const res = { writeHead(status) { this.status = status; }, end(data) { this.data = JSON.parse(data); } };
     await handler(req, res);
     return res;
@@ -59,6 +65,18 @@ test('authenticated gateway selects POWERFUL while preserving legacy FAST reques
       assert.equal(calls.at(-1).routing, 'POWERFUL');
       assert.equal(calls.at(-1).conversation_id, 'a'.repeat(24));
       assert.ok(!JSON.stringify(followup.data).includes('internal-test-token'));
+    });
+    await t.test('requests the selected visitor language from the engine', async () => {
+      for (const [language,name] of [['de','German'],['it','Italian'],['fr','French'],['pt','Brazilian Portuguese']]) {
+        const res=await request({message:'Etapel',language,routing:'POWERFUL'});
+        assert.equal(res.status,200);
+        assert(calls.at(-1).message.includes(`The interface language is ${name};`));
+        assert(calls.at(-1).message.includes("Reply in the language of the visitor's latest message"));
+        assert.equal(res.data.knowledge.pages, 1);
+        assert.equal(res.data.sources[0].url, 'https://www.etapel.com/');
+      }
+      assert.equal((await request({message:'Etapel',language:'xx',routing:'POWERFUL'})).status,400);
+      assert.equal((await request({message:'Etapel',language:'it',page:'https://private.example',routing:'POWERFUL'})).status,400);
     });
     await t.test('does not label a weaker upstream response as POWERFUL', async () => {
       upstreamRoutingOverride = 'FAST';

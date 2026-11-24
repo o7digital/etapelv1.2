@@ -46,10 +46,10 @@ const brands = cmsCollection('etapel_brands', localBrands);
     </div>
     <div class="brand-marquee-window">
       <div class="brand-marquee-track">
-        <ul class="brand-marquee-group">
+        <ul class="brand-marquee-group" translate="no">
           {brands.map((brand) => <li><span class={`brand-logo brand-logo--${brand.slug}`} role="img" aria-label={brand.name}><span class="brand-logo-mark" aria-hidden="true"></span><span class="brand-logo-copy"><span class="brand-logo-name">{brand.name}</span>{brand.note && <span class="brand-logo-note">{brand.note}</span>}</span></span></li>)}
         </ul>
-        <ul class="brand-marquee-group" aria-hidden="true">
+        <ul class="brand-marquee-group" aria-hidden="true" translate="no">
           {brands.map((brand) => <li><span class={`brand-logo brand-logo--${brand.slug}`}><span class="brand-logo-mark"></span><span class="brand-logo-copy"><span class="brand-logo-name">{brand.name}</span>{brand.note && <span class="brand-logo-note">{brand.note}</span>}</span></span></li>)}
         </ul>
       </div>

@@ -29,7 +29,8 @@ export function validateRecord(collection, input, previous) {
       if (previous && p.slug !== previous.payload.slug) throw new StudioError(400, 'La dirección de un producto existente se conserva para mantener sus enlaces.');
       const strings = ['slug','brand','familySlug','category','technology','application','name','summary','summaryEn','descriptionEn','description','image','catalogSection','catalogLine','catalogSubline','sprayPattern','nozzleTechnology','interest','sourceUrl'];
       const arrays = ['gallery','badges','specs','variants','optionGroups','highlights','highlightSlides','detailBlocks','downloads','spareParts'];
-      if (Object.keys(p).some(key => ![...strings, ...arrays, 'catalogOrder'].includes(key))) throw new StudioError(400, 'Campo de producto no permitido.');
+      if (Object.keys(p).some(key => ![...strings, ...arrays, 'catalogOrder', 'catalogVisible'].includes(key))) throw new StudioError(400, 'Campo de producto no permitido.');
+      if (p.catalogVisible !== undefined && typeof p.catalogVisible !== 'boolean') throw new StudioError(400, 'Selecciona una visibilidad de catálogo válida.');
       for (const key of strings) if (p[key] !== undefined && !string(p[key])) throw new StudioError(400, `Revisa ${key}.`);
       for (const key of arrays) if (p[key] !== undefined && (!Array.isArray(p[key]) || p[key].length > 100)) throw new StudioError(400, `Revisa ${key}.`);
       for (const key of ['badges','highlights','highlightSlides','spareParts','gallery']) if (p[key]?.some(value => !string(value, 4000))) throw new StudioError(400, `Revisa ${key}.`);

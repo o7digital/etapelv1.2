@@ -659,3 +659,4 @@ export const localCatalogProducts: CatalogProduct[] = sourceCatalogProducts
   .sort((a, b) => (a.catalogOrder ?? 999) - (b.catalogOrder ?? 999));
 
 export const catalogProducts: CatalogProduct[] = cmsCollection('etapel_products', localCatalogProducts);
+export const listedCatalogProducts = catalogProducts.filter((product) => product.catalogVisible !== false);

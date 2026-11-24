@@ -1,0 +1,22 @@
+---
+import { locales, languagePath } from '../lib/languageRoutes.mjs';
+const { lang = 'es', path = Astro.url.pathname } = Astro.props;
+---
+<details class="language-picker" data-language-picker translate="no">
+  <summary aria-label={lang === 'es' ? 'Elegir idioma' : 'Choose language'}><span data-language-summary>{lang.toUpperCase()}</span><span aria-hidden="true">⌄</span></summary>
+  <div class="language-options">
+    {locales.map(locale => <a href={languagePath(path, locale.code)} data-language-switch data-language-option={locale.code} hreflang={locale.tag} lang={locale.tag} aria-current={locale.code === lang ? 'page' : undefined}><span>{locale.name}</span><small>{locale.code.toUpperCase()}</small></a>)}
+  </div>
+</details>
+<style is:global>
+  .language-picker{position:relative;flex-shrink:0;color:var(--navy);font-size:12px;line-height:1.4}
+  .language-picker summary{display:flex;align-items:center;justify-content:center;gap:7px;min-width:55px;min-height:42px;padding:10px;border:1px solid var(--line);background:#fff;font-weight:850;list-style:none;cursor:pointer}
+  .language-picker summary::-webkit-details-marker{display:none}
+  .language-picker>.language-options{display:grid;gap:0;position:absolute;top:calc(100% + 8px);right:0;z-index:70;width:190px;padding:6px;background:#fff;border:1px solid var(--line);box-shadow:0 16px 44px #070b2f26}
+  .language-options a{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:11px 12px;color:var(--navy)!important;font-weight:700;white-space:nowrap}
+  .language-options small{color:var(--muted);font-size:10px}
+  .language-options a:hover,.language-options a[aria-current="page"]{background:var(--soft);color:var(--orange-dark)!important}
+  .language-picker summary:focus-visible,.language-options a:focus-visible{outline:2px solid var(--orange);outline-offset:3px}
+  .mobile-panel .language-picker{margin:6px 14px}.mobile-menu .mobile-panel .language-picker>summary{display:flex;justify-content:space-between;width:100%;height:auto;min-height:42px}.mobile-panel .language-picker>.language-options{left:0;right:auto;width:100%}
+  .footer-bottom .language-picker>.language-options{top:auto;bottom:calc(100% + 8px)}
+</style>

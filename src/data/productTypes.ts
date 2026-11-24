@@ -32,6 +32,7 @@ export interface CatalogProduct {
   catalogLine?: string;
   catalogSubline?: string;
   catalogOrder?: number;
+  catalogVisible?: boolean;
   category: string;
   technology: string;
   sprayPattern?: string;
@@ -59,3 +60,5 @@ export interface CatalogProduct {
   spareParts?: string[];
   sourceUrl?: string;
 }
+
+export type SeoKeywordProduct = Pick<CatalogProduct, 'name' | 'brand' | 'familySlug' | 'catalogLine' | 'catalogSubline'>;

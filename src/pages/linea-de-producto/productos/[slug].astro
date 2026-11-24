@@ -4,7 +4,7 @@ import Breadcrumbs from '../../../components/Breadcrumbs.astro';
 import { canonicalUrl, siteOrigin } from '../../../lib/seo.mjs';
 import { familyEnglish } from '../../../data/familyEnglish';
 import CabinFilterQuote from '../../../components/CabinFilterQuote.astro';
-import { catalogProducts, productDetailPath, type CatalogProduct } from '../../../data/products';
+import { catalogProducts, listedCatalogProducts, productDetailPath, type CatalogProduct } from '../../../data/products';
 import { productFamilies } from '../../../data/productLines';
 import type { ProductDownload } from '../../../data/productTypes';
 
@@ -82,13 +82,14 @@ const family = productFamilies.find((item) => item.slug === product.familySlug);
 const familyTitle = en ? productArea.replace(/^./, (letter) => letter.toUpperCase()) : family?.shortTitle;
 const isBoothFilter = product.catalogSubline === 'Filtros para cabina';
 const isOverview = ['catalogo-scanner', 'catalogo-rampas-y-elevadores-eae'].includes(product.slug);
-const relatedProducts = catalogProducts
+const relatedProducts = listedCatalogProducts
   .filter((item) => item.slug !== product.slug && (isOverview
     ? item.catalogLine === product.catalogLine
     : item.familySlug === product.familySlug))
   .sort((a, b) => Number(b.catalogLine === product.catalogLine) - Number(a.catalogLine === product.catalogLine))
   .slice(0, isOverview ? 12 : 4);
 const productDownloads = product.downloads || ['Ficha técnica', 'Manual de operación'];
+const keywordProduct = { name: product.name, brand: product.brand, familySlug: product.familySlug, catalogLine: product.catalogLine, catalogSubline: product.catalogSubline };
 const getDownloadLabel = (download: string | ProductDownload) => typeof download === 'string' ? download : download.label;
 const getDownloadHref = (download: string | ProductDownload) => typeof download === 'string' ? '/contacto' : download.url;
 const isLinkedDownload = (download: string | ProductDownload) => typeof download !== 'string';
@@ -111,8 +112,9 @@ const structuredData = [{
 }];
 ---
 
-<SiteLayout title={`${product.name} | ${en ? 'Etapel Catalog' : 'Catálogo Etapel'}`} description={displaySummary} lang={lang} image={product.image} breadcrumbs={breadcrumbs} structuredData={structuredData}>
+<SiteLayout title={`${product.name} | ${en ? 'Etapel Catalog' : 'Catálogo Etapel'}`} description={displaySummary} lang={lang} image={product.image} breadcrumbs={breadcrumbs} structuredData={structuredData} keywordProduct={keywordProduct}>
   <main data-product-detail>
+    <div hidden data-highlight-slides>{displaySlides.map(slide => <span data-highlight-slide>{slide}</span>)}</div>
     <section class="page-hero">
       <div class="page-hero-inner">
         <div>
@@ -252,8 +254,9 @@ const structuredData = [{
   </main>
 </SiteLayout>
 
-<script define:vars={{ slides: displaySlides }}>
+<script>
   document.querySelectorAll('[data-product-detail]').forEach((detail) => {
+    const slides = Array.from(detail.querySelectorAll('[data-highlight-slide]')).map(node => node.textContent || '');
     const mainImage = detail.querySelector('[data-gallery-main]');
     const thumbs = Array.from(detail.querySelectorAll('[data-gallery-thumb]'));
     let imageIndex = 0;

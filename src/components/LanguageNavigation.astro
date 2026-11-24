@@ -1,14 +1,13 @@
 <script>
-  import { languageHash } from '../lib/languageRoutes.mjs';
+  import { languageHash, pathLocale } from '../lib/languageRoutes.mjs';
 
   const storageKey = 'etapel-language-navigation';
   const filterSelectors = ['[data-interest-filter]', '[data-subline-filter]', '[data-pattern-filter]', '[data-nozzle-filter]', '[data-catalog-search]'];
   document.querySelectorAll<HTMLAnchorElement>('[data-language-switch]').forEach((link) => {
     link.addEventListener('click', () => {
       const destination = new URL(link.href);
-      const english = destination.pathname.startsWith('/en');
       destination.search = window.location.search;
-      destination.hash = languageHash(window.location.hash, english);
+      destination.hash = languageHash(window.location.hash, pathLocale(destination.pathname));
       link.href = destination.href;
       const section = [...document.querySelectorAll<HTMLElement>('[data-language-section]')]
         .find((element) => element.getBoundingClientRect().top <= 150 && element.getBoundingClientRect().bottom > 150);

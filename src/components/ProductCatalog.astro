@@ -1,5 +1,5 @@
 ---
-import { catalogProducts, productDetailPath } from '../data/products';
+import { listedCatalogProducts, productDetailPath } from '../data/products';
 import { productFamilies } from '../data/productLines';
 import { catalogLineTranslation } from '../data/catalogHierarchy';
 
@@ -11,8 +11,8 @@ interface Props {
 const { familySlug, lang = 'es' } = Astro.props as Props;
 const en = lang === 'en';
 const initialProducts = familySlug
-  ? catalogProducts.filter((product) => product.familySlug === familySlug)
-  : catalogProducts;
+  ? listedCatalogProducts.filter((product) => product.familySlug === familySlug)
+  : listedCatalogProducts;
 const activeFamily = familySlug ? productFamilies.find((family) => family.slug === familySlug) : undefined;
 const interests = Array.from(new Set(initialProducts.map((product) => product.catalogLine || product.interest || product.category)));
 const sublines = Array.from(new Set(initialProducts.map((product) => product.catalogSubline).filter(Boolean) as string[]));
@@ -89,7 +89,7 @@ const englishSummary = (product: (typeof initialProducts)[number]) =>
     <div class="section-head">
       <div>
         <div class="label">{en ? 'Product catalog' : 'Catálogo de productos'}</div>
-        <h2>{activeFamily ? (en ? `${activeFamily.shortTitle} products` : `Productos de ${activeFamily.shortTitle}`) : en ? 'Complete Etapel catalog' : 'Catálogo completo Etapel'}</h2>
+        <h2>{activeFamily ? (en ? `${catalogLineTranslation(activeFamily.shortTitle)} products` : `Productos de ${activeFamily.shortTitle}`) : en ? 'Complete Etapel catalog' : 'Catálogo completo Etapel'}</h2>
       </div>
       <p>{en ? 'Choose a product line or search by product and brand. Each card opens a detailed product page.' : 'Elige una línea de producto o busca por producto y marca. Cada tarjeta abre una ficha con galería, datos técnicos y recursos.'}</p>
     </div>

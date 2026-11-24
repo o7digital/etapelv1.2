@@ -1,5 +1,8 @@
 ---
 import { canonicalUrl, jsonLd, languageAlternates, siteOrigin } from '../lib/seo.mjs';
+import { locales } from '../lib/languageRoutes.mjs';
+import { seoKeywords } from '../lib/keywords.mjs';
+import type { SeoKeywordProduct } from '../data/productTypes';
 
 interface Props {
   title: string;
@@ -9,9 +12,10 @@ interface Props {
   image?: string;
   breadcrumbs?: { name: string; path: string }[];
   structuredData?: Record<string, unknown>[];
+  keywordProduct?: SeoKeywordProduct;
 }
 const { title, description, lang = 'es', path = Astro.url.pathname,
-  image = '/images/contacto-etapel.webp', breadcrumbs = [], structuredData = [] } = Astro.props;
+  image = '/images/contacto-etapel.webp', breadcrumbs = [], structuredData = [], keywordProduct } = Astro.props;
 const canonical = canonicalUrl(path);
 const imageUrl = new URL(image, siteOrigin).href;
 const graph = [
@@ -24,7 +28,7 @@ const graph = [
   },
   {
     '@type': 'WebSite', '@id': `${siteOrigin}/#website`, url: `${siteOrigin}/`, name: 'Etapel',
-    publisher: { '@id': `${siteOrigin}/#organization` }, inLanguage: ['es-MX', 'en'],
+    publisher: { '@id': `${siteOrigin}/#organization` }, inLanguage: locales.map(locale => locale.tag),
   },
   {
     '@type': 'WebPage', '@id': `${canonical}#webpage`, url: canonical, name: title, description,
@@ -42,6 +46,10 @@ const graph = [
 ---
 <title>{title}</title>
 <meta name="description" content={description} />
+<meta name="keywords" content={seoKeywords(path, lang, keywordProduct).join(', ')} data-seo-keywords data-seo-product={keywordProduct ? JSON.stringify(keywordProduct) : undefined} translate="no" />
+<link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48 64x64" href="/favicon.ico" />
+<link rel="icon" type="image/png" sizes="256x256" href="/favicon.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 <link rel="canonical" href={canonical} />
 {languageAlternates(path).map(item => <link rel="alternate" hreflang={item.lang} href={item.href} />)}
 <meta property="og:type" content="website" />
@@ -52,7 +60,7 @@ const graph = [
 <meta property="og:image" content={imageUrl} />
 <meta property="og:image:alt" content={title} />
 <meta property="og:locale" content={lang === 'es' ? 'es_MX' : 'en_US'} />
-<meta property="og:locale:alternate" content={lang === 'es' ? 'en_US' : 'es_MX'} />
+{locales.filter(locale => locale.code !== lang).map(locale => <meta property="og:locale:alternate" content={locale.og} />)}
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />

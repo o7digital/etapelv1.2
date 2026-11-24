@@ -1,6 +1,7 @@
 ---
 import { languagePath } from '../lib/languageRoutes.mjs';
-import { catalogProducts } from '../data/products';
+import { isSataFinder, sataFinderUrl } from '../lib/sataParts.mjs';
+import { listedCatalogProducts } from '../data/products';
 import { productFamilies, type ProductFamily } from '../data/productLines';
 import { catalogLinesForFamily } from '../data/catalogHierarchy';
 
@@ -23,12 +24,13 @@ const familyEnglish: Record<string, { title: string; description: string }> = {
   'consumibles-de-pintura': { title: 'Paint consumables', description: 'Abrasives, masking, polishing and personal protection.' },
   'consumibles-de-hojalateria': { title: 'Bodywork consumables', description: 'Fillers, sealants and body-repair tool consumables.' },
   'herramientas-de-hojalateria': { title: 'Bodywork tools', description: 'Pneumatic, hydraulic and manual bodywork tools.' },
-  detallado: { title: 'Detailing', description: 'Professional polishers and pads for surface correction and finishing.' }
+  detallado: { title: 'Detailing', description: 'Professional polishers and pads for surface correction and finishing.' },
+  'lavadora-de-pistolas': { title: 'Spray-gun cleaners', description: 'Professional spray-gun cleaning systems for waterborne and solvent-based paint.' }
 };
 
 const groupsFor = (item: ProductFamily) => {
   return catalogLinesForFamily(item.slug).map((line) => {
-    const products = catalogProducts.filter(
+    const products = listedCatalogProducts.filter(
       (product) => product.familySlug === item.slug && product.catalogLine === line.name
     );
     return {
@@ -40,7 +42,7 @@ const groupsFor = (item: ProductFamily) => {
 };
 
 const lineHref = (group: ReturnType<typeof groupsFor>[number], item?: ProductFamily) => {
-  if (group.externalHref) return group.externalHref;
+  if (group.externalHref) return isSataFinder(group.externalHref) ? sataFinderUrl(lang) : group.externalHref;
   if (group.contactOnly) return en ? '/en/contact#contact-form' : '/contacto#formulario-contacto';
   if (en) return `${item ? languagePath(item.href) : "/en/product-lines"}?tipo=${encodeURIComponent(group.name)}#product-catalog`;
   return `${item?.href || ''}?tipo=${encodeURIComponent(group.name)}#catalogo-productos`;
@@ -74,7 +76,7 @@ const sectionsFor = (item: ProductFamily) => {
             </header>
             <div class="line-directory">
               {section.groups.map((group) => (
-                <a class="line-card" href={lineHref(group, family)} target={group.externalHref ? '_blank' : undefined} rel={group.externalHref ? 'noreferrer' : undefined}>
+                <a class="line-card" href={lineHref(group, family)} data-olivia-sata={isSataFinder(group.externalHref)} target={group.externalHref ? '_blank' : undefined} rel={group.externalHref ? 'noopener noreferrer' : undefined}>
                   <div class="line-image"><img src={group.image} alt={en ? group.nameEn : group.name} loading="lazy" /></div>
                   <div class="line-copy">
                     <small>{en ? 'Product line' : 'Línea de producto'}</small>
@@ -128,7 +130,7 @@ const sectionsFor = (item: ProductFamily) => {
                 <p>{en ? translation?.description || item.menuDescription : item.menuDescription}</p>
                 <div class="family-lines">
                   {groups.map((group) => (
-                    <a href={lineHref(group, item)} target={group.externalHref ? '_blank' : undefined} rel={group.externalHref ? 'noreferrer' : undefined}>
+                    <a href={lineHref(group, item)} data-olivia-sata={isSataFinder(group.externalHref)} target={group.externalHref ? '_blank' : undefined} rel={group.externalHref ? 'noopener noreferrer' : undefined}>
                       {en ? group.nameEn : group.name}
                     </a>
                   ))}

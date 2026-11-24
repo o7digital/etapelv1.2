@@ -1,0 +1,59 @@
+---
+import { carOLinerHomologations, gysHomologations, josamHomologations } from '../data/homologations';
+interface Props { lang?: 'es' | 'en'; supplier?: 'car-o-liner' | 'gys' | 'josam'; }
+const supplier = Astro.props.supplier || 'car-o-liner';
+const suppliers = { 'car-o-liner': { name: 'CAR-O-LINER', logos: carOLinerHomologations }, gys: { name: 'GYS', logos: gysHomologations }, josam: { name: 'JOSAM', logos: josamHomologations } };
+const { name, logos } = suppliers[supplier];
+const copies = Array.from({ length: Math.max(1, Math.ceil(14 / logos.length)) }, (_, index) => index);
+const duration = Math.max(30, logos.length * copies.length * 1.85);
+const english = Astro.props.lang === 'en';
+const label = english ? 'Manufacturer approvals' : 'Homologaciones';
+const base = `/images/homologations/${supplier}`;
+---
+
+<div class="homologation-marquee" role="region" aria-label={`${label} ${name}`} data-approvals-carousel data-supplier={supplier} style={`--homologation-duration:${duration}s`}>
+  <div class="homologation-inner">
+    <div class="homologation-label">
+      <span class="homologation-dot" aria-hidden="true"></span>
+      <div><p>{label}</p><img class="homologation-supplier" src={`${base}/${supplier}.webp`} alt={name} width="140" height="24" loading="lazy" translate="no" /></div>
+    </div>
+    <div class="homologation-window" tabindex="0">
+      <div class="homologation-track">
+        <ul class="homologation-group" translate="no">
+          {copies.map(copy => logos.map(logo => <li aria-hidden={copy > 0 ? "true" : undefined}><img src={`${base}/${logo.slug}.webp`} alt={copy > 0 ? "" : logo.name} width="400" height="200" loading="lazy" decoding="async" /></li>))}
+        </ul>
+        <ul class="homologation-group" aria-hidden="true" translate="no">
+          {copies.map(() => logos.map(logo => <li><img src={`${base}/${logo.slug}.webp`} alt="" width="400" height="200" loading="lazy" decoding="async" /></li>))}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .homologation-marquee{overflow:hidden;background:#f7f9fc;border-bottom:1px solid var(--line)}
+  .homologation-inner{max-width:var(--max);margin:0 auto;padding:20px 28px;display:grid;grid-template-columns:165px minmax(0,1fr);gap:28px;align-items:center}
+  .homologation-label{display:flex;align-items:center;gap:11px;color:#747f91;position:relative;min-width:0}
+  .homologation-dot{width:9px;height:9px;flex:none;background:var(--orange);box-shadow:0 0 0 5px #f582201f}
+  .homologation-label p{margin:0 0 9px;font-size:11px;line-height:1.25;font-weight:950;letter-spacing:.1em;text-transform:uppercase}
+  .homologation-supplier{display:block;width:126px;height:32px;object-fit:contain;object-position:left center}
+  [data-supplier="gys"] .homologation-supplier{width:64px;height:50px}
+  .homologation-window{min-width:0;overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}
+  .homologation-track{display:flex;width:max-content;animation:homologation-scroll var(--homologation-duration,105s) linear infinite}
+  .homologation-group{display:flex;align-items:center;gap:12px;margin:0;padding:2px 12px 2px 0;list-style:none;flex:none}
+  .homologation-group li{width:142px;height:78px;padding:12px 19px;display:grid;place-items:center;flex:none;background:white;border:1px solid #e3e8f0;box-shadow:0 2px 0 #dce2eb}
+  .homologation-group img{width:100%;height:100%;min-height:0;object-fit:contain}
+  .homologation-window:hover .homologation-track,.homologation-window:focus-within .homologation-track{animation-play-state:paused}
+  @keyframes homologation-scroll{to{transform:translate3d(-50%,0,0)}}
+  @media(max-width:700px){
+    .homologation-inner{padding:18px 0;grid-template-columns:1fr;gap:14px}
+    .homologation-label{padding:0 20px;gap:11px}
+    .homologation-label>div{display:flex;align-items:center;gap:17px;min-width:0;flex-wrap:wrap}
+    .homologation-label p{margin:0}.homologation-supplier{width:114px;height:20px}
+    .homologation-group{gap:10px;padding-right:10px}.homologation-group li{width:128px;height:70px;padding:11px 17px}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .homologation-window{overflow-x:auto;mask-image:none;scrollbar-width:thin}
+    .homologation-track{animation:none}.homologation-group[aria-hidden="true"]{display:none}
+  }
+</style>
