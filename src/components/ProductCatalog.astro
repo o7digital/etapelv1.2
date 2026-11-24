@@ -1,5 +1,5 @@
 ---
-import { catalogProducts, productDetailPath } from '../data/products';
+import { listedCatalogProducts, productDetailPath } from '../data/products';
 import { productFamilies } from '../data/productLines';
 import { catalogLineTranslation } from '../data/catalogHierarchy';
 
@@ -11,8 +11,8 @@ interface Props {
 const { familySlug, lang = 'es' } = Astro.props as Props;
 const en = lang === 'en';
 const initialProducts = familySlug
-  ? catalogProducts.filter((product) => product.familySlug === familySlug)
-  : catalogProducts;
+  ? listedCatalogProducts.filter((product) => product.familySlug === familySlug)
+  : listedCatalogProducts;
 const activeFamily = familySlug ? productFamilies.find((family) => family.slug === familySlug) : undefined;
 const interests = Array.from(new Set(initialProducts.map((product) => product.catalogLine || product.interest || product.category)));
 const sublines = Array.from(new Set(initialProducts.map((product) => product.catalogSubline).filter(Boolean) as string[]));

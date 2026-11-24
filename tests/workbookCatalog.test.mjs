@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { localCatalogProducts } from '../src/data/products.ts';
+import { catalogProducts, listedCatalogProducts, localCatalogProducts } from '../src/data/products.ts';
 import { catalogLinesForFamily } from '../src/data/catalogHierarchy.ts';
 import { validateRecord } from '../cms/model.mjs';
 import { workbookAdditionalProducts, workbookProductPatches } from '../src/data/workbookProducts.ts';
@@ -34,6 +34,27 @@ test('starter navigation leads to products and ADAS uses the workbook brand', ()
   const adas = localCatalogProducts.find(p => p.slug === 'catalogo-ez-adas-recalibration-system');
   assert.equal(adas.brand, 'Car-O-Liner');
   assert.ok(adas.downloads.some(d => typeof d === 'object' && d.url.includes('36537-EZ-ADAS')));
+});
+
+test('Drester products leave catalog lists while keeping their pages, photos and documents for reassignment', () => {
+  const hidden = ['catalogo-drester-classic-1050', 'catalogo-drester-classic-3600'];
+  for (const slug of hidden) {
+    const product = catalogProducts.find(p => p.slug === slug);
+    assert.ok(product, `${slug}: technical page remains available`);
+    assert.ok(product.gallery.length && product.downloads?.length);
+    assert.ok(!listedCatalogProducts.some(p => p.slug === slug));
+    for (const catalogVisible of [false, true]) {
+      const input = { payload: { ...product, catalogVisible }, status: 'published', revision: 2 };
+      const saved = validateRecord('etapel_products', input, { payload: product, revision: 2 });
+      assert.equal(saved.payload.catalogVisible, catalogVisible);
+      assert.equal(saved.status, 'published');
+      assert.equal(saved.revision, 3);
+    }
+    assert.throws(() => validateRecord('etapel_products', { payload: { ...product, catalogVisible: 'false' }, status: 'published' }, null));
+  }
+  const otherAccessories = catalogProducts.filter(p => p.catalogLine === 'Accesorios pistolas' && !hidden.includes(p.slug));
+  assert.ok(otherAccessories.length);
+  assert.ok(otherAccessories.every(product => listedCatalogProducts.includes(product)));
 });
 
 test('booth filters include ceiling media without supplier branding and CMS records remain valid', () => {

@@ -7,6 +7,7 @@ interface ClientCatalogSeed {
   familySlug: CatalogProduct['familySlug'];
   division: string;
   category: string;
+  catalogVisible?: boolean;
   sourceUrl?: string;
   image: string;
   gallery?: string[];
@@ -21,6 +22,7 @@ interface ClientCatalogSeed {
 const clientCatalogSeeds: ClientCatalogSeed[] = [
   {
     "slug": "drester-classic-1050",
+    "catalogVisible": false,
     "name": "Drester Classic 1050",
     "brand": "Hedson",
     "familySlug": "pintura",
@@ -67,6 +69,7 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
   },
   {
     "slug": "drester-classic-3600",
+    "catalogVisible": false,
     "name": "Drester Classic 3600",
     "brand": "Hedson",
     "familySlug": "pintura",
@@ -5008,6 +5011,7 @@ export const clientCatalogProducts: CatalogProduct[] = uniqueClientCatalogSeeds.
     brand: seed.brand,
     familySlug: seed.familySlug,
     category,
+    ...(seed.catalogVisible === undefined ? {} : { catalogVisible: seed.catalogVisible }),
     technology: 'Tecnología profesional',
     sprayPattern: 'No aplica',
     nozzleTechnology: 'No aplica',

@@ -32,6 +32,7 @@ export interface CatalogProduct {
   catalogLine?: string;
   catalogSubline?: string;
   catalogOrder?: number;
+  catalogVisible?: boolean;
   category: string;
   technology: string;
   sprayPattern?: string;

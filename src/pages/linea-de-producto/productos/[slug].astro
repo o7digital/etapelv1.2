@@ -4,7 +4,7 @@ import Breadcrumbs from '../../../components/Breadcrumbs.astro';
 import { canonicalUrl, siteOrigin } from '../../../lib/seo.mjs';
 import { familyEnglish } from '../../../data/familyEnglish';
 import CabinFilterQuote from '../../../components/CabinFilterQuote.astro';
-import { catalogProducts, productDetailPath, type CatalogProduct } from '../../../data/products';
+import { catalogProducts, listedCatalogProducts, productDetailPath, type CatalogProduct } from '../../../data/products';
 import { productFamilies } from '../../../data/productLines';
 import type { ProductDownload } from '../../../data/productTypes';
 
@@ -82,7 +82,7 @@ const family = productFamilies.find((item) => item.slug === product.familySlug);
 const familyTitle = en ? productArea.replace(/^./, (letter) => letter.toUpperCase()) : family?.shortTitle;
 const isBoothFilter = product.catalogSubline === 'Filtros para cabina';
 const isOverview = ['catalogo-scanner', 'catalogo-rampas-y-elevadores-eae'].includes(product.slug);
-const relatedProducts = catalogProducts
+const relatedProducts = listedCatalogProducts
   .filter((item) => item.slug !== product.slug && (isOverview
     ? item.catalogLine === product.catalogLine
     : item.familySlug === product.familySlug))

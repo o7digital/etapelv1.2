@@ -1,7 +1,7 @@
 ---
 import { languagePath } from '../lib/languageRoutes.mjs';
 import { isSataFinder, sataFinderUrl } from '../lib/sataParts.mjs';
-import { catalogProducts } from '../data/products';
+import { listedCatalogProducts } from '../data/products';
 import { productFamilies, type ProductFamily } from '../data/productLines';
 import { catalogLinesForFamily } from '../data/catalogHierarchy';
 
@@ -29,7 +29,7 @@ const familyEnglish: Record<string, { title: string; description: string }> = {
 
 const groupsFor = (item: ProductFamily) => {
   return catalogLinesForFamily(item.slug).map((line) => {
-    const products = catalogProducts.filter(
+    const products = listedCatalogProducts.filter(
       (product) => product.familySlug === item.slug && product.catalogLine === line.name
     );
     return {
