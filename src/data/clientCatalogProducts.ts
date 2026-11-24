@@ -22,12 +22,12 @@ interface ClientCatalogSeed {
 const clientCatalogSeeds: ClientCatalogSeed[] = [
   {
     "slug": "drester-classic-1050",
-    "catalogVisible": false,
+    "catalogVisible": true,
     "name": "Drester Classic 1050",
     "brand": "Hedson",
-    "familySlug": "pintura",
+    "familySlug": "lavadora-de-pistolas",
     "division": "Pintura y Aplicación",
-    "category": "Accesorios pistolas",
+    "category": "Lavadora de pistolas",
     "sourceUrl": "https://www.hedson.com/products/drester-classic-1050/",
     "image": "/images/products/client-catalog/drester-classic-1050.webp",
     "specs": [
@@ -69,12 +69,12 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
   },
   {
     "slug": "drester-classic-3600",
-    "catalogVisible": false,
+    "catalogVisible": true,
     "name": "Drester Classic 3600",
     "brand": "Hedson",
-    "familySlug": "pintura",
+    "familySlug": "lavadora-de-pistolas",
     "division": "Pintura y Aplicación",
-    "category": "Accesorios pistolas",
+    "category": "Lavadora de pistolas",
     "sourceUrl": "https://www.hedson.com/products/drester-classic-3600/",
     "image": "/images/products/client-catalog/drester-classic-3600.webp",
     "specs": [

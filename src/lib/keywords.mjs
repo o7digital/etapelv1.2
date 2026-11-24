@@ -116,6 +116,7 @@ const productTerms = {
   adas: ['equipos de calibración ADAS', 'ADAS calibration equipment', 'ADAS-Kalibriergeräte', 'attrezzature per calibrazione ADAS', 'équipements de calibrage ADAS', 'equipamentos de calibração ADAS'],
   airConditioning: ['equipos de aire acondicionado automotriz', 'automotive air conditioning equipment', 'Kfz-Klimaservicegeräte', 'attrezzature per climatizzazione auto', 'équipements de climatisation automobile', 'equipamentos de ar condicionado automotivo'],
   gunAccessories: ['accesorios para pistolas de pintura', 'paint spray gun accessories', 'Lackierpistolenzubehör', 'accessori per pistole di verniciatura', 'accessoires pour pistolets de peinture', 'acessórios para pistolas de pintura'],
+  gunCleaners: ['lavadoras de pistolas de pintura', 'paint spray-gun cleaners', 'Lackierpistolenreiniger', 'lavapistole per verniciatura', 'laveuses de pistolets à peinture', 'lavadoras de pistolas de pintura'],
   paintTraining: terms.paintTraining,
   boothTraining: ['capacitación en cabinas de pintura', 'spray booth training', 'Lackierkabinenschulung', 'formazione sulle cabine di verniciatura', 'formation aux cabines de peinture', 'treinamento em cabines de pintura'],
   gunTraining: ['capacitación en pistolas SATA', 'SATA spray gun training', 'SATA Lackierpistolenschulung', 'formazione sulle pistole SATA', 'formation aux pistolets SATA', 'treinamento em pistolas SATA'],
@@ -147,6 +148,7 @@ const familyTerms = {
   'consumibles-de-hojalateria': ['bodyConsumables', 'fillers', 'sealants'],
   'herramientas-de-hojalateria': ['tools', 'sanders'],
   detallado: ['polishers', 'shinemate', 'pads', 'compounds'],
+  'lavadora-de-pistolas': ['gunCleaners'],
   // Existing aliases retain their destination's intent and canonical URL.
   'equipo-mayor': ['benches', 'measuring', 'truckEquipment'],
   'equipo-menor': ['welders', 'mig', 'spot', 'plasma', 'spotter', 'gys'],
@@ -160,6 +162,7 @@ const lineTerms = {
   'Zonas de preparación': ['preparation'],
   'Pistolas para pintar': ['sprayGun', 'sprayGuns', 'automotiveGuns'],
   'Accesorios pistolas': ['gunAccessories'],
+  'Lavadora de pistolas': ['gunCleaners'],
   'Protección respiratoria': ['respirators'],
   'Tecnología de filtros y aire comprimido': ['airFilters'],
   'Lámparas infrarrojas': ['infrared'],

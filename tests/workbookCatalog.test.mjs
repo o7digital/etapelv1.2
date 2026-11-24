@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { catalogProducts, listedCatalogProducts, localCatalogProducts } from '../src/data/products.ts';
+import { localCatalogProducts } from '../src/data/products.ts';
+import { localProductFamilies } from '../src/data/productLines.ts';
 import { catalogLinesForFamily } from '../src/data/catalogHierarchy.ts';
 import { validateRecord } from '../cms/model.mjs';
 import { workbookAdditionalProducts, workbookProductPatches } from '../src/data/workbookProducts.ts';
@@ -36,13 +37,23 @@ test('starter navigation leads to products and ADAS uses the workbook brand', ()
   assert.ok(adas.downloads.some(d => typeof d === 'object' && d.url.includes('36537-EZ-ADAS')));
 });
 
-test('Drester products leave catalog lists while keeping their pages, photos and documents for reassignment', () => {
-  const hidden = ['catalogo-drester-classic-1050', 'catalogo-drester-classic-3600'];
-  for (const slug of hidden) {
-    const product = catalogProducts.find(p => p.slug === slug);
+test('Drester cleaners belong to their dedicated published family and keep their technical resources', () => {
+  const slugs = ['catalogo-drester-classic-1050', 'catalogo-drester-classic-3600'];
+  const family = localProductFamilies.find(family => family.slug === 'lavadora-de-pistolas');
+  assert.equal(family?.title, 'Lavadora de pistolas');
+  assert.equal(family?.href, '/linea-de-producto/lavadora-de-pistolas');
+  assert.doesNotThrow(() => validateRecord('etapel_families', { payload: family, status: 'published' }, null));
+  const lines = catalogLinesForFamily(family.slug);
+  assert.equal(lines.length, 1);
+  assert.deepEqual(lines[0].sublines.map(row => row.name), ['Drester Classic 1050', 'Drester Classic 3600']);
+  assert.deepEqual(localCatalogProducts.filter(product => product.familySlug === family.slug).map(product => product.slug), slugs);
+  for (const slug of slugs) {
+    const product = localCatalogProducts.find(p => p.slug === slug);
     assert.ok(product, `${slug}: technical page remains available`);
     assert.ok(product.gallery.length && product.downloads?.length);
-    assert.ok(!listedCatalogProducts.some(p => p.slug === slug));
+    assert.equal(product.catalogVisible, true);
+    assert.equal(product.catalogLine, 'Lavadora de pistolas');
+    assert.equal(product.catalogSubline, product.name);
     for (const catalogVisible of [false, true]) {
       const input = { payload: { ...product, catalogVisible }, status: 'published', revision: 2 };
       const saved = validateRecord('etapel_products', input, { payload: product, revision: 2 });
@@ -52,9 +63,9 @@ test('Drester products leave catalog lists while keeping their pages, photos and
     }
     assert.throws(() => validateRecord('etapel_products', { payload: { ...product, catalogVisible: 'false' }, status: 'published' }, null));
   }
-  const otherAccessories = catalogProducts.filter(p => p.catalogLine === 'Accesorios pistolas' && !hidden.includes(p.slug));
-  assert.ok(otherAccessories.length);
-  assert.ok(otherAccessories.every(product => listedCatalogProducts.includes(product)));
+  const accessories = localCatalogProducts.filter(p => p.catalogLine === 'Accesorios pistolas');
+  assert.equal(accessories.length, 10);
+  assert.ok(accessories.every(product => !slugs.includes(product.slug)));
 });
 
 test('booth filters include ceiling media without supplier branding and CMS records remain valid', () => {
