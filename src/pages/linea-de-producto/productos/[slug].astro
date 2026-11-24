@@ -6,6 +6,7 @@ import { familyEnglish } from '../../../data/familyEnglish';
 import CabinFilterQuote from '../../../components/CabinFilterQuote.astro';
 import { catalogProducts, listedCatalogProducts, productDetailPath, type CatalogProduct } from '../../../data/products';
 import { productFamilies } from '../../../data/productLines';
+import { catalogModels } from '../../../lib/catalogCollections.mjs';
 import type { ProductDownload } from '../../../data/productTypes';
 
 export function getStaticPaths() {
@@ -44,6 +45,7 @@ const tr = (value?: string) => {
     'Tecnologia de filtros': 'Filter technology',
     'Proteccion respiratoria': 'Respiratory protection',
     'Cabinas y preparación': 'Spray booths and preparation areas',
+    'Cabina de pintura': 'Spray booth',
     'Sí': 'Yes',
     'Pieza': 'Piece',
   };
@@ -74,15 +76,21 @@ const displaySpecs = en
   ? [
       { label: 'Brand', value: product.brand },
       { label: 'Product area', value: productArea },
-      { label: 'Technology', value: product.technology || 'Professional workshop technology' },
+      { label: 'Technology', value: (product.catalogParentSlug ? tr(product.technology) : product.technology) || 'Professional workshop technology' },
       { label: 'Application', value: 'Automotive workshop use' },
     ]
   : product.specs;
 const family = productFamilies.find((item) => item.slug === product.familySlug);
 const familyTitle = en ? productArea.replace(/^./, (letter) => letter.toUpperCase()) : family?.shortTitle;
 const isBoothFilter = product.catalogSubline === 'Filtros para cabina';
+const collectionModels = catalogModels(catalogProducts, product.slug) as CatalogProduct[];
+const parentProduct = product.catalogParentSlug ? catalogProducts.find(item => item.slug === product.catalogParentSlug) : undefined;
+const collectionPath = (slug: string) => `${en ? '/en/product-lines/products' : '/linea-de-producto/productos'}/${slug}`;
+const catalogBackHref = parentProduct ? collectionPath(parentProduct.slug) : collectionModels.length
+  ? `${en ? '/en/product-lines' : '/linea-de-producto'}/${product.familySlug}?tipo=${encodeURIComponent(product.catalogLine || product.category)}#${en ? 'product-catalog' : 'catalogo-productos'}`
+  : en ? '/en/product-lines#product-catalog' : `${family?.href}#catalogo-productos`;
 const isOverview = ['catalogo-scanner', 'catalogo-rampas-y-elevadores-eae'].includes(product.slug);
-const relatedProducts = listedCatalogProducts
+const relatedProducts = (parentProduct ? catalogModels(catalogProducts, parentProduct.slug) as CatalogProduct[] : listedCatalogProducts)
   .filter((item) => item.slug !== product.slug && (isOverview
     ? item.catalogLine === product.catalogLine
     : item.familySlug === product.familySlug))
@@ -99,9 +107,16 @@ const breadcrumbs = [
   { name: en ? 'Product lines' : 'Línea de producto', path: en ? '/en/product-lines' : '/linea-de-producto' },
   ...(family ? [{ name: en ? familyEnglish[family.slug]?.title || family.title : family.title,
     path: `${en ? '/en/product-lines' : '/linea-de-producto'}/${family.slug}` }] : []),
+  ...(parentProduct ? [{ name: parentProduct.name, path: collectionPath(parentProduct.slug) }] : []),
   { name: product.name, path: detailPath },
 ];
-const structuredData = [{
+const structuredData = collectionModels.length ? [{
+  '@type': 'CollectionPage', '@id': `${canonicalUrl(detailPath)}#collection`,
+  name: product.name, description: displaySummary, url: canonicalUrl(detailPath),
+  mainEntity: { '@type': 'ItemList', numberOfItems: collectionModels.length,
+    itemListElement: collectionModels.map((item, index) => ({ '@type': 'ListItem', position: index + 1,
+      item: { '@type': 'Product', name: item.name, url: canonicalUrl(collectionPath(item.slug)), image: new URL(item.image, siteOrigin).href } })) },
+}] : [{
   '@type': 'Product', '@id': `${canonicalUrl(detailPath)}#product`,
   name: product.name, description: displayDescription, url: canonicalUrl(detailPath),
   image: [...new Set([product.image, ...product.gallery])].filter(Boolean).map(image => new URL(image, siteOrigin).href),
@@ -124,14 +139,35 @@ const structuredData = [{
           <p>{displaySummary}</p>
           <div class="hero-actions">
             <a class="btn orange" href={isBoothFilter ? '#cotizar-filtros' : en ? '/en/contact#contact-form' : '/contacto#formulario-contacto'}>{isBoothFilter ? (en ? 'Request a quote' : 'Cotizar filtros') : en ? 'Ask now' : 'Pregunte ahora'}</a>
-            {family && <a class="btn outline" href={en ? '/en/product-lines#product-catalog' : `${family.href}#catalogo-productos`}>{en ? 'Back to catalog' : 'Volver al catálogo'}</a>}
+            {family && <a class="btn outline" href={catalogBackHref}>{parentProduct ? (en ? 'Back to models' : 'Volver a los modelos') : en ? 'Back to catalog' : 'Volver al catálogo'}</a>}
           </div>
         </div>
         <div class="hero-panel"><img src={product.image} alt={product.name} /></div>
       </div>
     </section>
 
-    <section>
+    {collectionModels.length > 0 && (
+      <section class="related" id="modelos" data-product-collection>
+        <div class="container">
+          <div class="section-head">
+            <div><div class="label">USI Italia</div><h2>{en ? 'Choose your spray booth' : 'Elige tu cabina de pintura'}</h2></div>
+            <p>{displayDescription}</p>
+          </div>
+          <div class="catalog-grid">
+            {collectionModels.map(item => (
+              <article class="product-card" data-collection-model={item.slug}>
+                <a href={collectionPath(item.slug)}>
+                  <div class="product-image"><img src={item.image} alt={item.name} loading="lazy" /></div>
+                  <div class="product-body"><small>USI Italia</small><h3>{item.name}</h3><p>{en ? item.summaryEn || item.summary : item.summary}</p><span class="arrow">→</span></div>
+                </a>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    {collectionModels.length === 0 && <section>
       <div class="container">
         <div class="detail-grid">
           <div class="gallery-box">
@@ -227,9 +263,11 @@ const structuredData = [{
       </div>
     </section>
 
+    }
+
     {isBoothFilter && <CabinFilterQuote productName={product.name} lang={lang} />}
 
-    {relatedProducts.length > 0 && (
+    {collectionModels.length === 0 && relatedProducts.length > 0 && (
       <section class="related">
         <div class="container">
           <div class="section-head">

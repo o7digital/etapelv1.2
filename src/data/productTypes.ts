@@ -33,6 +33,7 @@ export interface CatalogProduct {
   catalogSubline?: string;
   catalogOrder?: number;
   catalogVisible?: boolean;
+  catalogParentSlug?: string;
   category: string;
   technology: string;
   sprayPattern?: string;

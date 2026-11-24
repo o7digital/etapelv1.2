@@ -188,7 +188,7 @@ export const catalogPlacementFor = (product: CatalogProduct) => {
     catalogSection: definition?.section || product.application,
     catalogLine: definition?.name || lineName,
     catalogSubline: sublineFor(product, definition?.name || lineName),
-    catalogOrder: definition ? catalogHierarchy.indexOf(definition) : 999,
+    catalogOrder: product.catalogParentSlug ? product.catalogOrder ?? 0 : definition ? catalogHierarchy.indexOf(definition) : 999,
   };
 };
 

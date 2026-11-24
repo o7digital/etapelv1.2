@@ -1,6 +1,8 @@
 import { cmsCollection } from '../lib/cms.mjs';
 import { sataImportedProducts } from './sataImportedProducts.ts';
 import { sataAdamProducts } from './sataAdamProducts.ts';
+import { usiBoothProducts } from './usiBoothProducts.ts';
+import { catalogRootProducts } from '../lib/catalogCollections.mjs';
 import { clientCatalogProducts } from './clientCatalogProducts.ts';
 import { catalogPlacementFor } from './catalogHierarchy.ts';
 import { workbookAdditionalProducts, applyWorkbookProductPatch } from './workbookProducts.ts';
@@ -582,6 +584,7 @@ const curatedCatalogProducts: CatalogProduct[] = [
   },
   {
     slug: 'cabinas-zonas-preparacion',
+    catalogVisible: false,
     brand: 'Etapel',
     familySlug: 'cabinas-y-preparacion',
     category: 'Cabinas y áreas',
@@ -647,6 +650,7 @@ const sourceCatalogProducts: CatalogProduct[] = [
     };
   }),
   ...sataAdamProducts,
+  ...usiBoothProducts,
   ...nonSataProducts,
   ...clientCatalogProducts,
   ...workbookAdditionalProducts
@@ -661,4 +665,4 @@ export const localCatalogProducts: CatalogProduct[] = sourceCatalogProducts
   .sort((a, b) => (a.catalogOrder ?? 999) - (b.catalogOrder ?? 999));
 
 export const catalogProducts: CatalogProduct[] = cmsCollection('etapel_products', localCatalogProducts);
-export const listedCatalogProducts = catalogProducts.filter((product) => product.catalogVisible !== false);
+export const listedCatalogProducts = catalogRootProducts(catalogProducts) as CatalogProduct[];

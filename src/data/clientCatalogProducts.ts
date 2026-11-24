@@ -116,18 +116,22 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
   },
   {
     "slug": "cabinas-de-pintura-usi-italia",
-    "name": "USI Italia CHRONOTECH",
+    "name": "Cabinas USI Italia",
     "brand": "USI Italia",
     "familySlug": "cabinas-y-preparacion",
     "division": "Pintura y Aplicación",
     "category": "Cabinas de pintura",
-    "sourceUrl": "https://www.usiitalia.com/en/products/chronotech/",
+    "sourceUrl": "https://www.usiitalia.com/en/category_products/booths/",
+    "summary": "Explora los modelos Ohmni, Master, Energo, HE, Open Booth y Chronotech.",
+    "summaryEn": "Explore Ohmni, Master, Energo, HE, Open Booth and Chronotech spray booths.",
+    "description": "Selecciona una cabina USI Italia para conocer su tecnología y consultar su configuración con Etapel.",
+    "descriptionEn": "Choose a USI Italia spray booth to explore its technology and discuss its configuration with Etapel.",
     "image": "/images/products/usi-chronotech.png",
     "specs": [],
     "downloads": [
       {
         "label": "Información del fabricante",
-        "url": "https://www.usiitalia.com/en/products/chronotech/"
+        "url": "https://www.usiitalia.com/en/category_products/booths/"
       }
     ]
   },
