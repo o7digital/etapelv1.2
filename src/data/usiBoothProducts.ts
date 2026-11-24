@@ -52,7 +52,7 @@ export const usiBoothProducts: CatalogProduct[] = [
     brochure: '2024/07/USI_2022_Flyer_OHMNI_ENG_sc.pdf',
   },
   {
-    slug: 'usi-master', name: 'USI Italia Master', file: 'master.jpg', page: 'master',
+    slug: 'usi-master', name: 'USI Italia Master', file: 'master.png', page: 'master',
     summary: 'Cabina con turbinas industriales de accionamiento directo y flujo de aire estable.',
     summaryEn: 'Spray booth with direct-drive industrial turbines and steady airflow.',
     description: 'Sus ventiladores de álabes curvados hacia atrás mantienen el caudal durante el uso de los filtros. Ofrece diferentes configuraciones de calentamiento y accesorios para el proceso de pintura.',
