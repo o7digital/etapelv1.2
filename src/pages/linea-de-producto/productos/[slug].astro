@@ -150,7 +150,7 @@ const structuredData = collectionModels.length ? [{
       <section class="related" id="modelos" data-product-collection>
         <div class="container">
           <div class="section-head">
-            <div><div class="label">USI Italia</div><h2>{en ? 'Choose your spray booth' : 'Elige tu cabina de pintura'}</h2></div>
+            <div><div class="label">{product.brand}</div><h2>{en ? 'Choose your spray booth' : 'Elige tu cabina de pintura'}</h2></div>
             <p>{displayDescription}</p>
           </div>
           <div class="catalog-grid">
@@ -158,7 +158,7 @@ const structuredData = collectionModels.length ? [{
               <article class="product-card" data-collection-model={item.slug}>
                 <a href={collectionPath(item.slug)}>
                   <div class="product-image"><img src={item.image} alt={item.name} loading="lazy" /></div>
-                  <div class="product-body"><small>USI Italia</small><h3>{item.name}</h3><p>{en ? item.summaryEn || item.summary : item.summary}</p><span class="arrow">→</span></div>
+                  <div class="product-body"><small>{item.brand}</small><h3>{item.name}</h3><p>{en ? item.summaryEn || item.summary : item.summary}</p><span class="arrow">→</span></div>
                 </a>
               </article>
             ))}

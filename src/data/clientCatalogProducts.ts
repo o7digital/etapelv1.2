@@ -142,7 +142,11 @@ const clientCatalogSeeds: ClientCatalogSeed[] = [
     "familySlug": "cabinas-y-preparacion",
     "division": "Pintura y Aplicación",
     "category": "Cabinas de pintura",
-    "sourceUrl": "https://www.millibar.it/wp-content/uploads/2020/11/MILLIBAR_Scheda_SDLINE_sc.pdf",
+    "sourceUrl": "https://www.millibar.it/all-products/",
+    "summary": "Explora las cabinas Millibar 2.0, Millibar LT y SD Line.",
+    "summaryEn": "Explore Millibar 2.0, Millibar LT and SD Line spray booths.",
+    "description": "Elige uno de los tres modelos Millibar para conocer su tecnología y consultar su configuración con Etapel.",
+    "descriptionEn": "Choose one of the three Millibar models to explore its technology and discuss its configuration with Etapel.",
     "image": "/images/products/verified/catalogo-cabinas-de-pintura-millibar.webp",
     "specs": [],
     "downloads": [

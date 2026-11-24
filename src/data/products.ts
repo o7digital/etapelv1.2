@@ -2,6 +2,7 @@ import { cmsCollection } from '../lib/cms.mjs';
 import { sataImportedProducts } from './sataImportedProducts.ts';
 import { sataAdamProducts } from './sataAdamProducts.ts';
 import { usiBoothProducts } from './usiBoothProducts.ts';
+import { millibarBoothProducts } from './millibarBoothProducts.ts';
 import { catalogRootProducts } from '../lib/catalogCollections.mjs';
 import { clientCatalogProducts } from './clientCatalogProducts.ts';
 import { catalogPlacementFor } from './catalogHierarchy.ts';
@@ -651,6 +652,7 @@ const sourceCatalogProducts: CatalogProduct[] = [
   }),
   ...sataAdamProducts,
   ...usiBoothProducts,
+  ...millibarBoothProducts,
   ...nonSataProducts,
   ...clientCatalogProducts,
   ...workbookAdditionalProducts

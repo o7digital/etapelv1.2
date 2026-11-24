@@ -4,6 +4,7 @@ import { existsSync } from 'node:fs';
 import { localCatalogProducts } from '../src/data/products.ts';
 import { catalogRootProducts, catalogModels } from '../src/lib/catalogCollections.mjs';
 import { usiBoothParentSlug } from '../src/data/usiBoothProducts.ts';
+import { millibarBoothParentSlug } from '../src/data/millibarBoothProducts.ts';
 import { validateRecord, validateProductGrouping } from '../cms/model.mjs';
 
 test('spray booths show the two brand cards and the six USI models only inside their collection', () => {
@@ -47,4 +48,23 @@ test('Studio prevents missing parents, nested collections and changes that would
   assert.throws(() => validateProductGrouping({ ...parent, familySlug: 'mecanica' }, 'published', rows));
   assert.doesNotThrow(() => validateProductGrouping(model, 'archived', rows));
   assert.doesNotThrow(() => validateProductGrouping(parent, 'archived', [rows[0], { ...rows[1], status: 'archived' }]));
+});
+
+test('Millibar opens only the three requested booths and keeps both brand collections separate', () => {
+  const models = catalogModels(localCatalogProducts, millibarBoothParentSlug);
+  assert.deepEqual(models.map(p => p.name), ['Millibar 2.0', 'Millibar LT', 'SD Line']);
+  assert.deepEqual(models.map(p => p.slug), ['millibar-2-0', 'millibar-lt', 'millibar-sd-line']);
+  assert.equal(new Set(models.map(p => p.image)).size, 3);
+  const roots = catalogRootProducts(localCatalogProducts);
+  assert.equal(roots.filter(p => p.catalogLine === 'Cabinas de pintura').length, 2);
+  assert.equal(catalogModels(localCatalogProducts, usiBoothParentSlug).length, 6);
+  const rows = localCatalogProducts.map(payload => ({ payload, status: 'published' }));
+  for (const model of models) {
+    assert(!roots.includes(model));
+    assert(existsSync('public' + model.image));
+    assert.equal(model.catalogSubline, 'Millibar');
+    assert.doesNotThrow(() => validateRecord('etapel_products', { payload: model, status: 'published' }, null));
+    assert.doesNotThrow(() => validateProductGrouping(model, 'published', rows));
+    assert(model.downloads.some(d => typeof d === 'object' && d.url === model.sourceUrl));
+  }
 });
